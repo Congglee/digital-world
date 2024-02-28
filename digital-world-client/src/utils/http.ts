@@ -2,6 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig, type AxiosInstance } fro
 import { toast } from 'react-toastify'
 import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
+import { URL_FINAL_REGISTER, URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN } from 'src/redux/apis/auth.api'
 import { AuthResponse, RefreshTokenResponse } from 'src/types/auth.type'
 import { ErrorResponse } from 'src/types/utils.type'
 import {
@@ -47,14 +48,14 @@ export class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
-        if (url === '/login' || url === '/register') {
+        if (url === URL_LOGIN || url?.includes(URL_FINAL_REGISTER)) {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
           setAccessTokenToLS(this.accessToken)
           setRefreshTokenToLS(this.refreshToken)
           setProfileToLS(data.data.user)
-        } else if (url === '/logout') {
+        } else if (url === URL_LOGOUT) {
           this.accessToken = ''
           this.refreshToken = ''
           clearLS()
@@ -73,7 +74,7 @@ export class Http {
         if (isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error)) {
           const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
           const { url } = config
-          if (isAxiosExpiredTokenError(error) && url !== '/refresh-access-token') {
+          if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
               : this.handleRefreshToken().finally(() => {
@@ -97,7 +98,7 @@ export class Http {
   }
   private handleRefreshToken() {
     return this.instance
-      .post<RefreshTokenResponse>('/refresh-access-token', {
+      .post<RefreshTokenResponse>(URL_REFRESH_TOKEN, {
         refresh_token: this.refreshToken
       })
       .then((res) => {

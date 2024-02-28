@@ -8,6 +8,8 @@ function translatePathname(pathname: string) {
       return 'Trang chủ'
     case 'login':
       return 'Đăng nhập'
+    case 'register':
+      return 'Đăng ký'
     default:
       return pathname
   }

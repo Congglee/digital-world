@@ -21,6 +21,7 @@ const axiosBaseQuery =
         params,
         headers
       })
+
       return { data: response }
     } catch (axiosError) {
       const error = axiosError as AxiosError

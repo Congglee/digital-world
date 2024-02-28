@@ -1,44 +1,52 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useEffect } from 'react'
+import omit from 'lodash/omit'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import Breadcrumbs from 'src/components/Breadcrumbs'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import path from 'src/constants/path'
-import { useLoginMutation } from 'src/redux/apis/auth.api'
-import { useAppDispatch } from 'src/redux/hook'
-import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
+import { useRegisterMutation } from 'src/redux/apis/auth.api'
 import { Schema, schema } from 'src/utils/rules'
 import { isEntityError } from 'src/utils/utils'
+import FinalRegisterModal from './components/FinalRegisterModal'
 
-type FormData = Pick<Schema, 'email' | 'password'>
+type FormData = Pick<Schema, 'name' | 'email' | 'password' | 'confirm_password'>
 
-const loginSchema = schema.pick(['email', 'password'])
+const registerSchema = schema.pick(['name', 'email', 'password', 'confirm_password'])
 
-export default function Login() {
+export default function Register() {
   const {
     register,
     setError,
     handleSubmit,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(loginSchema)
+    resolver: yupResolver(registerSchema)
   })
 
-  const [loginMutation, { isLoading, isSuccess, isError, data, error }] = useLoginMutation()
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const [registerMutation, { isLoading, isSuccess, isError, data, error }] = useRegisterMutation()
+  const [open, setOpen] = useState(false)
+
+  const closeModal = () => {
+    setOpen(false)
+  }
+
+  const openModal = () => {
+    setOpen(true)
+  }
 
   const onSubmit = handleSubmit(async (data) => {
-    await loginMutation(data)
+    const body = omit(data, ['confirm_password'])
+    await registerMutation(body)
   })
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setProfile(data?.data.data.user))
-      dispatch(setAuthenticated(true))
-      navigate('/')
+      toast.success(data?.data.message)
+      openModal()
     }
   }, [isSuccess])
 
@@ -47,7 +55,7 @@ export default function Login() {
       const formError = error.data.data
       if (formError) {
         Object.entries(formError).forEach(([key, value]) => {
-          setError(key as keyof FormData, {
+          setError(key as keyof Omit<FormData, 'confirm_password'>, {
             message: value as string,
             type: 'Server'
           })
@@ -61,7 +69,14 @@ export default function Login() {
       <Breadcrumbs />
       <div className='flex mt-5 mb-10 px-4 justify-center'>
         <div className='max-w-[495px] w-full'>
-          <form className='pb-8 mb-4' onSubmit={onSubmit} noValidate>
+          <form onSubmit={onSubmit} noValidate>
+            <Input
+              name='name'
+              register={register}
+              type='text'
+              placeholder='Họ và tên'
+              errorMessage={errors.name?.message}
+            />
             <Input
               name='email'
               register={register}
@@ -78,6 +93,15 @@ export default function Login() {
               errorMessage={errors.password?.message}
               autoComplete='on'
             />
+            <Input
+              name='confirm_password'
+              register={register}
+              type='password'
+              classNameEye='top-3'
+              placeholder='Xác nhận mật khẩu'
+              errorMessage={errors.confirm_password?.message}
+              autoComplete='on'
+            />
             <div className='mt-1'>
               <Button
                 type='submit'
@@ -85,19 +109,17 @@ export default function Login() {
                 disabled={isLoading}
                 isLoading={isLoading}
               >
-                Đăng nhập
+                Đăng ký
               </Button>
             </div>
             <div className='mt-5 flex flex-col gap-2 items-center text-sm text-[#1c1d1d]'>
-              <Link to={path.register} className='capitalize'>
-                Tạo tài khoản
-              </Link>
               <Link to={path.home}>Quay về cửa hàng</Link>
-              <Link to={path.forgot_password}>Quên mật khẩu?</Link>
             </div>
           </form>
         </div>
       </div>
+
+      <FinalRegisterModal open={open} closeModal={closeModal} />
     </div>
   )
 }

@@ -15,7 +15,7 @@ const sendMail = async ({ email, html, subject }) => {
   });
 
   let info = await transporter.sendMail({
-    from: '"Tech-Shop" <no-reply@techshop.com>',
+    from: '"Digital World" <no-reply@digital-world.com>',
     to: email,
     subject: subject,
     html: html,

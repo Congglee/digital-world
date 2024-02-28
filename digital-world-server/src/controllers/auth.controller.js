@@ -66,9 +66,7 @@ const registerController = async (req, res) => {
     };
     return responseSuccess(res, response);
   }
-  throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
-    email: "Email đã tồn tại",
-  });
+  throw new ErrorHandler(STATUS.BAD_REQUEST, "Email đã tồn tại");
 };
 
 const finalRegisterController = async (req, res) => {
