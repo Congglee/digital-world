@@ -53,6 +53,7 @@ module.exports = {
         jsxSingleQuote: true
       }
     ],
-    '@typescript-eslint/no-explicit-any': 'off'
+    '@typescript-eslint/no-explicit-any': 'off',
+    'import/no-commonjs': 'allow'
   }
 }

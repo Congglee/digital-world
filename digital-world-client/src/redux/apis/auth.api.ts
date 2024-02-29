@@ -10,6 +10,8 @@ export const URL_REGISTER = 'register'
 export const URL_FINAL_REGISTER = 'final-register'
 export const URL_LOGOUT = 'logout'
 export const URL_REFRESH_TOKEN = 'refresh-access-token'
+export const URL_FORGOT_PASSWORD = 'forgot-password'
+export const URL_RESET_PASSWORD = 'reset-password'
 
 const reducerPath = 'auth/api' as const
 const tagTypes = ['Auth'] as const
@@ -28,9 +30,25 @@ export const authApi = createApi({
       }),
       finalRegister: build.mutation<AxiosResponse<AuthResponse>, { token: string }>({
         query: (payload) => ({ url: `${URL_FINAL_REGISTER}/${payload.token}`, method: 'PUT', data: payload })
+      }),
+      forgotPassword: build.mutation<AxiosResponse<SuccessResponse<string>>, Pick<Schema, 'email'>>({
+        query: (payload) => ({ url: URL_FORGOT_PASSWORD, method: 'POST', data: payload })
+      }),
+      resetPassword: build.mutation<AxiosResponse<SuccessResponse<string>>, { token: string; password: string }>({
+        query: (payload) => ({ url: URL_RESET_PASSWORD, method: 'PUT', data: payload })
+      }),
+      logout: build.mutation({
+        query: () => ({ url: URL_LOGOUT, method: 'POST' })
       })
     }
   }
 })
 
-export const { useLoginMutation, useRegisterMutation, useFinalRegisterMutation } = authApi
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useFinalRegisterMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useLogoutMutation
+} = authApi

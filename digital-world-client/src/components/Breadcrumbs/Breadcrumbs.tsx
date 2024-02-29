@@ -1,8 +1,8 @@
 import { Fragment } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import path from 'src/constants/path'
 
-function translatePathname(pathname: string) {
+function translatePathname(pathname: string, tokenPathName?: string) {
   switch (pathname) {
     case 'home':
       return 'Trang chủ'
@@ -10,6 +10,14 @@ function translatePathname(pathname: string) {
       return 'Đăng nhập'
     case 'register':
       return 'Đăng ký'
+    case 'forgot-password':
+      return 'Quên mật khẩu'
+    case 'reset-password':
+      return 'Đổi mật khẩu'
+    case tokenPathName:
+      return ''
+    case `reset-password/${tokenPathName}`:
+      return 'Đổi mật khẩu'
     default:
       return pathname
   }
@@ -17,6 +25,7 @@ function translatePathname(pathname: string) {
 
 export default function Breadcrumbs() {
   const location = useLocation()
+  const { token } = useParams()
 
   let currentLink = ''
   const crumbs = location.pathname
@@ -24,10 +33,10 @@ export default function Breadcrumbs() {
     .filter((crumb) => crumb !== '')
     .map((crumb) => {
       currentLink += `/${crumb}`
-      const translatedCrumb = translatePathname(crumb)
+      const translatedCrumb = token ? translatePathname(crumb, token) : translatePathname(crumb)
       return (
         <Fragment key={crumb}>
-          <span>›</span>
+          {crumb !== token && <span>›</span>}
           <Link to={currentLink} className='capitalize text-[#1c1d1d] text-sm'>
             {translatedCrumb}
           </Link>
@@ -49,7 +58,7 @@ export default function Breadcrumbs() {
     <div className='py-[15px] bg-[#f7f7f7]'>
       <div className='container'>
         <h3 className='uppercase text-[#151515] mb-2 font-bold text-lg'>
-          {translatePathname(currentLink.replace('/', ''))}
+          {translatePathname(currentLink.replace('/', ''), token)}
         </h3>
         <nav className='flex items-center gap-1'>{crumbs}</nav>
       </div>

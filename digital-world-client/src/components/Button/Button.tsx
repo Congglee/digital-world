@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from 'react'
-import { twMerge } from 'src/utils/utils'
+import { cn } from 'src/utils/utils'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
@@ -9,7 +9,7 @@ export default function Button(props: ButtonProps) {
   const { className, isLoading, disabled, children, ...rest } = props
 
   return (
-    <button className={twMerge(className, { 'cursor-not-allowed': disabled })} disabled={disabled} {...rest}>
+    <button className={cn(className, { 'cursor-not-allowed': disabled })} disabled={disabled} {...rest}>
       <span>{children}</span>
       {isLoading && (
         <svg

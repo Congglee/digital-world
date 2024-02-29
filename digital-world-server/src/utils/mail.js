@@ -49,7 +49,7 @@ const generateResetPasswordEmail = (token) => {
       </div>
       <div style="font-size: 16px; color: #555;">
         <p style="margin-bottom: 20px;">Vui lòng click vào liên kết bên dưới để thay đổi mật khẩu của bạn. Liên kết này sẽ hết hạn sau 15 phút kể từ bây giờ.</p>
-        <a href="${process.env.CLIENT_URL}/resetpassword/${token}" style="display: inline-block; background-color: #00a8e8; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Click vào đây để đặt lại mật khẩu của bạn</a>
+        <a href="${process.env.CLIENT_URL}/reset-password/${token}" style="display: inline-block; background-color: #00a8e8; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Click vào đây để đặt lại mật khẩu của bạn</a>
       </div>
       <div style="text-align: center; margin-top: 20px; color: #888;">
         <p>Nếu bạn không định đặt lại mật khẩu này, vui lòng bỏ qua email này.</p>

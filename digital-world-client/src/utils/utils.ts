@@ -1,9 +1,13 @@
-import clsx, { ClassValue } from 'clsx'
-import { twMerge as twMergeOriginal } from 'tailwind-merge'
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 import { ErrorResponse } from 'src/types/utils.type'
 import axios, { AxiosError } from 'axios'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 export function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryError {
   return typeof error === 'object' && error !== null && 'status' in error
@@ -48,8 +52,4 @@ export function isAxiosExpiredTokenError<UnauthorizedError>(error: unknown): err
     isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error) &&
     error.response?.data?.data?.name === 'EXPIRED_TOKEN'
   )
-}
-
-export function twMerge(...inputs: ClassValue[]) {
-  return twMergeOriginal(clsx(inputs))
 }

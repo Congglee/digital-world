@@ -3,16 +3,19 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
 import { useClickOutsideListener } from 'src/hooks/useOutsideClick'
-import { twMerge } from 'src/utils/utils'
+import { useAppSelector } from 'src/redux/hook'
+import { cn } from 'src/utils/utils'
 
 interface MenuDrawerProps {
   active: boolean
   setActive: React.Dispatch<React.SetStateAction<boolean>>
+  handleLogout: () => Promise<void>
 }
 
 export default function MenuDrawer(props: MenuDrawerProps) {
-  const { active, setActive } = props
+  const { active, setActive, handleLogout } = props
   const menuDrawerRef = useRef<HTMLDivElement | null>(null)
+  const { isAuthenticated } = useAppSelector((state) => state.auth)
 
   useClickOutsideListener(menuDrawerRef, () => {
     setActive(false)
@@ -20,7 +23,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
 
   return (
     <div
-      className={twMerge(
+      className={cn(
         'md:hidden fixed top-0 bottom-0 left-0 bg-[#1c1d1d] px-[10px] w-3/5 z-50',
         { 'animate-drawer-up': active },
         { 'animate-drawer-down': !active }
@@ -43,21 +46,30 @@ export default function MenuDrawer(props: MenuDrawerProps) {
         <li className='text-white uppercase py-3 border-b border-[#343535]'>Liên hệ</li>
       </ul>
       <div className='mb-5'>
-        <Link to={path.login} className='flex items-center text-white py-3'>
-          <LogIn size={20} />
-          <span className='pl-2 uppercase'>Đăng nhập</span>
-        </Link>
-        <Link to={path.register} className='flex items-center text-white py-3'>
-          <UserPlus size={20} />
-          <span className='pl-2 uppercase'>Tạo tài khoản</span>
-        </Link>
-        <Link to='/profile' className='flex items-center text-white py-3'>
-          <span className='uppercase'>Tài khoản</span>
-        </Link>
-        <button className='flex items-center text-white py-[10px]'>
-          <span className='uppercase'>Đăng xuất</span>
-        </button>
-        <div className='flex gap-1 text-xs cursor-pointer'>
+        {!isAuthenticated && (
+          <>
+            <Link to={path.login} className='flex items-center text-white py-3'>
+              <LogIn size={20} />
+              <span className='pl-2 uppercase'>Đăng nhập</span>
+            </Link>
+            <Link to={path.register} className='flex items-center text-white'>
+              <UserPlus size={20} />
+              <span className='pl-2 uppercase'>Tạo tài khoản</span>
+            </Link>
+          </>
+        )}
+
+        {isAuthenticated && (
+          <>
+            <Link to={path.profile} className='flex items-center text-white py-3'>
+              <span className='uppercase'>Tài khoản</span>
+            </Link>
+            <button className='flex items-center text-white' onClick={handleLogout}>
+              <span className='uppercase'>Đăng xuất</span>
+            </button>
+          </>
+        )}
+        <div className='flex mt-1 gap-1 text-xs cursor-pointer'>
           <Banknote size={18} />
           <span>VND</span>
           <ChevronDown size={16} />

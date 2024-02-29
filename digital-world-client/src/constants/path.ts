@@ -6,7 +6,18 @@ const path = {
   wishlist: '/wishlist',
   cart: '/cart',
   products: '/products',
-  forgot_password: '/forgotpassword'
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password/:token',
+  user: '/user',
+  profile: '/user/profile',
+  historyOrder: '/user/order',
+
+  dashboard: '/dashboard',
+  productsDashboard: '/dashboard/products',
+  categoryDashboard: '/dashboard/categories',
+  brandDashBoard: '/dashboard/brands',
+  userDashBoard: '/dashboard/users',
+  orderDashBoard: '/dashboard/orders'
 } as const
 
 export default path

@@ -93,7 +93,7 @@ export default function Login() {
                 Tạo tài khoản
               </Link>
               <Link to={path.home}>Quay về cửa hàng</Link>
-              <Link to={path.forgot_password}>Quên mật khẩu?</Link>
+              <Link to={path.forgotPassword}>Quên mật khẩu?</Link>
             </div>
           </form>
         </div>

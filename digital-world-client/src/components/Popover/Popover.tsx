@@ -43,6 +43,7 @@ export default function Popover({
           {open && (
             <motion.div
               ref={refs.setFloating}
+              className='font-Inter'
               style={{
                 position: strategy,
                 top: y ?? 0,
