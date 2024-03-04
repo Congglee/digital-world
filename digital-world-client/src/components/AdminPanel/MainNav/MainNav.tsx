@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Button } from 'src/components/ui/button'
 import path from 'src/constants/path'
 import { cn } from 'src/utils/utils'
@@ -7,41 +7,88 @@ export default function MainNav({ className, ...props }: React.HTMLAttributes<HT
   return (
     <nav className={cn('flex items-center', className)} {...props}>
       <Button asChild variant='ghost'>
-        <Link to={path.dashboard} className='text-sm font-medium transition-colors hover:text-primary'>
-          Overview
-        </Link>
+        <NavLink to={path.dashboard} end>
+          {({ isActive }) => (
+            <span
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              Trang chủ
+            </span>
+          )}
+        </NavLink>
       </Button>
       <Button asChild variant='ghost'>
-        <Link
-          to={path.categoryDashboard}
-          className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
-        >
-          Category
-        </Link>
+        <NavLink to={path.categoryDashboard} end>
+          {({ isActive }) => (
+            <span
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              Danh mục
+            </span>
+          )}
+        </NavLink>
       </Button>
       <Button asChild variant='ghost'>
-        <Link
-          to={path.productsDashboard}
-          className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
-        >
-          Product
-        </Link>
+        <NavLink to={path.productsDashboard} end>
+          {({ isActive }) => (
+            <span
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              Thương hiệu
+            </span>
+          )}
+        </NavLink>
       </Button>
       <Button asChild variant='ghost'>
-        <Link
-          to={path.userDashBoard}
-          className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
-        >
-          User
-        </Link>
+        <NavLink to={path.productsDashboard} end>
+          {({ isActive }) => (
+            <span
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              Sản phẩm
+            </span>
+          )}
+        </NavLink>
       </Button>
       <Button asChild variant='ghost'>
-        <Link
-          to='/examples/dashboard'
-          className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
-        >
-          Settings
-        </Link>
+        <NavLink to={path.userDashBoard} end>
+          {({ isActive }) => (
+            <span
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              Tài khoản
+            </span>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to='/examples/dashboard' end>
+          {({ isActive }) => (
+            <span
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              Cài đặt
+            </span>
+          )}
+        </NavLink>
       </Button>
     </nav>
   )

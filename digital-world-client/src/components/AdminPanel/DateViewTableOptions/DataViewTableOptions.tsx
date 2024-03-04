@@ -21,11 +21,11 @@ export default function DataTableViewOptions<TData>({ table }: DataTableViewOpti
       <DropdownMenuTrigger asChild>
         <Button variant='outline' size='sm' className='ml-auto hidden h-8 lg:flex'>
           <MoreHorizontalIcon className='mr-2 h-4 w-4' />
-          View
+          Xem
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[150px]'>
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+        <DropdownMenuLabel>Hiển thị cột</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
@@ -38,7 +38,7 @@ export default function DataTableViewOptions<TData>({ table }: DataTableViewOpti
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {column.columnDef.footer?.toString()}
               </DropdownMenuCheckboxItem>
             )
           })}

@@ -2,32 +2,33 @@ import { X } from 'lucide-react'
 import { Table } from '@tanstack/react-table'
 import { Input } from 'src/components/ui/input'
 import { Button } from 'src/components/ui/button'
-import { priorities, statuses } from 'src/utils/data'
 import DataTableFacetedFilter from '../DataTableFacetedFilter'
 import DataTableViewOptions from '../DateViewTableOptions'
+// import { categoriesName, priorities } from 'src/utils/data'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  placeholder: string
 }
 
-export default function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export default function DataTableToolbar<TData>({ table, placeholder }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 items-center space-x-2'>
         <Input
-          placeholder='Filter tasks...'
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
+          placeholder={placeholder}
+          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
           className='h-8 w-[150px] lg:w-[250px]'
         />
-        {table.getColumn('status') && (
-          <DataTableFacetedFilter column={table.getColumn('status')} title='Status' options={statuses} />
-        )}
-        {table.getColumn('priority') && (
+        {/* {table.getColumn('name') && (
+          <DataTableFacetedFilter column={table.getColumn('name')} title='Tên danh mục' options={categoriesName} />
+        )} */}
+        {/* {table.getColumn('priority') && (
           <DataTableFacetedFilter column={table.getColumn('priority')} title='Priority' options={priorities} />
-        )}
+        )} */}
         {isFiltered && (
           <Button variant='ghost' onClick={() => table.resetColumnFilters()} className='h-8 px-2 lg:px-3'>
             Reset

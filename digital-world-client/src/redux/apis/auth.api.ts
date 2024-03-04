@@ -20,7 +20,7 @@ export const authApi = createApi({
   reducerPath,
   tagTypes,
   baseQuery: axiosBaseQuery(),
-  endpoints(build) {
+  endpoints: (build) => {
     return {
       login: build.mutation<AxiosResponse<AuthResponse>, Pick<Schema, 'email' | 'password'>>({
         query: (payload) => ({ url: URL_LOGIN, method: 'POST', data: payload })
@@ -37,7 +37,7 @@ export const authApi = createApi({
       resetPassword: build.mutation<AxiosResponse<SuccessResponse<string>>, { token: string; password: string }>({
         query: (payload) => ({ url: URL_RESET_PASSWORD, method: 'PUT', data: payload })
       }),
-      logout: build.mutation({
+      logout: build.mutation<AxiosResponse<SuccessResponse<string>>, void>({
         query: () => ({ url: URL_LOGOUT, method: 'POST' })
       })
     }

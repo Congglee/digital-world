@@ -332,7 +332,7 @@ export default function Header() {
   const [logoutMutation, { isSuccess }] = useLogoutMutation()
 
   const handleLogout = async () => {
-    await logoutMutation({})
+    await logoutMutation()
   }
 
   useEffect(() => {

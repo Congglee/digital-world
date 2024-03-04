@@ -35,4 +35,16 @@ export const schema = yup.object({
     .max(160, 'Độ dài từ 6 - 160 ký tự')
 })
 
+export const categorySchema = yup.object({
+  name: yup
+    .string()
+    .trim()
+    .required('Tên danh mục là bắt buộc')
+    .min(5, 'Độ dài từ 5 - 160 ký tự')
+    .max(160, 'Độ dài từ 5 - 160 ký tự'),
+  brands: yup.array().of(yup.string()).min(1, 'Vui lòng chọn ít nhất một thương hiệu').required()
+})
+
+export type CategorySchema = yup.InferType<typeof categorySchema>
+
 export type Schema = yup.InferType<typeof schema>

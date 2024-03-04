@@ -1,9 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from 'src/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
-import OverviewChart from '../../components/OverviewChart'
-import RecentSales from '../../components/RecentSales'
 import CalendarDateRangePicker from 'src/components/AdminPanel/CalendarDateRangePicker'
 import { Button } from 'src/components/ui/button'
+import OverviewChart from './components/OverviewChart'
+import RecentSales from './components/RecentSales'
 
 export default function Overview() {
   return (

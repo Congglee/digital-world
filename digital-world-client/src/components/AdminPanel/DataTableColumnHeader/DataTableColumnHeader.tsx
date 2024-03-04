@@ -1,4 +1,4 @@
-import { ArrowDownIcon, ArrowUpIcon, CarrotIcon, EyeOff } from 'lucide-react'
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDown, EyeOff } from 'lucide-react'
 import { Column } from '@tanstack/react-table'
 
 import {
@@ -36,23 +36,23 @@ export default function DataTableColumnHeader<TData, TValue>({
             ) : column.getIsSorted() === 'asc' ? (
               <ArrowUpIcon className='ml-2 h-4 w-4' />
             ) : (
-              <CarrotIcon className='ml-2 h-4 w-4' />
+              <ChevronsUpDown className='ml-2 h-4 w-4' />
             )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start'>
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUpIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Asc
+            Tăng dần
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDownIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Desc
+            Giảm dần
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
             <EyeOff className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Hide
+            Ẩn
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
