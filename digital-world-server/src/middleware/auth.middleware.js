@@ -31,7 +31,7 @@ const verifyAccessToken = async (req, res, next) => {
   }
   return responseError(
     res,
-    new ErrorHandler(STATUS.UNAUTHORIZED, "Token không được gửi")
+    new ErrorHandler(STATUS.UNAUTHORIZED, "Vui lòng đăng nhập")
   );
 };
 
@@ -58,7 +58,7 @@ const verifyRefreshToken = async (req, res, next) => {
   }
   return responseError(
     res,
-    new ErrorHandler(STATUS.UNAUTHORIZED, "Token không được gửi")
+    new ErrorHandler(STATUS.UNAUTHORIZED, "Vui lòng đăng nhập")
   );
 };
 

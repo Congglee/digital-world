@@ -1,3 +1,8 @@
+export interface UploadResponse {
+  message: string
+  data: { url: string }[]
+}
+
 export interface SuccessResponse<Data> {
   message: string
   data: Data

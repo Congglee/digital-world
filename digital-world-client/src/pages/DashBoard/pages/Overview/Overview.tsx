@@ -1,20 +1,13 @@
+import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from 'src/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
-import CalendarDateRangePicker from 'src/components/AdminPanel/CalendarDateRangePicker'
-import { Button } from 'src/components/ui/button'
 import OverviewChart from './components/OverviewChart'
 import RecentSales from './components/RecentSales'
 
 export default function Overview() {
   return (
     <>
-      <div className='flex items-center justify-between space-y-2'>
-        <h2 className='text-3xl font-bold tracking-tight'>Dashboard</h2>
-        <div className='flex items-center space-x-2'>
-          <CalendarDateRangePicker />
-          <Button>Download</Button>
-        </div>
-      </div>
+      <PageHeading heading='Quản trị' />
       <Tabs defaultValue='overview' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='overview'>Overview</TabsTrigger>

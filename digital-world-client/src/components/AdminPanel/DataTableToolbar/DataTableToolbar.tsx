@@ -4,6 +4,7 @@ import { Input } from 'src/components/ui/input'
 import { Button } from 'src/components/ui/button'
 import DataTableFacetedFilter from '../DataTableFacetedFilter'
 import DataTableViewOptions from '../DateViewTableOptions'
+import { brandsOptions } from 'src/constants/data'
 // import { categoriesName, priorities } from 'src/utils/data'
 
 interface DataTableToolbarProps<TData> {
@@ -13,7 +14,6 @@ interface DataTableToolbarProps<TData> {
 
 export default function DataTableToolbar<TData>({ table, placeholder }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
-
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 items-center space-x-2'>
@@ -26,9 +26,9 @@ export default function DataTableToolbar<TData>({ table, placeholder }: DataTabl
         {/* {table.getColumn('name') && (
           <DataTableFacetedFilter column={table.getColumn('name')} title='Tên danh mục' options={categoriesName} />
         )} */}
-        {/* {table.getColumn('priority') && (
-          <DataTableFacetedFilter column={table.getColumn('priority')} title='Priority' options={priorities} />
-        )} */}
+        {table.getColumn('brand') && (
+          <DataTableFacetedFilter column={table.getColumn('brand')} title='Thương hiệu' options={brandsOptions} />
+        )}
         {isFiltered && (
           <Button variant='ghost' onClick={() => table.resetColumnFilters()} className='h-8 px-2 lg:px-3'>
             Reset

@@ -41,7 +41,7 @@ const addProductRules = () => {
       .exists({ checkFalsy: true })
       .withMessage("Thumb không được để trống")
       .isLength({ max: 1000 })
-      .withMessage("Thumb  phải ít hơn 1000 kí tự"),
+      .withMessage("Thumb phải ít hơn 1000 kí tự"),
     body("images")
       .if((value) => value !== undefined)
       .isArray()
@@ -64,8 +64,8 @@ const addProductRules = () => {
       .isNumeric()
       .withMessage("Số lượng phải ở định dạng number"),
     body("brand")
-      .exists({ checkFalsy: true })
-      .withMessage("Brand không được để trống")
+      // .exists({ checkFalsy: true })
+      // .withMessage("Brand không được để trống")
       .isLength({ max: 160 })
       .withMessage("Brand phải ít hơn 160 kí tự"),
     body("is_featured")

@@ -1,12 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { Download, PlusCircle } from 'lucide-react'
+import { PlusCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import CalendarDateRangePicker from 'src/components/AdminPanel/CalendarDateRangePicker'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
 import DataTable from 'src/components/AdminPanel/DataTable'
 import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHeader'
 import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
+import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import { useDeleteCategoryMutation, useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
@@ -28,7 +28,7 @@ export default function CategoryList() {
 
   useEffect(() => {
     if (deleteCategoryResult.isSuccess) {
-      toast.success(deleteCategoryResult.data?.data.message)
+      toast.success(deleteCategoryResult.data.data.message)
     }
   }, [deleteCategoryResult.isSuccess])
 
@@ -67,9 +67,6 @@ export default function CategoryList() {
       footer: 'Tên danh mục',
       cell: ({ row }) => {
         return <div className='font-medium'>{row.getValue('name')}</div>
-      },
-      filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id))
       }
     },
     {
@@ -112,20 +109,12 @@ export default function CategoryList() {
 
   return (
     <>
-      <div className='flex items-center justify-between space-y-2'>
-        <h2 className='text-3xl font-bold tracking-tight'>Danh mục</h2>
-        <div className='flex items-center space-x-2'>
-          <CalendarDateRangePicker />
-          <Button className='space-x-2'>
-            <Download />
-            <span>Tải về</span>
-          </Button>
-          <Button variant='outline' className='space-x-2 bg-blue-500' onClick={() => setAddCategoryDialogOpen(true)}>
-            <PlusCircle />
-            <span>Thêm danh mục</span>
-          </Button>
-        </div>
-      </div>
+      <PageHeading heading='Danh mục'>
+        <Button variant='outline' className='space-x-2 bg-blue-500' onClick={() => setAddCategoryDialogOpen(true)}>
+          <PlusCircle />
+          <span>Thêm danh mục</span>
+        </Button>
+      </PageHeading>
       <DataTable data={categoriesData?.data.categories || []} columns={columns} placeholder='Lọc danh mục...' />
       <AddCategoryDialog open={addCategoryDialogOpen} onOpenChange={setAddCategoryDialogOpen} />
       <UpdateCategoryDialog

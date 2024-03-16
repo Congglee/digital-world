@@ -18,11 +18,11 @@ interface AddCategoryDialogProps {
 }
 
 type FormData = Pick<CategorySchema, 'name' | 'brands'>
-const createCategorySchema = categorySchema.pick(['name', 'brands'])
+const addCategorySchema = categorySchema.pick(['name', 'brands'])
 
 export default function AddCategoryDialog({ open, onOpenChange }: AddCategoryDialogProps) {
   const form = useForm<FormData>({
-    resolver: yupResolver(createCategorySchema),
+    resolver: yupResolver(addCategorySchema),
     defaultValues: { name: '', brands: [] }
   })
   const [addCategoryMutation, { isLoading, isSuccess, data }] = useAddCategoryMutation()

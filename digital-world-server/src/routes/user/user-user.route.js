@@ -21,28 +21,4 @@ userUserRouter.put(
   wrapAsync(userController.updateMe)
 );
 
-userUserRouter.post(
-  "/add-to-cart",
-  userMiddleware.addToCartRules(),
-  helpersMiddleware.entityValidator,
-  authMiddleware.verifyAccessToken,
-  wrapAsync(userController.addToCart)
-);
-
-userUserRouter.put(
-  "/update-cart",
-  userMiddleware.updateCartRules(),
-  helpersMiddleware.entityValidator,
-  authMiddleware.verifyAccessToken,
-  wrapAsync(userController.updateCart)
-);
-
-userUserRouter.delete(
-  "/delete-products-cart",
-  userMiddleware.deleteProductsCartRules(),
-  helpersMiddleware.entityValidator,
-  authMiddleware.verifyAccessToken,
-  wrapAsync(userController.deleteProductsCart)
-);
-
 export default userUserRouter;

@@ -13,7 +13,10 @@ const path = {
   historyOrder: '/user/order',
 
   dashboard: '/dashboard',
+
   productsDashboard: '/dashboard/products',
+  addProduct: '/dashboard/products/add',
+
   categoryDashboard: '/dashboard/categories',
   brandDashBoard: '/dashboard/brands',
   userDashBoard: '/dashboard/users',

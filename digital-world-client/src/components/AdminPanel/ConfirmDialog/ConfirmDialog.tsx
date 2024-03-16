@@ -8,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from 'src/components/ui/alert-dialog'
+import { Button } from 'src/components/ui/button'
 
 interface confirmDialogProps {
   open: boolean
@@ -31,13 +32,15 @@ export default function ConfirmDialog(props: confirmDialogProps) {
           <AlertDialogCancel onClick={() => props.onOpenStateChange(!props.open)}>
             {props.cancelText || 'Hủy'}
           </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => {
-              if (props.onConfirm) props.onConfirm()
-            }}
-          >
-            {props.confirmText || 'OK'}
-          </AlertDialogAction>
+          <Button asChild variant='destructive'>
+            <AlertDialogAction
+              onClick={() => {
+                if (props.onConfirm) props.onConfirm()
+              }}
+            >
+              {props.confirmText || 'OK'}
+            </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
