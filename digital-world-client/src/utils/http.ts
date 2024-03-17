@@ -13,7 +13,7 @@ import {
   setProfileToLS,
   setRefreshTokenToLS
 } from './auth'
-import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
+import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './helper'
 
 export class Http {
   instance: AxiosInstance

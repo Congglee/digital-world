@@ -10,7 +10,7 @@ import { useLoginMutation } from 'src/redux/apis/auth.api'
 import { useAppDispatch } from 'src/redux/hook'
 import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
 import { Schema, schema } from 'src/utils/rules'
-import { isEntityError } from 'src/utils/utils'
+import { isEntityError } from 'src/utils/helper'
 
 type FormData = Pick<Schema, 'email' | 'password'>
 

@@ -9,7 +9,7 @@ import { useFinalRegisterMutation } from 'src/redux/apis/auth.api'
 import { useAppDispatch } from 'src/redux/hook'
 import { useNavigate } from 'react-router-dom'
 import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
-import { isEntityError } from 'src/utils/utils'
+import { isEntityError } from 'src/utils/helper'
 
 interface FinalRegisterModalProps {
   open: boolean

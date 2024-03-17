@@ -82,6 +82,9 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'drawer-up': 'drawer-up 0.3s linear both',
         'drawer-down': 'drawer-down 0.3s linear both'
+      },
+      screens: {
+        xs: '480px'
       }
     }
   },

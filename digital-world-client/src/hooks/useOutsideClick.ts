@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export function useClickOutsideListener(
+export function useOnClickOutside(
   ref: React.RefObject<HTMLElement>,
   callback: () => void,
   excludeRefs: React.RefObject<HTMLElement>[] = []

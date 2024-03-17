@@ -2,7 +2,7 @@ import { Banknote, ChevronDown, LogIn, Search, UserPlus, X } from 'lucide-react'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
-import { useClickOutsideListener } from 'src/hooks/useOutsideClick'
+import { useOnClickOutside } from 'src/hooks/useOutsideClick'
 import { useAppSelector } from 'src/redux/hook'
 import { cn } from 'src/utils/utils'
 
@@ -17,7 +17,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
   const menuDrawerRef = useRef<HTMLDivElement | null>(null)
   const { isAuthenticated } = useAppSelector((state) => state.auth)
 
-  useClickOutsideListener(menuDrawerRef, () => {
+  useOnClickOutside(menuDrawerRef, () => {
     setActive(false)
   })
 

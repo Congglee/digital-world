@@ -30,7 +30,7 @@ const ProductSchema = new Schema(
     quantity: { type: Number, default: 0 },
     sold: { type: Number, default: 0 },
     view: { type: Number, default: 0 },
-    brand: { type: String, required: true },
+    brand: { type: String },
     is_featured: { type: Boolean, default: false },
     is_published: { type: Boolean, default: true },
     // variants: [VariantSchema],

@@ -21,6 +21,7 @@ const addProduct = async (req, res) => {
     quantity,
     brand,
     is_featured,
+    is_published,
   } = form;
   const product = {
     name,
@@ -34,6 +35,7 @@ const addProduct = async (req, res) => {
     quantity,
     brand,
     is_featured,
+    is_published,
   };
   const productAdd = await new ProductModel(product).save();
   const response = {
@@ -174,6 +176,7 @@ const updateProduct = async (req, res) => {
     quantity,
     brand,
     is_featured,
+    is_published,
   } = form;
   const product = omitBy(
     {
@@ -188,6 +191,7 @@ const updateProduct = async (req, res) => {
       quantity,
       brand,
       is_featured,
+      is_published,
     },
     (value) => value === undefined || value === ""
   );

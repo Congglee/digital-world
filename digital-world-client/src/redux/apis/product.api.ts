@@ -5,9 +5,13 @@ import axiosBaseQuery from '../helper'
 import { Product, ProductList } from 'src/types/product.type'
 import { ProductSchema } from 'src/utils/rules'
 
-export const ADMIN_PRODUCT_URL = 'admin/products/'
-export const URL_GET_PRODUCTS = `${ADMIN_PRODUCT_URL}/get-products`
+export const PRODUCT_URL = 'products/'
+export const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
+
+export const URL_GET_PRODUCTS = 'get-products'
+export const URL_GET_PRODUCT = 'get-product'
 export const URL_ADD_PRODUCT = `${ADMIN_PRODUCT_URL}/add-product`
+export const URL_UPDATE_PRODUCT = `${ADMIN_PRODUCT_URL}/update-product`
 export const URL_DELETE_PRODUCT = `${ADMIN_PRODUCT_URL}/delete-product`
 
 const reducerPath = 'product/api' as const
@@ -19,36 +23,34 @@ export const productApi = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => ({
     getProducts: build.query<SuccessResponse<ProductList>, void>({
-      query: () => ({ url: URL_GET_PRODUCTS, method: 'GET' }),
+      query: () => ({ url: `${PRODUCT_URL}${URL_GET_PRODUCTS}`, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<ProductList>>) => response.data,
       providesTags: tagTypes
     }),
-    addProduct: build.mutation<
-      AxiosResponse<SuccessResponse<Product>>,
-      Pick<
-        ProductSchema,
-        | 'name'
-        | 'thumb'
-        | 'images'
-        | 'price'
-        | 'price_before_discount'
-        | 'quantity'
-        | 'category'
-        | 'brand'
-        | 'is_featured'
-        | 'is_published'
-        | 'overview'
-        | 'description'
-      >
-    >({
+    addProduct: build.mutation<AxiosResponse<SuccessResponse<Product>>, ProductSchema>({
       query: (payload) => ({ url: URL_ADD_PRODUCT, method: 'POST', data: payload }),
-      invalidatesTags: tagTypes
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+    }),
+    getProductDetail: build.query<AxiosResponse<SuccessResponse<Product>>, string>({
+      query: (id) => ({ url: `${PRODUCT_URL}${URL_GET_PRODUCT}/${id}`, method: 'GET' }),
+      providesTags: (result, _error, _args) =>
+        result ? [{ type: 'Product' as const, id: result?.data.data._id }] : tagTypes
+    }),
+    updateProduct: build.mutation<AxiosResponse<SuccessResponse<Product>>, { id: string; payload: ProductSchema }>({
+      query: ({ id, payload }) => ({ url: `${URL_UPDATE_PRODUCT}/${id}`, method: 'PUT', data: payload }),
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
     }),
     deleteProduct: build.mutation<AxiosResponse<SuccessResponse<string>>, string>({
       query: (id) => ({ url: `${URL_DELETE_PRODUCT}/${id}`, method: 'DELETE' }),
-      invalidatesTags: tagTypes
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
     })
   })
 })
 
-export const { useGetProductsQuery, useDeleteProductMutation, useAddProductMutation } = productApi
+export const {
+  useGetProductsQuery,
+  useDeleteProductMutation,
+  useAddProductMutation,
+  useGetProductDetailQuery,
+  useUpdateProductMutation
+} = productApi

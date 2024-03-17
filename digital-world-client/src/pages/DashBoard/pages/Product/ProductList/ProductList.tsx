@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { PlusCircle, Star } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
 import DataTable from 'src/components/AdminPanel/DataTable'
@@ -21,6 +21,7 @@ export default function ProductList() {
   const [deleteProductDialogOpen, setDeleteProductDialogOpen] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
   const [deleteProduct, deleteProductResult] = useDeleteProductMutation()
+  const navigate = useNavigate()
 
   const handleDeleteProduct = async (id: string) => {
     await deleteProduct(id)
@@ -99,14 +100,6 @@ export default function ProductList() {
       }
     },
     {
-      accessorKey: 'quantity',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Số lượng' />,
-      footer: 'Số lượng',
-      cell: ({ row }) => {
-        return <div className='font-medium'>{formatCurrency(row.getValue('quantity'))}</div>
-      }
-    },
-    {
       accessorKey: 'total_ratings',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Đánh giá' />,
       footer: 'Đánh giá',
@@ -141,22 +134,21 @@ export default function ProductList() {
     {
       id: 'actions',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Thao tác' />,
-      cell: ({ row }) =>
-        row.getValue('name') !== 'Uncategorized' ? (
-          <DataTableRowActions
-            row={row}
-            enableEditing={true}
-            enableDeleting={true}
-            onDelete={() => {
-              setSelectedProduct(row.original._id)
-              setDeleteProductDialogOpen(true)
-            }}
-            // onEdit={() => {
-            //   setSelectedCategory(row.original)
-            //   setUpdateCategoryDiglogOpen(true)
-            // }}
-          />
-        ) : null
+      cell: ({ row }) => (
+        <DataTableRowActions
+          row={row}
+          enableEditing={true}
+          enableDeleting={true}
+          onDelete={() => {
+            setSelectedProduct(row.original._id)
+            setDeleteProductDialogOpen(true)
+          }}
+          onEdit={() => {
+            navigate(path.updateProduct.replace(':product_id', row.original._id))
+            // setSelectedCategory(row.original)
+          }}
+        />
+      )
     }
   ]
 

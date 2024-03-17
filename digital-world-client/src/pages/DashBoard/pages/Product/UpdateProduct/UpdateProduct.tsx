@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { ImageUp, List, Loader } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import RichTextEditor from 'src/components/AdminPanel/RichTextEditor'
@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from 's
 import { Switch } from 'src/components/ui/switch'
 import path from 'src/constants/path'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
-import { useAddProductMutation } from 'src/redux/apis/product.api'
+import { useGetProductDetailQuery, useUpdateProductMutation } from 'src/redux/apis/product.api'
 import { useUploadImagesMutation } from 'src/redux/apis/upload.api'
 import { isEntityError } from 'src/utils/helper'
 import { ProductSchema, productSchema } from 'src/utils/rules'
@@ -21,7 +21,7 @@ import { handleValidateFile, handleValidateMultiFile } from 'src/utils/utils'
 import PreviewProductImages from '../components/PreviewProductImages'
 
 type FormData = ProductSchema
-const addProductSchema = productSchema
+const updateProductSchema = productSchema
 
 const initialFormState = {
   name: '',
@@ -38,12 +38,16 @@ const initialFormState = {
   description: ''
 }
 
-export default function AddProduct() {
-  const { data: categoriesData } = useGetAllCategoriesQuery()
+export default function UpdateProduct() {
+  const { product_id } = useParams()
   const form = useForm<FormData>({
-    resolver: yupResolver(addProductSchema),
+    resolver: yupResolver(updateProductSchema),
     defaultValues: initialFormState
   })
+  const { data: productDetailData, refetch } = useGetProductDetailQuery(product_id!)
+  const { data: categoriesData } = useGetAllCategoriesQuery()
+  const product = productDetailData?.data.data
+
   const thumbFileInputRef = useRef<HTMLInputElement>(null)
   const [thumbFile, setThumbFile] = useState<File | null>(null)
   const previewThumbImage = useMemo(() => {
@@ -55,6 +59,7 @@ export default function AddProduct() {
   const previewImages = useMemo(() => {
     return imageFiles.length > 0 ? imageFiles.map((file) => URL.createObjectURL(file)) : []
   }, [imageFiles])
+  const [productImages, setProductImages] = useState<string[]>([])
 
   const selectedCategory = useMemo(() => {
     return categoriesData?.data.categories.find((category) => category._id === form.watch('category'))
@@ -64,12 +69,26 @@ export default function AddProduct() {
   }, [selectedCategory])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
-  const [addProduct, { data, isSuccess, isError, error, isLoading }] = useAddProductMutation()
+  const [updateProduct, { data, isSuccess, isError, error, isLoading }] = useUpdateProductMutation()
 
-  const handleRemoveImageFiles = (index: number) => {
-    const updatedFiles = imageFiles.filter((_, idx) => idx !== index)
-    setImageFiles(updatedFiles)
-  }
+  useEffect(() => {
+    if (product) {
+      form.setValue('name', product.name)
+      form.setValue('thumb', product.thumb)
+      form.setValue('images', product.images)
+      form.setValue('price', product.price)
+      form.setValue('price_before_discount', product.price_before_discount)
+      form.setValue('brand', product.brand)
+      form.setValue('category', product.category._id)
+      form.setValue('quantity', product.quantity)
+      form.setValue('is_featured', product.is_featured)
+      form.setValue('is_published', product.is_published)
+      form.setValue('overview', product.overview)
+      form.setValue('description', product.description)
+
+      setProductImages(product.images)
+    }
+  }, [product, form.setValue])
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
@@ -95,7 +114,15 @@ export default function AddProduct() {
           }
         }
       }
-      await addProduct({ ...data, thumb: thumbUrl, images: imagesUrls })
+      const payloadData = {
+        ...data,
+        thumb: thumbUrl !== '' ? thumbUrl : data.thumb,
+        images: imagesUrls.length > 0 ? imagesUrls : productImages
+      }
+      await updateProduct({
+        id: product_id!,
+        payload: payloadData
+      })
     } catch (error) {
       console.log(error)
     }
@@ -104,9 +131,7 @@ export default function AddProduct() {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.data.message)
-      form.reset()
-      setThumbFile(null)
-      setImageFiles([])
+      refetch()
     }
   }, [isSuccess])
 
@@ -124,9 +149,19 @@ export default function AddProduct() {
     }
   }, [isError])
 
+  const handleRemoveImageFiles = (index: number) => {
+    const updatedFiles = imageFiles.filter((_, idx) => idx !== index)
+    setImageFiles(updatedFiles)
+  }
+
+  const handleRemoveProductImages = (index: number) => {
+    const updatedProductImages = productImages.filter((_, idx) => idx !== index)
+    setProductImages(updatedProductImages)
+  }
+
   return (
     <>
-      <PageHeading heading='Thêm mới sản phẩm' isDownload={false}>
+      <PageHeading heading='Cập nhật sản phẩm' isDownload={false}>
         <Link to={path.productsDashboard}>
           <Button variant='outline' className='space-x-2 bg-blue-500'>
             <List />
@@ -205,9 +240,11 @@ export default function AddProduct() {
                       <span>Chọn ảnh</span>
                     </Button>
                     <FormMessage />
-                    {previewThumbImage !== '' && (
-                      <img src={previewThumbImage} alt='product-thumb' className='w-full object-cover' />
-                    )}
+                    <img
+                      src={previewThumbImage || product?.thumb}
+                      alt='product-thumb'
+                      className='rounded-md object-cover'
+                    />
                   </div>
                 </FormItem>
               )}
@@ -244,7 +281,9 @@ export default function AddProduct() {
                     <FormMessage />
                     <PreviewProductImages
                       previewImages={previewImages}
+                      productImages={productImages}
                       handleRemoveImageFiles={handleRemoveImageFiles}
+                      handleRemoveProductImages={handleRemoveProductImages}
                     />
                   </div>
                 </FormItem>
@@ -262,7 +301,7 @@ export default function AddProduct() {
                         {field.value ? (
                           <SelectValue placeholder='Hãy chọn một danh mục sản phẩm' />
                         ) : (
-                          'Hãy chọn một danh mục sản phẩm'
+                          `${product?.category.name}`
                         )}
                       </SelectTrigger>
                     </FormControl>
@@ -290,7 +329,7 @@ export default function AddProduct() {
                         {field.value ? (
                           <SelectValue placeholder='Hãy chọn một thương hiệu sản phẩm' />
                         ) : (
-                          'Hãy chọn một thương hiệu sản phẩm'
+                          `${product?.brand}`
                         )}
                       </SelectTrigger>
                     </FormControl>
@@ -341,7 +380,7 @@ export default function AddProduct() {
                   <FormItem className='flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
                     <FormLabel>Sản phẩm nổi bật?</FormLabel>
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} style={{ marginTop: 0 }} />
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -355,7 +394,7 @@ export default function AddProduct() {
                   <FormItem>
                     <FormLabel>Thông số kỹ thuật</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value as string} onChange={field.onChange} />
+                      <RichTextEditor value={field.value!} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -370,7 +409,7 @@ export default function AddProduct() {
                   <FormItem>
                     <FormLabel>Mô tả sản phẩm</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value as string} onChange={field.onChange} editorHeight={500} />
+                      <RichTextEditor value={field.value!} onChange={field.onChange} editorHeight={500} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -381,7 +420,7 @@ export default function AddProduct() {
           <div className='space-x-4'>
             <Button type='submit' disabled={uploadImagesResult.isLoading || isLoading}>
               {uploadImagesResult.isLoading || isLoading ? <Loader className='animate-spin w-4 h-4 mr-1' /> : null}
-              Thêm mới
+              Cập nhật
             </Button>
             <Button type='button' variant='outline' className='px-10'>
               Hủy

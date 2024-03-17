@@ -16,6 +16,7 @@ const path = {
 
   productsDashboard: '/dashboard/products',
   addProduct: '/dashboard/products/add',
+  updateProduct: '/dashboard/products/update/:product_id',
 
   categoryDashboard: '/dashboard/categories',
   brandDashBoard: '/dashboard/brands',

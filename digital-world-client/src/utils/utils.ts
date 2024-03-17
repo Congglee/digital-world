@@ -1,59 +1,50 @@
-import { type ClassValue, clsx } from 'clsx'
+import { clsx, type ClassValue } from 'clsx'
+import { toast } from 'react-toastify'
+import config from 'src/constants/config'
 import { twMerge } from 'tailwind-merge'
-import { ErrorResponse } from 'src/types/utils.type'
-import axios, { AxiosError } from 'axios'
-import HttpStatusCode from 'src/constants/httpStatusCode.enum'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryError {
-  return typeof error === 'object' && error !== null && 'status' in error
+export function formatCurrency(currency: number) {
+  return new Intl.NumberFormat('de-De').format(currency)
 }
 
-interface ErrorFormObject {
-  [key: string | number]: string | ErrorFormObject | ErrorFormObject[]
-}
-
-interface EntityError {
-  status: 422
-  data: {
-    data: ErrorFormObject
+export function handleValidateMultiFile(
+  event: React.ChangeEvent<HTMLInputElement>,
+  onChange: (...event: any[]) => void,
+  handleImageFiles: (value: React.SetStateAction<File[]>) => void
+) {
+  const filesFromLocal = event.target.files
+  if (filesFromLocal) {
+    const validFiles = Array.from(filesFromLocal).filter(
+      (file) => file.size < config.maxSizeUpload && file.type.includes('image')
+    )
+    if (validFiles.length === 0) {
+      toast.error(
+        `Không có file hình ảnh hợp lệ nào được chọn. Kích thước file tối đa 5 MB, Định dạng: .JPG, .JPEG, .PNG, .WEBP`,
+        { position: 'top-center' }
+      )
+    } else {
+      handleImageFiles(validFiles)
+      onChange(validFiles.map((file) => URL.createObjectURL(file)))
+    }
   }
 }
 
-export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
-  // eslint-disable-next-line import/no-named-as-default-member
-  return axios.isAxiosError(error)
-}
-
-export function isAxiosUnprocessableEntityError<FormError>(error: unknown): error is AxiosError<FormError> {
-  return isAxiosError(error) && error.response?.status === HttpStatusCode.UnprocessableEntity
-}
-
-export function isEntityError(error: unknown): error is EntityError {
-  return (
-    isFetchBaseQueryError(error) &&
-    error.status === 422 &&
-    typeof error.data === 'object' &&
-    error.data !== null &&
-    !(error.data instanceof Array)
-  )
-}
-
-export function isAxiosUnauthorizedError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
-  return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized
-}
-
-export function isAxiosExpiredTokenError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
-  return (
-    isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error) &&
-    error.response?.data?.data?.name === 'EXPIRED_TOKEN'
-  )
-}
-
-export function formatCurrency(currency: number) {
-  return new Intl.NumberFormat('de-De').format(currency)
+export function handleValidateFile(
+  event: React.ChangeEvent<HTMLInputElement>,
+  onChange: (...event: any[]) => void,
+  handleImageFile: (value: React.SetStateAction<File | null>) => void
+) {
+  const fileFromLocal = event.target.files?.[0]
+  if (fileFromLocal && (fileFromLocal?.size >= config.maxSizeUpload || !fileFromLocal.type.includes('image'))) {
+    toast.error(`Dung lượng file tối đa 5 MB, Định dạng:.JPG, .JPEG, .PNG, .WEBP`, {
+      position: 'top-center'
+    })
+  } else {
+    handleImageFile(fileFromLocal as File)
+    onChange(URL.createObjectURL(fileFromLocal!))
+  }
 }

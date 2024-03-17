@@ -12,6 +12,7 @@ import DashboardLayout from './layouts/DashboardLayout'
 import CategoryList from './pages/DashBoard/pages/Category/CategoryList'
 import ProductList from './pages/DashBoard/pages/Product/ProductList'
 import AddProduct from './pages/DashBoard/pages/Product/AddProduct'
+import UpdateProduct from './pages/DashBoard/pages/Product/UpdateProduct'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -72,6 +73,10 @@ export default function useRouteElements() {
         {
           path: path.addProduct,
           element: <AddProduct />
+        },
+        {
+          path: path.updateProduct,
+          element: <UpdateProduct />
         }
       ]
     },

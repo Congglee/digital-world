@@ -16,7 +16,7 @@ export default function DashboardLayout() {
             </div>
           </div>
         </div>
-        <div className='flex-1 md:px-20 space-y-4 p-10 pt-6'>
+        <div className='flex-1 lg:px-20 space-y-4 p-10 pt-6'>
           <Outlet />
         </div>
       </div>

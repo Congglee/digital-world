@@ -10,7 +10,7 @@ import Input from 'src/components/Input'
 import path from 'src/constants/path'
 import { useRegisterMutation } from 'src/redux/apis/auth.api'
 import { Schema, schema } from 'src/utils/rules'
-import { isEntityError } from 'src/utils/utils'
+import { isEntityError } from 'src/utils/helper'
 import FinalRegisterModal from './components/FinalRegisterModal'
 
 type FormData = Pick<Schema, 'name' | 'email' | 'password' | 'confirm_password'>
