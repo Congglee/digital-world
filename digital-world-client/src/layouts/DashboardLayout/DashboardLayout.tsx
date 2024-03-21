@@ -2,6 +2,8 @@ import { Outlet } from 'react-router-dom'
 import MainNav from 'src/components/AdminPanel/MainNav'
 import Search from 'src/components/AdminPanel/Search'
 import UserNav from 'src/components/AdminPanel/UserNav'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function DashboardLayout() {
   return (
@@ -9,7 +11,7 @@ export default function DashboardLayout() {
       <div className='flex-col md:flex text-white'>
         <div className='border-b'>
           <div className='flex h-16 items-center px-4'>
-            <MainNav className='lg:mx-5' />
+            <MainNav />
             <div className='ml-auto flex items-center space-x-4'>
               <Search />
               <UserNav />
@@ -20,6 +22,19 @@ export default function DashboardLayout() {
           <Outlet />
         </div>
       </div>
+      <ToastContainer
+        position='bottom-right'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='colored'
+        className='text-[15px]'
+      />
     </>
   )
 }

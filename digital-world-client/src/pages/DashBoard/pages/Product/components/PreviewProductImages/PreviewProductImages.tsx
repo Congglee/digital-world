@@ -15,10 +15,10 @@ export default function PreviewProductImages({
   handleRemoveProductImages
 }: PreviewProductImagesProps) {
   return (
-    <div className='grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-4'>
+    <div className='grid auto-fill-40 gap-4'>
       {previewImages.length > 0
         ? previewImages.map((imageUrl, index) => (
-            <div className='relative' key={index}>
+            <div className='relative h-[185px]' key={index}>
               <img src={imageUrl} alt={`product-image-${index}`} className='w-full h-full object-cover' />
               <Button
                 type='button'
@@ -30,7 +30,7 @@ export default function PreviewProductImages({
             </div>
           ))
         : productImages.map((imageUrl, index) => (
-            <div className='relative' key={index}>
+            <div className='relative h-[185px]' key={index}>
               <img src={imageUrl} alt={`product-image-${index}`} className='w-full h-full object-cover' />
               <Button
                 type='button'

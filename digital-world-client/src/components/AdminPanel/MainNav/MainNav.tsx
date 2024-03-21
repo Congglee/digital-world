@@ -1,147 +1,153 @@
-import { AlignJustify } from 'lucide-react'
+import { Gauge, Menu, Settings, ShoppingBag, UserRound } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { Button } from 'src/components/ui/button'
-import { Input } from 'src/components/ui/input'
-import { Label } from 'src/components/ui/label'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from 'src/components/ui/sheet'
+import { DialogClose } from 'src/components/ui/dialog'
+import { Sheet, SheetContent, SheetTrigger } from 'src/components/ui/sheet'
 import path from 'src/constants/path'
 import { cn } from 'src/utils/utils'
+import Search from '../Search'
+import { Brand, Category, Website } from 'src/utils/icons'
+
+function SideMenu({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
+  return (
+    <nav className={cn('hidden md:flex items-center overflow-auto', className)} {...props}>
+      <Button asChild variant='ghost'>
+        <NavLink to={path.home} end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <Website className='w-5 h-5' />
+              <span>Website</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to={path.dashboard} end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <Gauge className='w-5 h-5' />
+              <span>Trang chủ</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to={path.categoryDashboard} end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <Category className='w-5 h-5' />
+              <span>Danh mục</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to={path.brandDashBoard} end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <Brand className='w-5 h-5' />
+              <span>Thương hiệu</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to={path.productsDashboard} end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <ShoppingBag className='w-5 h-5' />
+              <span>Sản phẩm</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to={path.userDashBoard} end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <UserRound className='w-5 h-5' />
+              <span>Tài khoản</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to='/examples/dashboard' end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <Settings />
+              <span>Cài đặt</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+    </nav>
+  )
+}
 
 function MainNavDrawer() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='outline' className='block md:hidden'>
-          <AlignJustify />
+        <Button
+          variant='ghost'
+          className='border border-input hover:bg-accent hover:text-accent-foreground block md:hidden'
+        >
+          <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side='left'>
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>Make changes to your profile here. Click save when you're done.</SheetDescription>
-        </SheetHeader>
-        <div className='grid gap-4 py-4'>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='name' className='text-right'>
-              Name
-            </Label>
-            <Input id='name' value='Pedro Duarte' className='col-span-3' />
-          </div>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='username' className='text-right'>
-              Username
-            </Label>
-            <Input id='username' value='@peduarte' className='col-span-3' />
-          </div>
+      <SheetContent side='left' className='text-primary'>
+        <SideMenu className='flex flex-col items-start mb-5' />
+        <Search />
+        <div className='flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-5'>
+          <DialogClose className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2'>
+            Close
+          </DialogClose>
         </div>
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type='submit'>Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   )
 }
 
-export default function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
+export default function MainNav() {
   return (
     <>
-      <nav className={cn('hidden md:flex items-center overflow-x-auto', className)} {...props}>
-        <Button asChild variant='ghost'>
-          <NavLink to={path.dashboard} className='' end>
-            {({ isActive }) => (
-              <span
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
-                  !isActive ? 'text-muted-foreground' : null
-                )}
-              >
-                Trang chủ
-              </span>
-            )}
-          </NavLink>
-        </Button>
-        <Button asChild variant='ghost'>
-          <NavLink to={path.categoryDashboard} end>
-            {({ isActive }) => (
-              <span
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
-                  !isActive ? 'text-muted-foreground' : null
-                )}
-              >
-                Danh mục
-              </span>
-            )}
-          </NavLink>
-        </Button>
-        <Button asChild variant='ghost'>
-          <NavLink to={path.brandDashBoard} end>
-            {({ isActive }) => (
-              <span
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
-                  !isActive ? 'text-muted-foreground' : null
-                )}
-              >
-                Thương hiệu
-              </span>
-            )}
-          </NavLink>
-        </Button>
-        <Button asChild variant='ghost'>
-          <NavLink to={path.productsDashboard} end>
-            {({ isActive }) => (
-              <span
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
-                  !isActive ? 'text-muted-foreground' : null
-                )}
-              >
-                Sản phẩm
-              </span>
-            )}
-          </NavLink>
-        </Button>
-        <Button asChild variant='ghost'>
-          <NavLink to={path.userDashBoard} end>
-            {({ isActive }) => (
-              <span
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
-                  !isActive ? 'text-muted-foreground' : null
-                )}
-              >
-                Tài khoản
-              </span>
-            )}
-          </NavLink>
-        </Button>
-        <Button asChild variant='ghost'>
-          <NavLink to='/examples/dashboard' end>
-            {({ isActive }) => (
-              <span
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
-                  !isActive ? 'text-muted-foreground' : null
-                )}
-              >
-                Cài đặt
-              </span>
-            )}
-          </NavLink>
-        </Button>
-      </nav>
+      <SideMenu className='lg:mx-4' />
       <MainNavDrawer />
     </>
   )

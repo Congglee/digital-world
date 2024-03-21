@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { PlusCircle, Star } from 'lucide-react'
+import { PlusCircle, Star, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -11,7 +11,11 @@ import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
-import { useDeleteProductMutation, useGetProductsQuery } from 'src/redux/apis/product.api'
+import {
+  useDeleteManyProductsMutation,
+  useDeleteProductMutation,
+  useGetProductsQuery
+} from 'src/redux/apis/product.api'
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
 import { formatCurrency } from 'src/utils/utils'
@@ -19,12 +23,19 @@ import { formatCurrency } from 'src/utils/utils'
 export default function ProductList() {
   const { data: productsData } = useGetProductsQuery()
   const [deleteProductDialogOpen, setDeleteProductDialogOpen] = useState<boolean>(false)
+  const [deleteProductsDialogOpen, setDeleteProductsDialogOpen] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
+  const [selectedProductsIds, setSelectedProductsIds] = useState<string[]>([])
   const [deleteProduct, deleteProductResult] = useDeleteProductMutation()
+  const [deleteManyProducts, deleteManyProductsResult] = useDeleteManyProductsMutation()
   const navigate = useNavigate()
 
   const handleDeleteProduct = async (id: string) => {
     await deleteProduct(id)
+  }
+
+  const handleDeleteManyProducts = async (productIds: string[]) => {
+    await deleteManyProducts({ list_id: productIds })
   }
 
   useEffect(() => {
@@ -32,6 +43,12 @@ export default function ProductList() {
       toast.success(deleteProductResult.data.data.message)
     }
   }, [deleteProductResult.isSuccess])
+
+  useEffect(() => {
+    if (deleteManyProductsResult.isSuccess) {
+      toast.success(deleteManyProductsResult.data.data.message)
+    }
+  }, [deleteManyProductsResult.isSuccess])
 
   const columns: ColumnDef<Product>[] = [
     {
@@ -47,7 +64,15 @@ export default function ProductList() {
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value)
+            const productId = row.original._id
+            if (!row.getIsSelected()) {
+              setSelectedProductsIds((prevIds) => [...prevIds, productId])
+            } else {
+              setSelectedProductsIds((prevIds) => prevIds.filter((id) => id !== productId))
+            }
+          }}
           aria-label='Select row'
           className='translate-y-[2px]'
         />
@@ -145,7 +170,6 @@ export default function ProductList() {
           }}
           onEdit={() => {
             navigate(path.updateProduct.replace(':product_id', row.original._id))
-            // setSelectedCategory(row.original)
           }}
         />
       )
@@ -156,13 +180,32 @@ export default function ProductList() {
     <>
       <PageHeading heading='Sản phẩm'>
         <Link to={path.addProduct}>
-          <Button variant='outline' className='space-x-2 bg-blue-500'>
+          <Button variant='outline' className='w-full space-x-2 bg-blue-500'>
             <PlusCircle />
             <span>Thêm sản phẩm</span>
           </Button>
         </Link>
+        <Button
+          variant='destructive'
+          className='space-x-2'
+          onClick={() => {
+            if (selectedProductsIds.length > 0) {
+              setDeleteProductsDialogOpen(true)
+            } else {
+              toast.info('Vui lòng chọn một sản phẩm')
+            }
+          }}
+        >
+          <Trash2 className='size-5' />
+          <span>Xóa</span>
+        </Button>
       </PageHeading>
-      <DataTable data={productsData?.data.products || []} columns={columns} placeholder='Lọc sản phẩm...' />
+      <DataTable
+        data={productsData?.data.products || []}
+        columns={columns}
+        placeholder='Lọc sản phẩm...'
+        handleSelectedRowsIds={setSelectedProductsIds}
+      />
       <ConfirmDialog
         open={deleteProductDialogOpen}
         onOpenStateChange={setDeleteProductDialogOpen}
@@ -170,8 +213,20 @@ export default function ProductList() {
         description='Sản phẩm sau khi bị xóa không thể khôi phục'
         onConfirm={() => {
           if (!deleteProductResult.isLoading) {
-            handleDeleteProduct(selectedProduct as string)
+            handleDeleteProduct(selectedProduct!)
             setSelectedProduct(null)
+          }
+        }}
+      />
+      <ConfirmDialog
+        open={deleteProductsDialogOpen}
+        onOpenStateChange={setDeleteProductsDialogOpen}
+        title='Bạn có chắc là muốn xóa những sản phẩm này chứ?'
+        description='Sản phẩm sau khi bị xóa không thể khôi phục'
+        onConfirm={() => {
+          if (!deleteManyProductsResult.isLoading) {
+            handleDeleteManyProducts(selectedProductsIds)
+            setSelectedProductsIds([])
           }
         }}
       />

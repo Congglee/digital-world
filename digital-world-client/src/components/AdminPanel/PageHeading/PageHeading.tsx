@@ -10,9 +10,9 @@ interface PageHeadingProps {
 
 export default function PageHeading({ heading, isDownload = true, children }: PageHeadingProps) {
   return (
-    <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-2'>
+    <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-3'>
       <h2 className='text-3xl font-bold tracking-tight'>{heading}</h2>
-      <div className='flex flex-col md:flex-row md:items-center space-x-2 gap-2'>
+      <div className='flex flex-col flex-wrap sm:flex-row sm:items-center sm:space-x-2 gap-1'>
         <CalendarDateRangePicker />
         {isDownload && (
           <Button className='space-x-2'>

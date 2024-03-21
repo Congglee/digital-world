@@ -13,6 +13,7 @@ export const URL_GET_PRODUCT = 'get-product'
 export const URL_ADD_PRODUCT = `${ADMIN_PRODUCT_URL}/add-product`
 export const URL_UPDATE_PRODUCT = `${ADMIN_PRODUCT_URL}/update-product`
 export const URL_DELETE_PRODUCT = `${ADMIN_PRODUCT_URL}/delete-product`
+export const URL_DELETE_PRODUCTS = `${ADMIN_PRODUCT_URL}/delete-many-products`
 
 const reducerPath = 'product/api' as const
 const tagTypes = ['Product'] as const
@@ -43,6 +44,13 @@ export const productApi = createApi({
     deleteProduct: build.mutation<AxiosResponse<SuccessResponse<string>>, string>({
       query: (id) => ({ url: `${URL_DELETE_PRODUCT}/${id}`, method: 'DELETE' }),
       invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+    }),
+    deleteManyProducts: build.mutation<
+      AxiosResponse<SuccessResponse<{ deleted_cound: number }>>,
+      { list_id: string[] }
+    >({
+      query: (payload) => ({ url: URL_DELETE_PRODUCTS, method: 'DELETE', data: payload }),
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
     })
   })
 })
@@ -52,5 +60,6 @@ export const {
   useDeleteProductMutation,
   useAddProductMutation,
   useGetProductDetailQuery,
-  useUpdateProductMutation
+  useUpdateProductMutation,
+  useDeleteManyProductsMutation
 } = productApi

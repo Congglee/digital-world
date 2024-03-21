@@ -64,10 +64,10 @@ const addProductRules = () => {
       .isNumeric()
       .withMessage("Số lượng phải ở định dạng number"),
     body("brand")
-      // .exists({ checkFalsy: true })
-      // .withMessage("Brand không được để trống")
+      .exists({ checkFalsy: true })
+      .withMessage("Thương hiệu không được để trống")
       .isLength({ max: 160 })
-      .withMessage("Brand phải ít hơn 160 kí tự"),
+      .withMessage("Thương hiệu phải ít hơn 160 kí tự"),
     body("overview")
       .exists({ checkFalsy: true })
       .withMessage("Thông số kỹ thuật không được để trống"),

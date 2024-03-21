@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ImageUp, List, Loader } from 'lucide-react'
+import { ArrowDownUp, CheckIcon, ImageUp, List, Loader } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
@@ -7,9 +7,10 @@ import { toast } from 'react-toastify'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import RichTextEditor from 'src/components/AdminPanel/RichTextEditor'
 import { Button } from 'src/components/ui/button'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from 'src/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { Switch } from 'src/components/ui/switch'
 import path from 'src/constants/path'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
@@ -17,7 +18,7 @@ import { useGetProductDetailQuery, useUpdateProductMutation } from 'src/redux/ap
 import { useUploadImagesMutation } from 'src/redux/apis/upload.api'
 import { isEntityError } from 'src/utils/helper'
 import { ProductSchema, productSchema } from 'src/utils/rules'
-import { handleValidateFile, handleValidateMultiFile } from 'src/utils/utils'
+import { cn, handleValidateFile, handleValidateMultiFile } from 'src/utils/utils'
 import PreviewProductImages from '../components/PreviewProductImages'
 
 type FormData = ProductSchema
@@ -40,13 +41,13 @@ const initialFormState = {
 
 export default function UpdateProduct() {
   const { product_id } = useParams()
+  const { data: productDetailData, refetch } = useGetProductDetailQuery(product_id!)
+  const { data: categoriesData } = useGetAllCategoriesQuery()
+  const product = productDetailData?.data.data
   const form = useForm<FormData>({
     resolver: yupResolver(updateProductSchema),
     defaultValues: initialFormState
   })
-  const { data: productDetailData, refetch } = useGetProductDetailQuery(product_id!)
-  const { data: categoriesData } = useGetAllCategoriesQuery()
-  const product = productDetailData?.data.data
 
   const thumbFileInputRef = useRef<HTMLInputElement>(null)
   const [thumbFile, setThumbFile] = useState<File | null>(null)
@@ -64,6 +65,11 @@ export default function UpdateProduct() {
   const selectedCategory = useMemo(() => {
     return categoriesData?.data.categories.find((category) => category._id === form.watch('category'))
   }, [categoriesData, form.watch('category')])
+  const categoriesOptions = useMemo(() => {
+    return categoriesData
+      ? categoriesData.data.categories.map((category) => ({ label: category.name, value: category._id }))
+      : []
+  }, [categoriesData])
   const brandsOptions = useMemo(() => {
     return selectedCategory ? selectedCategory.brands.map((brand) => ({ label: brand, value: brand })) : []
   }, [selectedCategory])
@@ -78,8 +84,8 @@ export default function UpdateProduct() {
       form.setValue('images', product.images)
       form.setValue('price', product.price)
       form.setValue('price_before_discount', product.price_before_discount)
-      form.setValue('brand', product.brand)
       form.setValue('category', product.category._id)
+      form.setValue('brand', product.brand)
       form.setValue('quantity', product.quantity)
       form.setValue('is_featured', product.is_featured)
       form.setValue('is_published', product.is_published)
@@ -163,7 +169,7 @@ export default function UpdateProduct() {
     <>
       <PageHeading heading='Cập nhật sản phẩm' isDownload={false}>
         <Link to={path.productsDashboard}>
-          <Button variant='outline' className='space-x-2 bg-blue-500'>
+          <Button variant='outline' className='w-full space-x-2 bg-blue-500'>
             <List />
             <span>Quản lý sản phẩm</span>
           </Button>
@@ -293,26 +299,53 @@ export default function UpdateProduct() {
               control={form.control}
               name='category'
               render={({ field }) => (
-                <FormItem className='col-span-2 md:col-span-1'>
+                <FormItem className='flex flex-col col-span-2 md:col-span-1'>
                   <FormLabel>Danh mục sản phẩm</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        {field.value ? (
-                          <SelectValue placeholder='Hãy chọn một danh mục sản phẩm' />
-                        ) : (
-                          `${product?.category.name}`
-                        )}
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {categoriesData?.data.categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant='outline'
+                          role='combobox'
+                          className={cn(
+                            'w-full justify-between overflow-hidden',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value
+                            ? categoriesOptions.find((category) => category.value === field.value)?.label
+                            : 'Hãy chọn một danh mục sản phẩm'}
+                          <ArrowDownUp className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className='xs:w-96 p-0'>
+                      <Command>
+                        <CommandInput placeholder='Tìm kiếm danh mục sản phẩm...' className='h-9' />
+                        <CommandEmpty>Không tìm thấy danh mục.</CommandEmpty>
+                        <CommandGroup>
+                          {categoriesOptions.map((category) => (
+                            <CommandItem
+                              value={category.label}
+                              key={category.value}
+                              onSelect={() => {
+                                form.setValue('category', category.value)
+                                form.setValue('brand', '')
+                              }}
+                            >
+                              {category.label}
+                              <CheckIcon
+                                className={cn(
+                                  'ml-auto h-4 w-4',
+                                  category.value === field.value ? 'opacity-100' : 'opacity-0'
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -321,28 +354,52 @@ export default function UpdateProduct() {
               control={form.control}
               name='brand'
               render={({ field }) => (
-                <FormItem className='col-span-2 md:col-span-1'>
+                <FormItem className='flex flex-col col-span-2 md:col-span-1'>
                   <FormLabel>Thương hiệu sản phẩm</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        {field.value ? (
-                          <SelectValue placeholder='Hãy chọn một thương hiệu sản phẩm' />
-                        ) : (
-                          `${product?.brand}`
-                        )}
-                      </SelectTrigger>
-                    </FormControl>
-                    {brandsOptions.length > 0 && (
-                      <SelectContent>
-                        {brandsOptions.map((brand) => (
-                          <SelectItem key={brand.value} value={brand.value}>
-                            {brand.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    )}
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant='outline'
+                          role='combobox'
+                          className={cn(
+                            'w-full justify-between overflow-hidden',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value
+                            ? brandsOptions.find((brand) => brand.value === field.value)?.label
+                            : 'Hãy chọn một thương hiệu sản phẩm'}
+                          <ArrowDownUp className='xs:block ml-2 h-4 w-4 shrink-0 opacity-50' />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className='xs:w-96 p-0'>
+                      <Command>
+                        <CommandInput placeholder='Tìm kiếm thương hiệu sản phẩm...' className='h-9' />
+                        <CommandEmpty>Không tìm thấy thương hiệu.</CommandEmpty>
+                        <CommandGroup>
+                          {brandsOptions.map((brand) => (
+                            <CommandItem
+                              value={brand.label}
+                              key={brand.value}
+                              onSelect={() => {
+                                form.setValue('brand', brand.value)
+                              }}
+                            >
+                              {brand.label}
+                              <CheckIcon
+                                className={cn(
+                                  'ml-auto h-4 w-4',
+                                  brand.value === field.value ? 'opacity-100' : 'opacity-0'
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -420,9 +477,19 @@ export default function UpdateProduct() {
           <div className='space-x-4'>
             <Button type='submit' disabled={uploadImagesResult.isLoading || isLoading}>
               {uploadImagesResult.isLoading || isLoading ? <Loader className='animate-spin w-4 h-4 mr-1' /> : null}
-              Cập nhật
+              Lưu lại
             </Button>
-            <Button type='button' variant='outline' className='px-10'>
+            <Button
+              type='button'
+              variant='outline'
+              className='px-10'
+              onClick={() => {
+                form.reset({ ...product, category: product?.category._id }),
+                  setProductImages(product?.images!),
+                  setThumbFile(null),
+                  setImageFiles([])
+              }}
+            >
               Hủy
             </Button>
           </div>

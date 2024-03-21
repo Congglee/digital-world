@@ -8,7 +8,8 @@ export const brands = [
   { name: 'VAIO' },
   { name: 'Xiaomi' },
   { name: 'MSI' },
-  { name: 'Microsoft Surface' }
+  { name: 'Microsoft Surface' },
+  { name: 'Unbranded' }
 ]
 
 export const brandsOptions = [

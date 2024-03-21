@@ -12,6 +12,9 @@ const sendMail = async ({ email, html, subject }) => {
       user: process.env.EMAIL_NAME, // generated ethereal user
       pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 
   let info = await transporter.sendMail({

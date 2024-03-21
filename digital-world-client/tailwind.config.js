@@ -90,7 +90,7 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-animate'),
-    plugin(function ({ addComponents, theme }) {
+    plugin(function ({ addComponents, theme, matchUtilities }) {
       addComponents({
         '.container': {
           maxWidth: theme('columns.7xl'),
@@ -99,7 +99,18 @@ module.exports = {
           paddingLeft: theme('spacing.4'),
           paddingRight: theme('spacing.4')
         }
-      })
+      }),
+        matchUtilities(
+          {
+            'auto-fill': (value) => ({
+              gridTemplateColumns: `repeat(auto-fill, minmax(min(${value}, 100%), 1fr))`
+            }),
+            'auto-fit': (value) => ({
+              gridTemplateColumns: `repeat(auto-fit, minmax(min(${value}, 100%), 1fr))`
+            })
+          },
+          { values: theme('width', {}) }
+        )
     })
   ]
 }

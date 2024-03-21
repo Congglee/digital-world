@@ -19,18 +19,23 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 's
 import DataTablePagination from '../DataTablePagination/DataTablePagination'
 import DataTableToolbar from '../DataTableToolbar'
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { _id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   placeholder: string
+  handleSelectedRowsIds?: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-export default function DataTable<TData, TValue>({ columns, data, placeholder }: DataTableProps<TData, TValue>) {
+export default function DataTable<TData extends { _id: string }, TValue>({
+  columns,
+  data,
+  placeholder,
+  handleSelectedRowsIds
+}: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
-
   const table = useReactTable({
     data,
     columns,
@@ -40,6 +45,7 @@ export default function DataTable<TData, TValue>({ columns, data, placeholder }:
       rowSelection,
       columnFilters
     },
+    getRowId: (row) => row._id,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -52,6 +58,20 @@ export default function DataTable<TData, TValue>({ columns, data, placeholder }:
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues()
   })
+
+  React.useEffect(() => {
+    const selectedRowModel = table.getSelectedRowModel().rows
+    if (table.getIsAllPageRowsSelected()) {
+      const selectedRowIds = selectedRowModel.map((row) => row.id)
+      handleSelectedRowsIds && handleSelectedRowsIds(selectedRowIds)
+    } else {
+      if (selectedRowModel.length > 0) {
+        handleSelectedRowsIds && handleSelectedRowsIds((prevSelectedRowsIds) => prevSelectedRowsIds)
+      } else {
+        handleSelectedRowsIds && handleSelectedRowsIds([])
+      }
+    }
+  }, [table.getIsAllPageRowsSelected()])
 
   return (
     <div className='space-y-4'>
