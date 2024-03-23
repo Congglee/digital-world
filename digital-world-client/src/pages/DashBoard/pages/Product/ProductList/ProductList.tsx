@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { PlusCircle, Star, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
@@ -18,7 +18,24 @@ import {
 } from 'src/redux/apis/product.api'
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
-import { formatCurrency } from 'src/utils/utils'
+import { convertHTMLToPlainText, formatCurrency } from 'src/utils/utils'
+
+import { pdf } from '@react-pdf/renderer'
+
+import { saveAs } from 'file-saver'
+import { PDFProductsTableDocument } from '../components/PDFViewProductsTable/PDFViewProductsTable'
+
+const exportDataHeaders = [
+  'ID',
+  'Name',
+  'Thumb',
+  'Price',
+  'Giá gốc sản phẩm',
+  'Đánh giá',
+  'Danh mục',
+  'Thương hiệu',
+  'Thông số kỹ thuật'
+]
 
 export default function ProductList() {
   const { data: productsData } = useGetProductsQuery()
@@ -30,12 +47,37 @@ export default function ProductList() {
   const [deleteManyProducts, deleteManyProductsResult] = useDeleteManyProductsMutation()
   const navigate = useNavigate()
 
+  const csvExportProductsData = useMemo(() => {
+    return (
+      productsData && [
+        exportDataHeaders,
+        ...productsData.data.products.map((product) => [
+          product._id,
+          product.name,
+          product.thumb,
+          product.price,
+          product.price_before_discount,
+          product.total_ratings,
+          product.category.name,
+          product.brand,
+          convertHTMLToPlainText(product.overview)
+        ])
+      ]
+    )
+  }, [productsData])
+
   const handleDeleteProduct = async (id: string) => {
     await deleteProduct(id)
   }
 
   const handleDeleteManyProducts = async (productIds: string[]) => {
     await deleteManyProducts({ list_id: productIds })
+  }
+
+  const handleDownloadPdf = () => {
+    pdf(<PDFProductsTableDocument products={productsData?.data.products!} />)
+      .toBlob()
+      .then((blob) => saveAs(blob, 'danh_sach_san_pham.pdf'))
   }
 
   useEffect(() => {
@@ -178,7 +220,12 @@ export default function ProductList() {
 
   return (
     <>
-      <PageHeading heading='Sản phẩm'>
+      <PageHeading
+        heading='Sản phẩm'
+        csvData={csvExportProductsData}
+        csvFileName='danh_sach_san_pham.csv'
+        handleDownloadPdf={handleDownloadPdf}
+      >
         <Link to={path.addProduct}>
           <Button variant='outline' className='w-full space-x-2 bg-blue-500'>
             <PlusCircle />

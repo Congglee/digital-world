@@ -1,4 +1,4 @@
-import { Gauge, Menu, Settings, ShoppingBag, UserRound } from 'lucide-react'
+import { Gauge, Menu, Receipt, Settings, ShoppingBag, UserRound } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { Button } from 'src/components/ui/button'
 import { DialogClose } from 'src/components/ui/dialog'
@@ -97,6 +97,21 @@ function SideMenu({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
             >
               <UserRound className='w-5 h-5' />
               <span>Tài khoản</span>
+            </div>
+          )}
+        </NavLink>
+      </Button>
+      <Button asChild variant='ghost'>
+        <NavLink to={path.userDashBoard} end>
+          {({ isActive }) => (
+            <div
+              className={cn(
+                'text-sm font-medium transition-colors hover:text-primary flex items-center gap-2',
+                !isActive ? 'text-muted-foreground' : null
+              )}
+            >
+              <Receipt className='w-5 h-5' />
+              <span>Đơn hàng</span>
             </div>
           )}
         </NavLink>

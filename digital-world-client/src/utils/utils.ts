@@ -48,3 +48,9 @@ export function handleValidateFile(
     onChange(URL.createObjectURL(fileFromLocal!))
   }
 }
+
+export function convertHTMLToPlainText(html: string) {
+  var tempDivElement = document.createElement('div')
+  tempDivElement.innerHTML = html
+  return tempDivElement.textContent || tempDivElement.innerText || ''
+}
