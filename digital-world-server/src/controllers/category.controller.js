@@ -1,3 +1,4 @@
+import { CATEGORY_SORT_BY, ORDER } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { CategoryModel } from "../database/models/category.model";
 import { ProductModel } from "../database/models/product.model";
@@ -19,7 +20,7 @@ const addCategory = async (req, res) => {
 };
 
 const getCategories = async (req, res) => {
-  let { page = 1, limit = 30, name, exclude } = req.query;
+  let { page = 1, limit = 30, name, exclude, sort_by, order } = req.query;
 
   page = Number(page);
   limit = Number(limit);
@@ -30,9 +31,17 @@ const getCategories = async (req, res) => {
   if (name) {
     condition.name = { $regex: name, $options: "i" };
   }
+  if (!ORDER.includes(order)) {
+    order = ORDER[0];
+  }
+  if (!CATEGORY_SORT_BY.includes(sort_by)) {
+    sort_by = CATEGORY_SORT_BY[0];
+  }
 
   let [categories, totalCategories] = await Promise.all([
     CategoryModel.find(condition)
+      .populate({ path: "brands", select: "name" })
+      .sort({ [sort_by]: order === "desc" ? -1 : 1 })
       .skip(page * limit - limit)
       .limit(limit)
       .select({ __v: 0 })
@@ -56,6 +65,7 @@ const getCategories = async (req, res) => {
 
 const getCategory = async (req, res) => {
   const categoryDB = await CategoryModel.findById(req.params.category_id)
+    .populate({ path: "brands", select: "name" })
     .select({ __v: 0 })
     .lean();
   if (categoryDB) {
@@ -100,7 +110,9 @@ const deleteCategory = async (req, res) => {
       });
       await ProductModel.updateMany(
         { category: categoryDB._id },
-        { $set: { category: uncategorized._id } }
+        {
+          $set: { category: uncategorized._id, brand: "Unbranded" },
+        }
       );
     }
     return responseSuccess(res, { message: "Xóa danh mục thành công" });

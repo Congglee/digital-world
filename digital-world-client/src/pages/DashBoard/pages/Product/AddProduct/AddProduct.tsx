@@ -66,7 +66,7 @@ export default function AddProduct() {
       : []
   }, [categoriesData])
   const brandsOptions = useMemo(() => {
-    return selectedCategory ? selectedCategory.brands.map((brand) => ({ label: brand, value: brand })) : []
+    return selectedCategory ? selectedCategory.brands.map((brand) => ({ label: brand.name, value: brand.name })) : []
   }, [selectedCategory])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()

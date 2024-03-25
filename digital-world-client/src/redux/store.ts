@@ -6,6 +6,7 @@ import { authApi } from './apis/auth.api'
 import { categoryApi } from './apis/category.api'
 import { productApi } from './apis/product.api'
 import { uploadApi } from './apis/upload.api'
+import { brandApi } from './apis/brand.api'
 
 const persistConfig = {
   key: 'root',
@@ -21,6 +22,7 @@ const store = configureStore({
       uploadApi.middleware,
       authApi.middleware,
       categoryApi.middleware,
+      brandApi.middleware,
       productApi.middleware
     ])
 } as ConfigureStoreOptions)

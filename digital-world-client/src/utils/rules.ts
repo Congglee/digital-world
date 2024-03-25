@@ -53,6 +53,10 @@ export const categorySchema = yup.object({
   brands: yup.array().of(yup.string()).min(1, 'Vui lòng chọn ít nhất một thương hiệu').required()
 })
 
+export const brandSchema = yup.object({
+  name: yup.string().trim().required('Tên thương hiệu là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự')
+})
+
 export const productSchema = yup.object({
   name: yup
     .string()
@@ -93,5 +97,6 @@ export const productSchema = yup.object({
 
 export type CategorySchema = yup.InferType<typeof categorySchema>
 export type ProductSchema = yup.InferType<typeof productSchema>
+export type BrandSchema = yup.InferType<typeof brandSchema>
 
 export type Schema = yup.InferType<typeof schema>

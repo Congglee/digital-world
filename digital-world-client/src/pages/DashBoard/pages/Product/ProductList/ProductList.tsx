@@ -1,4 +1,6 @@
+import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
+import { saveAs } from 'file-saver'
 import { PlusCircle, Star, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,6 +13,8 @@ import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
+import { useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
+import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import {
   useDeleteManyProductsMutation,
   useDeleteProductMutation,
@@ -19,17 +23,13 @@ import {
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
 import { convertHTMLToPlainText, formatCurrency } from 'src/utils/utils'
-
-import { pdf } from '@react-pdf/renderer'
-
-import { saveAs } from 'file-saver'
 import { PDFProductsTableDocument } from '../components/PDFViewProductsTable/PDFViewProductsTable'
 
 const exportDataHeaders = [
   'ID',
-  'Name',
-  'Thumb',
-  'Price',
+  'Tên sản phẩm',
+  'Ảnh',
+  'Giá sản phẩm',
   'Giá gốc sản phẩm',
   'Đánh giá',
   'Danh mục',
@@ -39,6 +39,9 @@ const exportDataHeaders = [
 
 export default function ProductList() {
   const { data: productsData } = useGetProductsQuery()
+  useGetAllBrandsQuery()
+  useGetAllCategoriesQuery()
+
   const [deleteProductDialogOpen, setDeleteProductDialogOpen] = useState<boolean>(false)
   const [deleteProductsDialogOpen, setDeleteProductsDialogOpen] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
@@ -196,6 +199,9 @@ export default function ProductList() {
       footer: 'Danh mục',
       cell: ({ row }) => {
         return <div className='font-medium'>{(row.getValue('category') as Category).name}</div>
+      },
+      filterFn: (row, id, value) => {
+        return value.includes((row.getValue(id) as Category)._id)
       }
     },
     {

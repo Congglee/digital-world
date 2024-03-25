@@ -4,6 +4,8 @@ import { SuccessResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 import { CategoryList, Category } from 'src/types/category.type'
 import { CategorySchema } from 'src/utils/rules'
+import { productApi } from './product.api'
+import { setCategoriesOptionsFilter } from '../slices/category.slice'
 
 export const ADMIN_CATEGORY_URL = 'admin/categories/'
 export const URL_GET_ALL_CATEGORIES = `${ADMIN_CATEGORY_URL}/get-categories`
@@ -22,6 +24,21 @@ export const categoryApi = createApi({
     getAllCategories: build.query<SuccessResponse<CategoryList>, void>({
       query: () => ({ url: URL_GET_ALL_CATEGORIES, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<CategoryList>>) => response.data,
+      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+        try {
+          const { data } = await queryFulfilled
+          dispatch(
+            setCategoriesOptionsFilter(
+              data.data.categories.map((category) => ({
+                label: category.name,
+                value: category._id
+              }))
+            )
+          )
+        } catch (error) {
+          console.log(error)
+        }
+      },
       providesTags: tagTypes
     }),
     addCategory: build.mutation<AxiosResponse<SuccessResponse<Category>>, Pick<CategorySchema, 'name' | 'brands'>>({
@@ -37,6 +54,20 @@ export const categoryApi = createApi({
     }),
     deleteCategory: build.mutation<AxiosResponse<SuccessResponse<string>>, string>({
       query: (id) => ({ url: `${URL_DELETE_CATEGORY}/${id}`, method: 'DELETE' }),
+      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+        // `onStart` side-effect
+        // anything you want to run when the query starts
+        try {
+          await queryFulfilled
+          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
+          // `onSuccess` side-effect
+          // anything you want to run when the query succeeds
+        } catch (error) {
+          // `onError` side-effect
+          // anything you want to run when the query fails
+          console.log(error)
+        }
+      },
       invalidatesTags: tagTypes
     })
   })

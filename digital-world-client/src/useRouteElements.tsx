@@ -13,6 +13,7 @@ import CategoryList from './pages/DashBoard/pages/Category/CategoryList'
 import ProductList from './pages/DashBoard/pages/Product/ProductList'
 import AddProduct from './pages/DashBoard/pages/Product/AddProduct'
 import UpdateProduct from './pages/DashBoard/pages/Product/UpdateProduct'
+import BrandList from './pages/DashBoard/pages/Brand/BrandList'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -65,6 +66,10 @@ export default function useRouteElements() {
         {
           path: path.categoryDashboard,
           element: <CategoryList />
+        },
+        {
+          path: path.brandDashBoard,
+          element: <BrandList />
         },
         {
           path: path.productsDashboard,

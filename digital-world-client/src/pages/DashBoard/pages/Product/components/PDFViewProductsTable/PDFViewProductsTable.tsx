@@ -83,7 +83,7 @@ function chunkSubstr(str: string, size: number) {
   const chunks = new Array(numChunks)
 
   for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-    chunks[i] = str.substr(o, size)
+    chunks[i] = str.substring(o, size)
   }
 
   return chunks
@@ -150,18 +150,24 @@ export function PDFProductsTableDocument({ products }: { products: Product[] }) 
               </View>
               <View style={[styles.tableCol]}>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={[styles.tableCell, { marginRight: 3 }]}>{product.total_ratings}</Text>
-                  <Svg
-                    width={8}
-                    height={8}
-                    viewBox='0 0 24 24'
-                    fill='yellow'
-                    stroke='currentColor'
-                    strokeWidth={2}
-                    strokeLinejoin='round'
-                  >
-                    <Polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2' />
-                  </Svg>
+                  {product.total_ratings > 0 ? (
+                    <>
+                      <Text style={[styles.tableCell, { marginRight: 3 }]}>{product.total_ratings}</Text>
+                      <Svg
+                        width={8}
+                        height={8}
+                        viewBox='0 0 24 24'
+                        fill='yellow'
+                        stroke='currentColor'
+                        strokeWidth={2}
+                        strokeLinejoin='round'
+                      >
+                        <Polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2' />
+                      </Svg>
+                    </>
+                  ) : (
+                    <Text style={[styles.tableCell]}>Không có đánh giá</Text>
+                  )}
                 </View>
               </View>
               <View style={[styles.tableCol, { width: '8%' }]}>

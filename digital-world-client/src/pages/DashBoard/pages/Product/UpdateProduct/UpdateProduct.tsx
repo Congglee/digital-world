@@ -65,13 +65,20 @@ export default function UpdateProduct() {
   const selectedCategory = useMemo(() => {
     return categoriesData?.data.categories.find((category) => category._id === form.watch('category'))
   }, [categoriesData, form.watch('category')])
+
+  useEffect(() => {
+    if (!selectedCategory) {
+      refetch()
+    }
+  }, [selectedCategory])
+
   const categoriesOptions = useMemo(() => {
     return categoriesData
       ? categoriesData.data.categories.map((category) => ({ label: category.name, value: category._id }))
       : []
   }, [categoriesData])
   const brandsOptions = useMemo(() => {
-    return selectedCategory ? selectedCategory.brands.map((brand) => ({ label: brand, value: brand })) : []
+    return selectedCategory ? selectedCategory.brands.map((brand) => ({ label: brand.name, value: brand.name })) : []
   }, [selectedCategory])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()

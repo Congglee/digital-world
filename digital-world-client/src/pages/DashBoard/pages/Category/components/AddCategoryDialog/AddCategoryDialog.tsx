@@ -8,23 +8,32 @@ import { Checkbox } from 'src/components/ui/checkbox'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from 'src/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
-import { brands } from 'src/constants/data'
 import { useAddCategoryMutation } from 'src/redux/apis/category.api'
+import { Brand } from 'src/types/brand.type'
 import { CategorySchema, categorySchema } from 'src/utils/rules'
 
 interface AddCategoryDialogProps {
   open: boolean
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  brands: Brand[]
 }
 
 type FormData = Pick<CategorySchema, 'name' | 'brands'>
 const addCategorySchema = categorySchema.pick(['name', 'brands'])
 
-export default function AddCategoryDialog({ open, onOpenChange }: AddCategoryDialogProps) {
+export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCategoryDialogProps) {
+  const unbranded = brands.find((brand) => brand.name === 'Unbranded')
   const form = useForm<FormData>({
     resolver: yupResolver(addCategorySchema),
     defaultValues: { name: '', brands: [] }
   })
+
+  useEffect(() => {
+    if (unbranded) {
+      form.reset({ name: '', brands: [unbranded._id] })
+    }
+  }, [unbranded])
+
   const [addCategoryMutation, { isLoading, isSuccess, data }] = useAddCategoryMutation()
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -77,28 +86,29 @@ export default function AddCategoryDialog({ open, onOpenChange }: AddCategoryDia
                 render={() => (
                   <FormItem className='col-span-3'>
                     <FormLabel htmlFor='name'>Thương hiệu</FormLabel>
-                    <div className='w-full text-sm font-medium border rounded-lg grid grid-cols-2 sm:grid-cols-3 gap-4 text-white p-4'>
+                    <div className='w-full text-[13px] font-medium border rounded-lg grid grid-cols-2 sm:grid-cols-3 gap-4 text-white p-4'>
                       {brands.map((brand) => (
                         <FormField
-                          key={brand.name}
+                          key={brand._id}
                           control={form.control}
                           name='brands'
                           render={({ field }) => {
                             return (
-                              <FormItem key={brand.name} className='space-y-0 w-full flex items-center gap-2'>
+                              <FormItem key={brand._id} className='space-y-0 w-full flex items-center gap-2'>
                                 <FormControl>
                                   <Checkbox
-                                    id={brand.name}
-                                    checked={field.value?.includes(brand.name)}
+                                    id={brand._id}
+                                    checked={brand.name === 'Unbranded' || field.value?.includes(brand._id)}
                                     onCheckedChange={(checked) => {
                                       return checked
-                                        ? field.onChange([...field.value, brand.name])
-                                        : field.onChange(field.value?.filter((value) => value !== brand.name))
+                                        ? field.onChange([...field.value, brand._id])
+                                        : field.onChange(field.value?.filter((value) => value !== brand._id))
                                     }}
+                                    disabled={brand.name === 'Unbranded'}
                                   />
                                 </FormControl>
                                 <label
-                                  htmlFor={brand.name}
+                                  htmlFor={brand._id}
                                   className='w-full peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer'
                                 >
                                   {brand.name}
@@ -117,7 +127,7 @@ export default function AddCategoryDialog({ open, onOpenChange }: AddCategoryDia
             <DialogFooter>
               <Button type='submit' disabled={isLoading}>
                 {isLoading && <Loader className='animate-spin w-4 h-4 mr-1' />}
-                Thêm mới
+                Lưu lại
               </Button>
             </DialogFooter>
           </form>
