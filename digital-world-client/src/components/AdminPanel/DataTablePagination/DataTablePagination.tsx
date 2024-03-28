@@ -11,8 +11,7 @@ export default function DataTablePagination<TData>({ table }: DataTablePaginatio
   return (
     <div className='flex flex-col sm:flex-row sm:items-center gap-2 justify-between px-2'>
       <div className='flex-1 text-sm text-muted-foreground'>
-        {table.getFilteredSelectedRowModel().rows.length} trên {table.getFilteredRowModel().rows.length} 7 hàng được
-        chọn
+        {table.getFilteredSelectedRowModel().rows.length} trên {table.getFilteredRowModel().rows.length} hàng được chọn
       </div>
       <div className='flex flex-wrap gap-2 items-center space-x-6 lg:space-x-8'>
         <div className='flex items-center space-x-2'>

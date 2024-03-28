@@ -14,7 +14,7 @@ interface PageHeadingProps {
   heading: string
   isDownload?: boolean
   children?: React.ReactNode
-  csvData?: (string | number)[][]
+  csvData?: (string | number | undefined)[][]
   csvFileName?: string
   handleDownloadPdf?: () => void
 }

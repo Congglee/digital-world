@@ -60,7 +60,7 @@ export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCat
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[425px] text-white'>
+      <DialogContent className='sm:max-w-[425px] text-foreground'>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <DialogHeader>
@@ -86,7 +86,7 @@ export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCat
                 render={() => (
                   <FormItem className='col-span-3'>
                     <FormLabel htmlFor='name'>Thương hiệu</FormLabel>
-                    <div className='w-full text-[13px] font-medium border rounded-lg grid grid-cols-2 sm:grid-cols-3 gap-4 text-white p-4'>
+                    <div className='w-full text-[13px] font-medium border rounded-lg grid grid-cols-2 sm:grid-cols-3 gap-4 p-4'>
                       {brands.map((brand) => (
                         <FormField
                           key={brand._id}

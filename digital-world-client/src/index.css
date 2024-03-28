@@ -76,3 +76,7 @@
 .scroll::-webkit-scrollbar-thumb {
   @apply rounded-lg bg-border;
 }
+
+.rdp-vhidden {
+  @apply hidden;
+}

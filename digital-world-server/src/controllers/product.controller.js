@@ -283,7 +283,7 @@ const ratingProduct = async (req, res) => {
           $set: {
             "ratings.$.star": star,
             "ratings.$.comment": comment,
-            "$ratings.$date": new Date().toISOString(),
+            "ratings.$.date": new Date().toISOString(),
           },
         },
         { new: true }

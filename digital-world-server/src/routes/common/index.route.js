@@ -3,6 +3,7 @@ import commonMediaRouter from "./common-media.route";
 import commonUserRouter from "./common-user.route";
 import commonProductRouter from "./common-product.route";
 import commonCategoryRouter from "./common-category.route";
+import commonLocationRouter from "./common-location.route";
 
 const commonRoutes = {
   prefix: "/",
@@ -26,6 +27,10 @@ const commonRoutes = {
     {
       path: "media",
       route: commonMediaRouter,
+    },
+    {
+      path: "location",
+      route: commonLocationRouter,
     },
   ],
 };

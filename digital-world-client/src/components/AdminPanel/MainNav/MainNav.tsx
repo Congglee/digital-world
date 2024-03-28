@@ -102,7 +102,7 @@ function SideMenu({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
         </NavLink>
       </Button>
       <Button asChild variant='ghost'>
-        <NavLink to={path.userDashBoard} end>
+        <NavLink to={path.orderDashBoard} end>
           {({ isActive }) => (
             <div
               className={cn(

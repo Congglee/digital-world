@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { toast } from 'react-toastify'
+import userImage from 'src/assets/images/user.svg'
 import config from 'src/constants/config'
 import { twMerge } from 'tailwind-merge'
 
@@ -50,7 +51,9 @@ export function handleValidateFile(
 }
 
 export function convertHTMLToPlainText(html: string) {
-  var tempDivElement = document.createElement('div')
+  let tempDivElement = document.createElement('div')
   tempDivElement.innerHTML = html
   return tempDivElement.textContent || tempDivElement.innerText || ''
 }
+
+export const getAvatarUrl = (avatarName?: string) => (avatarName ? avatarName : userImage)

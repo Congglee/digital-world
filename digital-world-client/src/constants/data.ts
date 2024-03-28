@@ -11,26 +11,3 @@ export const brands = [
   { name: 'Microsoft Surface' },
   { name: 'Unbranded' }
 ]
-
-export const brandsOptions = [
-  {
-    label: 'Asus',
-    value: 'Asus'
-  },
-  {
-    label: 'Acer',
-    value: 'Acer'
-  },
-  {
-    label: 'Dell',
-    value: 'Dell'
-  },
-  {
-    label: 'Lenovo',
-    value: 'Lenovo'
-  },
-  {
-    label: 'MSI',
-    value: 'MSI'
-  }
-]

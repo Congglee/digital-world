@@ -7,6 +7,8 @@ import { categoryApi } from './apis/category.api'
 import { productApi } from './apis/product.api'
 import { uploadApi } from './apis/upload.api'
 import { brandApi } from './apis/brand.api'
+import { userApi } from './apis/user.api'
+import { locationApi } from './apis/location.api'
 
 const persistConfig = {
   key: 'root',
@@ -21,9 +23,11 @@ const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }).concat([
       uploadApi.middleware,
       authApi.middleware,
+      userApi.middleware,
       categoryApi.middleware,
       brandApi.middleware,
-      productApi.middleware
+      productApi.middleware,
+      locationApi.middleware
     ])
 } as ConfigureStoreOptions)
 

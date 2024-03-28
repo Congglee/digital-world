@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 export default function DashboardLayout() {
   return (
     <>
-      <div className='flex-col md:flex text-white'>
+      <div className='flex-col md:flex text-foreground'>
         <div className='border-b'>
           <div className='flex h-16 items-center px-4'>
             <MainNav />

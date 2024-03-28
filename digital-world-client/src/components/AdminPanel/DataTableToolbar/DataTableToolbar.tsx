@@ -5,6 +5,7 @@ import { Button } from 'src/components/ui/button'
 import DataTableFacetedFilter from '../DataTableFacetedFilter'
 import DataTableViewOptions from '../DateViewTableOptions'
 import { useAppSelector } from 'src/redux/hook'
+import { isBlockedOptions, rolesOptions } from 'src/constants/options'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -33,6 +34,16 @@ export default function DataTableToolbar<TData>({ table, placeholder }: DataTabl
         )}
         {table.getColumn('category') && (
           <DataTableFacetedFilter column={table.getColumn('category')} title='Danh mục' options={categoriesOptions} />
+        )}
+        {table.getColumn('roles') && (
+          <DataTableFacetedFilter column={table.getColumn('roles')} title='Vai trò' options={rolesOptions} />
+        )}
+        {table.getColumn('is_blocked') && (
+          <DataTableFacetedFilter
+            column={table.getColumn('is_blocked')}
+            title='Trạng thái'
+            options={isBlockedOptions}
+          />
         )}
         {isFiltered && (
           <Button variant='ghost' onClick={() => table.resetColumnFilters()} className='h-8 px-2 lg:px-3'>

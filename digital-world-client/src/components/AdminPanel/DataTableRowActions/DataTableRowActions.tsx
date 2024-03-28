@@ -1,5 +1,5 @@
 import { Row } from '@tanstack/react-table'
-import { FoldHorizontalIcon, Pencil, Trash2 } from 'lucide-react'
+import { FoldHorizontalIcon, LockKeyhole, Pencil, Trash2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,15 +14,19 @@ interface DataTableRowActionsProps<TData> {
   row: Row<TData>
   enableDeleting?: boolean
   enableEditing?: boolean
+  enableEditPassword?: boolean
   onDelete?: () => void
   onEdit?: () => void
+  onEditPassword?: () => void
 }
 
 export default function DataTableRowActions<TData>({
   row,
   enableDeleting,
   enableEditing,
+  enableEditPassword,
   onEdit,
+  onEditPassword,
   onDelete
 }: DataTableRowActionsProps<TData>) {
   return (
@@ -44,6 +48,21 @@ export default function DataTableRowActions<TData>({
           <Pencil className='w-4 h-4 mr-2' />
           Cập nhật
         </DropdownMenuItem>
+        {enableEditPassword && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              disabled={!enableEditPassword}
+              className='cursor-pointer'
+              onClick={() => {
+                if (onEditPassword) onEditPassword()
+              }}
+            >
+              <LockKeyhole className='w-4 h-4 mr-2' />
+              Đổi mật khẩu
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           disabled={!enableDeleting}

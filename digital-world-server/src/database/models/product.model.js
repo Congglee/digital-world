@@ -22,6 +22,8 @@ const ProductSchema = new Schema(
       {
         star: { type: Number },
         posted_by: { type: mongoose.SchemaTypes.ObjectId, ref: "users" },
+        user_name: { type: String }, // TODO: save user name when delete user
+        user_avatart: { type: String }, // TODO: save user avatar when delete user
         comment: { type: String },
         date: { type: Date, maxlength: 160 },
       },

@@ -41,6 +41,18 @@ const addUserRules = () => {
       .if((value) => value !== undefined)
       .isLength({ max: 160 })
       .withMessage("Địa chỉ phải ít hơn 160 kí tự"),
+    body("province")
+      .if((value) => value !== undefined)
+      .isLength({ max: 160 })
+      .withMessage("Tỉnh phải ít hơn 160 kí tự"),
+    body("district")
+      .if((value) => value !== undefined)
+      .isLength({ max: 160 })
+      .withMessage("Quận huyện phải ít hơn 160 kí tự"),
+    body("ward")
+      .if((value) => value !== undefined)
+      .isLength({ max: 160 })
+      .withMessage("Phường phải ít hơn 160 kí tự"),
     body("phone")
       .if((value) => value !== undefined)
       .isLength({ max: 20 })
@@ -143,6 +155,24 @@ const updateMeRules = () => {
       .withMessage("Địa chỉ phải ở định dạng string")
       .isLength({ max: 160 })
       .withMessage("Địa chỉ phải ít hơn 160 kí tự"),
+    body("province")
+      .if((value) => value !== undefined)
+      .isString()
+      .withMessage("Tỉnh phải ở định dạng string")
+      .isLength({ max: 160 })
+      .withMessage("Tỉnh phải ít hơn 160 kí tự"),
+    body("district")
+      .if((value) => value !== undefined)
+      .isString()
+      .withMessage("Quận huyện phải ở định dạng string")
+      .isLength({ max: 160 })
+      .withMessage("Quận huyện phải ít hơn 160 kí tự"),
+    body("ward")
+      .if((value) => value !== undefined)
+      .isString()
+      .withMessage("Phường phải ở định dạng string")
+      .isLength({ max: 160 })
+      .withMessage("Phường phải ít hơn 160 kí tự"),
     body("phone")
       .if((value) => value !== undefined)
       .isString()

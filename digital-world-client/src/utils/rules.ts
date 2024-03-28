@@ -95,8 +95,34 @@ export const productSchema = yup.object({
   description: yup.string().trim()
 })
 
+export const userSchema = yup.object({
+  name: yup.string().trim().required('Họ và tên là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  email: yup
+    .string()
+    .required('Email là bắt buộc')
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 'Email không đúng định dạng')
+    .min(5, 'Độ dài từ 5 - 160 ký tự')
+    .max(160, 'Độ dài từ 5 - 160 ký tự'),
+  phone: yup
+    .string()
+    .matches(/^(0[1-9])+([0-9]{8,9})$/, { message: 'Số điện thoại không đúng định dạng', excludeEmptyString: true })
+    .max(20, 'Độ dài tối đa là 20 ký tự'),
+  address: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
+  province: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
+  district: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
+  ward: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
+  avatar: yup.string().max(1000, 'Độ dài tối đa là 1000 ký tự'),
+  date_of_birth: yup.date().max(new Date(), 'Hãy chọn một ngày trong quá khứ'),
+  is_blocked: yup.boolean().required('Vui lòng chọn trạng thái tài khoản'),
+  roles: yup.array().of(yup.string()).min(1, 'Vui lòng chọn vai trò cho tài khoản').required(),
+  password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  new_password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  confirm_password: handleConfirmPasswordYup('new_password')
+})
+
 export type CategorySchema = yup.InferType<typeof categorySchema>
 export type ProductSchema = yup.InferType<typeof productSchema>
 export type BrandSchema = yup.InferType<typeof brandSchema>
+export type UserSchema = yup.InferType<typeof userSchema>
 
 export type Schema = yup.InferType<typeof schema>

@@ -66,7 +66,7 @@ export default function UpdateBrandDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[425px] text-white'>
+      <DialogContent className='sm:max-w-[425px] text-foreground'>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <DialogHeader>

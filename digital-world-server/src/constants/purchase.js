@@ -5,10 +5,7 @@ export const ORDER_STATUS = {
 };
 
 export const DELIVERY_STATUS = {
-  WAIT_FOR_CONFIRMATION: 0,
-  IN_PROGRESS: 1,
-  ON_DELIVERY: 2,
-  DELIVERED: 3,
+  WAIT_FOR_CONFIRMATION: "Đợi xác nhận",
 };
 
 export const PAYMENT_STATUS = {

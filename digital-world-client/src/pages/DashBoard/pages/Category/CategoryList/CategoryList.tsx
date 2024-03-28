@@ -26,7 +26,7 @@ export default function CategoryList() {
   const { data: brandsData } = useGetAllBrandsQuery()
   const [addCategoryDialogOpen, setAddCategoryDialogOpen] = useState<boolean>(false)
   const [deleteCategoryDialogOpen, setDeleteCategoryDialogOpen] = useState<boolean>(false)
-  const [updateCategoryDiglogOpen, setUpdateCategoryDiglogOpen] = useState<boolean>(false)
+  const [updateCategoryDialogOpen, setUpdateCategoryDialogOpen] = useState<boolean>(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [deleteCategory, deleteCategoryResult] = useDeleteCategoryMutation()
 
@@ -128,7 +128,7 @@ export default function CategoryList() {
             }}
             onEdit={() => {
               setSelectedCategory(row.original)
-              setUpdateCategoryDiglogOpen(true)
+              setUpdateCategoryDialogOpen(true)
             }}
           />
         ) : null
@@ -155,9 +155,9 @@ export default function CategoryList() {
         brands={brandsData?.data.brands || []}
       />
       <UpdateCategoryDialog
-        open={updateCategoryDiglogOpen}
+        open={updateCategoryDialogOpen}
         selectedCategory={selectedCategory}
-        onOpenChange={setUpdateCategoryDiglogOpen}
+        onOpenChange={setUpdateCategoryDialogOpen}
         onAfterUpdate={setSelectedCategory}
         brands={brandsData?.data.brands!}
       />

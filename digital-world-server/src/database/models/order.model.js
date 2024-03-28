@@ -13,6 +13,10 @@ const OrderSchema = new Schema(
     products: [
       {
         product: { type: mongoose.SchemaTypes.ObjectId, ref: "Product" },
+        product_name: { type: String }, // TODO: save product name when delete product
+        product_price: { type: Number }, // TODO: save product price when delete product
+        product_price_before_discount: { type: Number }, // TODO: save product price before discount when delete product,
+        product_thumb: { type: String }, // TODO: save product thumb when delete product,
         buy_count: Number,
       },
     ],
@@ -21,7 +25,7 @@ const OrderSchema = new Schema(
       default: ORDER_STATUS.IN_PROGRESS,
     },
     delivery_status: {
-      type: Number,
+      type: String,
       default: DELIVERY_STATUS.WAIT_FOR_CONFIRMATION,
     },
     total_amount: { type: Number },

@@ -13,6 +13,9 @@ const addUser = async (req, res) => {
     password,
     date_of_birth,
     address,
+    province,
+    district,
+    ward,
     phone,
     roles,
     avatar,
@@ -26,6 +29,9 @@ const addUser = async (req, res) => {
       password: hashedPassword,
       roles,
       address,
+      province,
+      district,
+      ward,
       date_of_birth,
       name,
       phone,
@@ -134,6 +140,9 @@ const updateUser = async (req, res) => {
   const {
     password,
     address,
+    province,
+    district,
+    ward,
     date_of_birth,
     name,
     phone,
@@ -145,6 +154,9 @@ const updateUser = async (req, res) => {
     {
       password,
       address,
+      province,
+      district,
+      ward,
       date_of_birth,
       name,
       phone,
@@ -152,17 +164,32 @@ const updateUser = async (req, res) => {
       is_blocked,
       avatar,
     },
-    (value) => value === undefined || value === ""
+    (value) => value === undefined
   );
-  const userDB = await UserModel.findByIdAndUpdate(req.params.user_id, user, {
-    new: true,
-  })
-    .select({ password: 0, __v: 0 })
-    .lean();
+  const userDB = await UserModel.findById(req.params.user_id);
   if (userDB) {
+    let updatedUserDB;
+    if (user.password) {
+      const hash_password = hashValue(password);
+      updatedUserDB = await UserModel.findByIdAndUpdate(
+        req.params.user_id,
+        { ...user, password: hash_password },
+        { new: true }
+      )
+        .select({ password: 0, __v: 0 })
+        .lean();
+    } else {
+      updatedUserDB = await UserModel.findByIdAndUpdate(
+        req.params.user_id,
+        user,
+        { new: true }
+      )
+        .select({ password: 0, __v: 0 })
+        .lean();
+    }
     const response = {
       message: "Cập nhật người dùng thành công",
-      data: userDB,
+      data: updatedUserDB,
     };
     return responseSuccess(res, response);
   } else {
@@ -177,6 +204,9 @@ const updateMe = async (req, res) => {
     password,
     new_password,
     address,
+    province,
+    district,
+    ward,
     date_of_birth,
     name,
     phone,
@@ -187,12 +217,15 @@ const updateMe = async (req, res) => {
       email,
       password,
       address,
+      province,
+      district,
+      ward,
       date_of_birth,
       name,
       phone,
       avatar,
     },
-    (value) => value === undefined || value === ""
+    (value) => value === undefined
   );
   const userDB = await UserModel.findById(req.jwtDecoded.id).lean();
   if (user.password) {

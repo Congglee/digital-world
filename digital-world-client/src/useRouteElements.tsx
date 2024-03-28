@@ -1,19 +1,20 @@
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import path from './constants/path'
+import DashboardLayout from './layouts/DashboardLayout'
 import MainLayout from './layouts/MainLayout'
+import BrandList from './pages/DashBoard/pages/Brand/BrandList'
+import CategoryList from './pages/DashBoard/pages/Category/CategoryList'
+import Overview from './pages/DashBoard/pages/Overview'
+import AddProduct from './pages/DashBoard/pages/Product/AddProduct'
+import ProductList from './pages/DashBoard/pages/Product/ProductList'
+import UpdateProduct from './pages/DashBoard/pages/Product/UpdateProduct'
+import UserList from './pages/DashBoard/pages/User/UserList'
+import ForgotPassword from './pages/ForgotPassword'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import { useAppSelector } from './redux/hook'
-import Home from './pages/Home'
-import Overview from './pages/DashBoard/pages/Overview'
-import DashboardLayout from './layouts/DashboardLayout'
-import CategoryList from './pages/DashBoard/pages/Category/CategoryList'
-import ProductList from './pages/DashBoard/pages/Product/ProductList'
-import AddProduct from './pages/DashBoard/pages/Product/AddProduct'
-import UpdateProduct from './pages/DashBoard/pages/Product/UpdateProduct'
-import BrandList from './pages/DashBoard/pages/Brand/BrandList'
 
 // function ProtectedRoute() {
 //   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -70,6 +71,10 @@ export default function useRouteElements() {
         {
           path: path.brandDashBoard,
           element: <BrandList />
+        },
+        {
+          path: path.userDashBoard,
+          element: <UserList />
         },
         {
           path: path.productsDashboard,
