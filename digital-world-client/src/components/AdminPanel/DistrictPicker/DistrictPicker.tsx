@@ -6,10 +6,12 @@ import { FormControl } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { VietNamDistrict } from 'src/types/location.type'
+import { UserSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-import { FormData } from '../AddUserDrawer/AddUserDrawer'
 
-interface VNDistrictPickerProps {
+type FormData = Omit<UserSchema, 'confirm_password' | 'new_password'>
+
+interface DistrictPickerProps {
   value?: string
   districts: VietNamDistrict[]
   setValue?: UseFormSetValue<FormData>
@@ -17,13 +19,13 @@ interface VNDistrictPickerProps {
   handleSetDistrictId: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function VNDistrictPicker({
+export default function DistrictPicker({
   value,
-  districts,
   setValue,
   provinceId,
+  districts,
   handleSetDistrictId
-}: VNDistrictPickerProps) {
+}: DistrictPickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>

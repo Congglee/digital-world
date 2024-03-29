@@ -19,9 +19,9 @@ import { VietNamProvince } from 'src/types/location.type'
 import { Role, User } from 'src/types/user.type'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-import VNDistrictPicker from '../VNDistrictPicker'
-import VNProvincePicker from '../VNProvincePicker'
-import VNWardPicker from '../VNWardPicker'
+import ProvincePicker from 'src/components/AdminPanel/ProvincePicker'
+import DistrictPicker from 'src/components/AdminPanel/DistrictPicker'
+import WardPicker from 'src/components/AdminPanel/WardPicker'
 
 interface UpdateUserDrawerProps {
   open: boolean
@@ -199,7 +199,7 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel htmlFor='province'>Tỉnh</FormLabel>
-                          <VNProvincePicker
+                          <ProvincePicker
                             value={field.value}
                             provinces={provinces}
                             setValue={form.setValue}
@@ -215,7 +215,7 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel htmlFor='district'>Quận huyện</FormLabel>
-                          <VNDistrictPicker
+                          <DistrictPicker
                             value={field.value}
                             districts={districtsData?.data.results || []}
                             setValue={form.setValue}
@@ -232,7 +232,7 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel htmlFor='ward'>Phường</FormLabel>
-                          <VNWardPicker
+                          <WardPicker
                             value={field.value}
                             setValue={form.setValue}
                             wards={wardsData?.data.results || []}

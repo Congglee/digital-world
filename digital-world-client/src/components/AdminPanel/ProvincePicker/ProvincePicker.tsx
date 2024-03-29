@@ -6,17 +6,19 @@ import { FormControl } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { VietNamProvince } from 'src/types/location.type'
+import { UserSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-import { FormData } from '../AddUserDrawer/AddUserDrawer'
 
-interface VNProvincePickerProps {
+type FormData = Omit<UserSchema, 'confirm_password' | 'new_password'>
+
+interface ProvincePickerProps {
   value?: string
   provinces: VietNamProvince[]
   setValue?: UseFormSetValue<FormData>
   handleSetProvinceId: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function VNProvincePicker({ value, provinces, setValue, handleSetProvinceId }: VNProvincePickerProps) {
+export default function ProvincePicker({ value, provinces, setValue, handleSetProvinceId }: ProvincePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>

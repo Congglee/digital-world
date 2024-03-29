@@ -6,17 +6,19 @@ import { FormControl } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { VietNamWard } from 'src/types/location.type'
+import { UserSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-import { FormData } from '../AddUserDrawer/AddUserDrawer'
 
-interface VNWardPickerProps {
+type FormData = Omit<UserSchema, 'confirm_password' | 'new_password'>
+
+interface WardPickerProps {
   value?: string
   wards: VietNamWard[]
   setValue?: UseFormSetValue<FormData>
   districtId: string
 }
 
-export default function VNWardPicker({ value, wards, setValue, districtId }: VNWardPickerProps) {
+export default function WardPicker({ value, wards, setValue, districtId }: WardPickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>

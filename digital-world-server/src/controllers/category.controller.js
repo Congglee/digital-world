@@ -75,7 +75,7 @@ const getCategory = async (req, res) => {
     };
     return responseSuccess(res, response);
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy danh mục");
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy danh mục");
   }
 };
 
@@ -103,8 +103,8 @@ const deleteCategory = async (req, res) => {
   const category_id = req.params.category_id;
   const categoryDB = await CategoryModel.findByIdAndDelete(category_id).lean();
   if (categoryDB) {
-    const productsUpdated = await ProductModel.find({ category: categoryDB });
-    if (productsUpdated.length > 0) {
+    const products = await ProductModel.find({ category: categoryDB });
+    if (products.length > 0) {
       const uncategorized = await CategoryModel.findOne({
         name: "Uncategorized",
       });

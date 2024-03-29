@@ -105,7 +105,7 @@ const getUsers = async (req, res) => {
 const getAllUsers = async (req, res) => {
   let users = await UserModel.find({})
     .sort({ createdAt: -1 })
-    .select({ __v: 0, description: 0 })
+    .select({ __v: 0, password: 0 })
     .lean();
   const response = { message: "Lấy tất cả người dùng thành công", data: users };
   return responseSuccess(res, response);
@@ -170,10 +170,10 @@ const updateUser = async (req, res) => {
   if (userDB) {
     let updatedUserDB;
     if (user.password) {
-      const hash_password = hashValue(password);
+      const hashedPassword = hashValue(password);
       updatedUserDB = await UserModel.findByIdAndUpdate(
         req.params.user_id,
-        { ...user, password: hash_password },
+        { ...user, password: hashedPassword },
         { new: true }
       )
         .select({ password: 0, __v: 0 })
@@ -229,8 +229,8 @@ const updateMe = async (req, res) => {
   );
   const userDB = await UserModel.findById(req.jwtDecoded.id).lean();
   if (user.password) {
-    const hash_password = hashValue(password);
-    if (hash_password === userDB.password) {
+    const hashedPassword = hashValue(password);
+    if (hashedPassword === userDB.password) {
       Object.assign(user, { password: hashValue(new_password) });
     } else {
       throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
