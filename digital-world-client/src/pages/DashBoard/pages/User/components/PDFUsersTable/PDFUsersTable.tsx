@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import config from 'src/constants/config'
 import { User } from 'src/types/user.type'
+import { chunkSubstr } from 'src/utils/utils'
 
 Font.register({
   family: 'Roboto',
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     flexGrow: 1
   },
   tableColHeader: {
-    width: '7.25%',
+    width: '10%',
     borderStyle: 'solid',
     borderColor: '#bfbfbf',
     borderBottomColor: '#000',
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0
   },
   tableCol: {
-    width: '7.25%',
+    width: '10%',
     borderStyle: 'solid',
     borderColor: '#bfbfbf',
     borderWidth: 1,
@@ -79,17 +80,6 @@ const styles = StyleSheet.create({
   }
 })
 
-function chunkSubstr(str: string, size: number) {
-  const numChunks = Math.ceil(str.length / size)
-  const chunks = new Array(numChunks)
-
-  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-    chunks[i] = str.substring(o, size)
-  }
-
-  return chunks
-}
-
 Font.registerHyphenationCallback((word) => {
   if (word.length > 12) {
     return chunkSubstr(word, 10)
@@ -98,25 +88,33 @@ Font.registerHyphenationCallback((word) => {
   }
 })
 
-export function PDFUsersTableDocument({ users }: { users: User[] }) {
+function WrapText({ text }: { text?: string }) {
+  return (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+      {text?.match(/\w+|\W+/g)?.map((seg, i) => <Text key={i}>{seg}</Text>)}
+    </View>
+  )
+}
+
+export default function PDFUsersTableDocument({ users }: { users: User[] }) {
   return (
     <Document title='Danh sách người dùng'>
       <Page size='A4' style={styles.body} wrap>
         <View style={styles.table}>
           <View style={styles.tableRow}>
-            <View style={[styles.tableColHeader, { width: '10%' }]}>
+            <View style={[styles.tableColHeader]}>
               <Text style={styles.tableCellHeader}>ID</Text>
             </View>
             <View style={[styles.tableColHeader]}>
               <Text style={styles.tableCellHeader}>Họ và tên</Text>
             </View>
-            <View style={[styles.tableColHeader, { width: '12%' }]}>
+            <View style={[styles.tableColHeader]}>
               <Text style={styles.tableCellHeader}>Email</Text>
             </View>
             <View style={[styles.tableColHeader]}>
               <Text style={styles.tableCellHeader}>Avatar</Text>
             </View>
-            <View style={[styles.tableColHeader, { width: '8%' }]}>
+            <View style={[styles.tableColHeader]}>
               <Text style={styles.tableCellHeader}>Ngày sinh</Text>
             </View>
             <View style={[styles.tableColHeader]}>
@@ -131,33 +129,29 @@ export function PDFUsersTableDocument({ users }: { users: User[] }) {
             <View style={[styles.tableColHeader]}>
               <Text style={styles.tableCellHeader}>Phường</Text>
             </View>
-            <View style={[styles.tableColHeader, { width: '12%' }]}>
+            <View style={[styles.tableColHeader]}>
               <Text style={styles.tableCellHeader}>SĐT</Text>
-            </View>
-            <View style={[styles.tableColHeader]}>
-              <Text style={styles.tableCellHeader}>Vai trò</Text>
-            </View>
-            <View style={[styles.tableColHeader]}>
-              <Text style={styles.tableCellHeader}>Trạng thái tài khoản</Text>
             </View>
           </View>
           {users?.map((user) => (
             <View style={styles.tableRow} key={user._id}>
-              <View style={[styles.tableCol, { width: '10%' }]}>
+              <View style={[styles.tableCol]}>
                 <Text style={styles.tableCell}>{user._id}</Text>
               </View>
               <View style={[styles.tableCol]}>
                 <Text style={styles.tableCell}>{user.name}</Text>
               </View>
-              <View style={[styles.tableCol, { width: '12%' }]}>
-                <Text style={styles.tableCell}>{user.email}</Text>
+              <View style={[styles.tableCol]}>
+                <Text style={styles.tableCell}>
+                  <WrapText text={user.email} />
+                </Text>
               </View>
               <View style={[styles.tableCol]}>
                 <Image src={user.avatar ? user.avatar : config.defaultUserImageUrl} />
               </View>
-              <View style={[styles.tableCol, { width: '8%' }]}>
+              <View style={[styles.tableCol]}>
                 <Text style={styles.tableCell}>
-                  {user.date_of_birth ? format(user.date_of_birth!, 'dd/MM/yy', { locale: vi }) : ''}
+                  {user.date_of_birth ? format(user.date_of_birth!, 'dd/MM/yyyy', { locale: vi }) : ''}
                 </Text>
               </View>
               <View style={[styles.tableCol]}>
@@ -172,14 +166,8 @@ export function PDFUsersTableDocument({ users }: { users: User[] }) {
               <View style={[styles.tableCol]}>
                 <Text style={styles.tableCell}>{user.ward}</Text>
               </View>
-              <View style={[styles.tableCol, { width: '12%' }]}>
+              <View style={[styles.tableCol]}>
                 <Text style={styles.tableCell}>{user.phone}</Text>
-              </View>
-              <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{user.roles?.[0]}</Text>
-              </View>
-              <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{user.is_blocked ? 'Bị khóa' : 'Hoạt động'}</Text>
               </View>
             </View>
           ))}

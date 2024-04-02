@@ -79,8 +79,8 @@ export default function AddUserDrawer({ open, onOpenChange, provinces }: AddUser
   })
   const [provinceId, setProvinceId] = useState('')
   const [districtId, setDistrictId] = useState('')
-  const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, { skip: provinceId !== '' ? false : true })
-  const { data: wardsData } = useGetDistrictWardsQuery(districtId, { skip: districtId !== '' ? false : true })
+  const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, { skip: provinceId ? false : true })
+  const { data: wardsData } = useGetDistrictWardsQuery(districtId, { skip: districtId ? false : true })
   const [addUserMutaton, { data, isLoading, isSuccess, isError, error }] = useAddUserMutation()
 
   const onSubmit = form.handleSubmit(async (data) => {

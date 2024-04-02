@@ -40,7 +40,8 @@ const OrderSchema = new Schema(
     },
     delivery_at: { type: String },
     date_of_order: { type: Date, maxlength: 160 },
-    order_phone: { type: String },
+    order_phone: { type: String, maxlength: 20 },
+    order_note: { type: String },
     payment_method: {
       type: String,
       enum: [PAYMENT.DIRECTLY, PAYMENT.BANKING, PAYMENT.STRIPE_GATE],

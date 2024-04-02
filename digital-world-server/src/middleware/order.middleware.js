@@ -20,10 +20,11 @@ const getOrdersRules = () => {
 
 const addOrderRules = () => {
   return [
-    body("phone")
-      .if((value) => value !== undefined)
+    body("order_phone")
+      .exists({ checkFalsy: true })
+      .withMessage("SDT không được để trống")
       .isLength({ max: 20 })
-      .withMessage("SĐT không được lớn hơn 20 kí tự"),
+      .withMessage("SDT phải ít hơn 20 kí tự"),
     body("payment_method")
       .exists({ checkFalsy: true })
       .withMessage("Phương thức thanh toán không được để trống")

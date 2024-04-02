@@ -10,8 +10,12 @@ import { brandSlice } from './slices/brand.slice'
 import { categorySlice } from './slices/category.slice'
 import { userApi } from './apis/user.api'
 import { locationApi } from './apis/location.api'
+import { orderApi } from './apis/order.api'
+import { appSlice } from './slices/app.slice'
 
 const rootReducer = combineReducers({
+  [appSlice.name]: appSlice.reducer,
+
   [uploadApi.reducerPath]: uploadApi.reducer,
   [authSlice.name]: authSlice.reducer,
   [authApi.reducerPath]: authApi.reducer,
@@ -26,6 +30,8 @@ const rootReducer = combineReducers({
 
   [productSlice.name]: productSlice.reducer,
   [productApi.reducerPath]: productApi.reducer,
+
+  [orderApi.reducerPath]: orderApi.reducer,
 
   [locationApi.reducerPath]: locationApi.reducer
 })

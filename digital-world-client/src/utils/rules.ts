@@ -120,9 +120,20 @@ export const userSchema = yup.object({
   confirm_password: handleConfirmPasswordYup('new_password')
 })
 
+export const orderSchema = yup.object({
+  order_status: yup.string().trim().required('Trạng thái đơn hàng là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  delivery_status: yup
+    .string()
+    .trim()
+    .required('Trạng thái vận chuyển là bắt buộc')
+    .max(160, 'Độ dài từ 5 - 160 ký tự'),
+  payment_status: yup.string().trim().required('Trạng thái thanh toán là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự')
+})
+
 export type CategorySchema = yup.InferType<typeof categorySchema>
 export type ProductSchema = yup.InferType<typeof productSchema>
 export type BrandSchema = yup.InferType<typeof brandSchema>
 export type UserSchema = yup.InferType<typeof userSchema>
+export type OrderSchema = yup.InferType<typeof orderSchema>
 
 export type Schema = yup.InferType<typeof schema>

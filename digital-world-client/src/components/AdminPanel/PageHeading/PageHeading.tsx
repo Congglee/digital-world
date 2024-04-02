@@ -1,31 +1,46 @@
-import { Download } from 'lucide-react'
+import { BlobProvider, DocumentProps } from '@react-pdf/renderer'
+import { Download, Eye, FileDown } from 'lucide-react'
+import { CSVLink } from 'react-csv'
+import { Link } from 'react-router-dom'
 import { Button } from 'src/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from 'src/components/ui/dropdown-menu'
 import { CSV, PDF } from 'src/utils/icons'
 import CalendarDateRangePicker from '../CalendarDateRangePicker'
-import { CSVLink } from 'react-csv'
 
 interface PageHeadingProps {
   heading: string
-  isDownload?: boolean
   children?: React.ReactNode
+  isDownload?: boolean
+  hasPdfDownload?: boolean
+  hasCsvDownload?: boolean
+
   csvData?: (string | number | undefined)[][]
   csvFileName?: string
   handleDownloadPdf?: () => void
+  pdfViewDocument?: React.ReactElement<DocumentProps>
 }
 
 export default function PageHeading({
   heading,
   isDownload = true,
+  hasPdfDownload = true,
+  hasCsvDownload = true,
   children,
   csvData = [],
   csvFileName,
-  handleDownloadPdf
+  handleDownloadPdf,
+  pdfViewDocument
 }: PageHeadingProps) {
   return (
     <>
@@ -42,26 +57,62 @@ export default function PageHeading({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem asChild>
-                  <Button
-                    variant='ghost'
-                    className='w-full justify-start flex gap-2 cursor-pointer'
-                    onClick={() => {
-                      handleDownloadPdf && handleDownloadPdf()
-                    }}
-                  >
-                    <PDF className='size-5' />
-                    <span>PDF (.pdf)</span>
-                  </Button>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Button variant='ghost' asChild className='w-full justify-start flex gap-2 cursor-pointer'>
-                    <CSVLink filename={csvFileName} data={csvData}>
-                      <CSV className='size-5' />
-                      <span>CSV (.csv)</span>
-                    </CSVLink>
-                  </Button>
-                </DropdownMenuItem>
+                {hasPdfDownload && (
+                  <>
+                    <DropdownMenuGroup>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger className='p-0'>
+                          <Button variant='ghost' className='w-full justify-start flex gap-2 cursor-pointer px-2'>
+                            <PDF className='size-5' />
+                            <span>PDF (.pdf)</span>
+                          </Button>
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                          <DropdownMenuSubContent>
+                            {pdfViewDocument && (
+                              <>
+                                <DropdownMenuItem>
+                                  <BlobProvider document={pdfViewDocument}>
+                                    {({ url, blob }) => (
+                                      <Link to={url!} target='_blank' className='flex items-center'>
+                                        <Eye className='mr-2 h-4 w-4' />
+                                        <span>Xem file PDF</span>
+                                      </Link>
+                                    )}
+                                  </BlobProvider>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                              </>
+                            )}
+                            <DropdownMenuItem>
+                              <button
+                                className='flex items-center'
+                                onClick={() => {
+                                  handleDownloadPdf && handleDownloadPdf()
+                                }}
+                              >
+                                <FileDown className='mr-2 h-4 w-4' />
+                                <span>Tải về...</span>
+                              </button>
+                            </DropdownMenuItem>
+                          </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                      </DropdownMenuSub>
+                    </DropdownMenuGroup>
+                  </>
+                )}
+                {hasCsvDownload && (
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Button variant='ghost' asChild className='w-full justify-start flex gap-2 cursor-pointer'>
+                        <CSVLink filename={csvFileName} data={csvData}>
+                          <CSV className='size-5' />
+                          <span>CSV (.csv)</span>
+                        </CSVLink>
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           )}

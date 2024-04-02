@@ -3,6 +3,7 @@ import MainNav from 'src/components/AdminPanel/MainNav'
 import Search from 'src/components/AdminPanel/Search'
 import UserNav from 'src/components/AdminPanel/UserNav'
 import { ToastContainer } from 'react-toastify'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 export default function DashboardLayout() {

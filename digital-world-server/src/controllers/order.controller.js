@@ -11,7 +11,8 @@ import { generateOrderCode } from "../utils/utils";
 const addOrder = async (req, res) => {
   const form = req.body;
   const user_id = req.jwtDecoded.id;
-  const { order_phone, payment_method, delivery_at, products } = form;
+  const { order_phone, order_note, payment_method, delivery_at, products } =
+    form;
   const userInDB = await UserModel.findById(user_id).exec();
   if (userInDB) {
     let totalAmount = 0;
@@ -40,6 +41,7 @@ const addOrder = async (req, res) => {
       delivery_at,
       date_of_order: new Date().toISOString(),
       order_phone,
+      order_note,
       payment_method,
     };
     const orderAdd = await new OrderModel(order).save();

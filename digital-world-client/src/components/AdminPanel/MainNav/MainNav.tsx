@@ -7,10 +7,22 @@ import path from 'src/constants/path'
 import { cn } from 'src/utils/utils'
 import Search from '../Search'
 import { Brand, Category, Website } from 'src/utils/icons'
+import { useHorizontalScroll } from 'src/hooks/useSideScroll'
 
-function SideMenu({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
+interface SideMenuProps extends React.HTMLAttributes<HTMLElement> {
+  className: string
+  horizontalScroll?: boolean
+}
+
+function SideMenu({ className, horizontalScroll = false, ...props }: SideMenuProps) {
+  const scrollRef = useHorizontalScroll()
+
   return (
-    <nav className={cn('hidden md:flex items-center overflow-auto', className)} {...props}>
+    <nav
+      className={cn('hidden md:flex items-center overflow-auto', horizontalScroll && 'scroll', className)}
+      {...props}
+      ref={scrollRef}
+    >
       <Button asChild variant='ghost'>
         <NavLink to={path.home} end>
           {({ isActive }) => (
@@ -162,7 +174,7 @@ function MainNavDrawer() {
 export default function MainNav() {
   return (
     <>
-      <SideMenu className='lg:mx-4' />
+      <SideMenu className='lg:mx-4' horizontalScroll={true} />
       <MainNavDrawer />
     </>
   )

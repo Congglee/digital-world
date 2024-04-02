@@ -11,3 +11,5 @@ export const brands = [
   { name: 'Microsoft Surface' },
   { name: 'Unbranded' }
 ]
+
+export const allowedRoles = ['Admin', 'Guest', 'Writer']

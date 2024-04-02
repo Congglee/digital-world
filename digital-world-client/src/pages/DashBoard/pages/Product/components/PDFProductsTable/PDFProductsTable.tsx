@@ -1,7 +1,6 @@
-import { View, StyleSheet, Text, Document, Page, Image, Font, PDFViewer, Svg, Polygon } from '@react-pdf/renderer'
-import { Dialog, DialogContent } from 'src/components/ui/dialog'
+import { Document, Font, Image, Page, Polygon, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
 import { Product } from 'src/types/product.type'
-import { convertHTMLToPlainText, formatCurrency } from 'src/utils/utils'
+import { chunkSubstr, convertHTMLToPlainText, formatCurrency } from 'src/utils/utils'
 
 Font.register({
   family: 'Roboto',
@@ -78,17 +77,6 @@ const styles = StyleSheet.create({
   }
 })
 
-function chunkSubstr(str: string, size: number) {
-  const numChunks = Math.ceil(str.length / size)
-  const chunks = new Array(numChunks)
-
-  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-    chunks[i] = str.substring(o, size)
-  }
-
-  return chunks
-}
-
 Font.registerHyphenationCallback((word) => {
   if (word.length > 12) {
     return chunkSubstr(word, 10)
@@ -97,7 +85,7 @@ Font.registerHyphenationCallback((word) => {
   }
 })
 
-export function PDFProductsTableDocument({ products }: { products: Product[] }) {
+export default function PDFProductsTableDocument({ products }: { products: Product[] }) {
   return (
     <Document title='Danh sách sản phẩm'>
       <Page size='A4' style={styles.body} wrap>
@@ -189,25 +177,5 @@ export function PDFProductsTableDocument({ products }: { products: Product[] }) 
         />
       </Page>
     </Document>
-  )
-}
-
-export default function PDFViewProductsTable({
-  products,
-  open,
-  onOpenStateChange
-}: {
-  products: Product[]
-  open: boolean
-  onOpenStateChange: React.Dispatch<React.SetStateAction<boolean>>
-}) {
-  return (
-    <Dialog open={open} onOpenChange={onOpenStateChange}>
-      <DialogContent className='max-w-screen-lg h-[650px]'>
-        <PDFViewer className='w-full h-full'>
-          <PDFProductsTableDocument products={products} />
-        </PDFViewer>
-      </DialogContent>
-    </Dialog>
   )
 }

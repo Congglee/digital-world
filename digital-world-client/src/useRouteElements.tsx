@@ -1,9 +1,12 @@
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { allowedRoles } from './constants/data'
 import path from './constants/path'
 import DashboardLayout from './layouts/DashboardLayout'
 import MainLayout from './layouts/MainLayout'
 import BrandList from './pages/DashBoard/pages/Brand/BrandList'
 import CategoryList from './pages/DashBoard/pages/Category/CategoryList'
+import OrderList from './pages/DashBoard/pages/Order/OrderList'
+import UpdateUserOrder from './pages/DashBoard/pages/Order/UpdateUserOrder'
 import Overview from './pages/DashBoard/pages/Overview'
 import AddProduct from './pages/DashBoard/pages/Product/AddProduct'
 import ProductList from './pages/DashBoard/pages/Product/ProductList'
@@ -16,10 +19,17 @@ import Register from './pages/Register'
 import ResetPassword from './pages/ResetPassword'
 import { useAppSelector } from './redux/hook'
 
-// function ProtectedRoute() {
-//   const { isAuthenticated } = useAppSelector((state) => state.auth)
-//   return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
-// }
+function ProtectedRoute() {
+  const { isAuthenticated } = useAppSelector((state) => state.auth)
+  return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
+}
+
+function ProtectedDashboardRoute() {
+  const { profile } = useAppSelector((state) => state.auth)
+  const isAllowedRole = profile.roles.some((role: string) => allowedRoles.includes(role))
+
+  return isAllowedRole ? <Outlet /> : <Navigate to={path.home} />
+}
 
 function RejectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -56,40 +66,62 @@ export default function useRouteElements() {
         }
       ]
     },
+
     {
-      path: path.dashboard,
-      element: <DashboardLayout />,
+      path: '',
+      element: <ProtectedRoute />,
       children: [
         {
-          path: path.dashboard,
-          element: <Overview />
-        },
-        {
-          path: path.categoryDashboard,
-          element: <CategoryList />
-        },
-        {
-          path: path.brandDashBoard,
-          element: <BrandList />
-        },
-        {
-          path: path.userDashBoard,
-          element: <UserList />
-        },
-        {
-          path: path.productsDashboard,
-          element: <ProductList />
-        },
-        {
-          path: path.addProduct,
-          element: <AddProduct />
-        },
-        {
-          path: path.updateProduct,
-          element: <UpdateProduct />
+          path: '',
+          element: <ProtectedDashboardRoute />,
+          children: [
+            {
+              path: path.dashboard,
+              element: <DashboardLayout />,
+              children: [
+                {
+                  path: path.dashboard,
+                  element: <Overview />
+                },
+                {
+                  path: path.categoryDashboard,
+                  element: <CategoryList />
+                },
+                {
+                  path: path.brandDashBoard,
+                  element: <BrandList />
+                },
+                {
+                  path: path.userDashBoard,
+                  element: <UserList />
+                },
+                {
+                  path: path.productsDashboard,
+                  element: <ProductList />
+                },
+                {
+                  path: path.addProduct,
+                  element: <AddProduct />
+                },
+                {
+                  path: path.updateProduct,
+                  element: <UpdateProduct />
+                },
+                {
+                  path: path.orderDashBoard,
+                  element: <OrderList />
+                },
+                {
+                  path: path.updateUserOrder,
+                  element: <UpdateUserOrder />
+                }
+              ]
+            }
+          ]
         }
       ]
     },
+
     {
       path: '',
       element: <MainLayout />,

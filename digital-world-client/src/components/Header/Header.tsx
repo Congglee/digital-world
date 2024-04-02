@@ -10,9 +10,11 @@ import { useAppDispatch, useAppSelector } from 'src/redux/hook'
 import Popover from '../Popover'
 import { useLogoutMutation } from 'src/redux/apis/auth.api'
 import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
+import { allowedRoles } from 'src/constants/data'
 
 function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> }) {
   const { isAuthenticated, profile } = useAppSelector((state) => state.auth)
+  const isAllowedRole = profile.roles.some((role: string) => allowedRoles.includes(role))
 
   return (
     <div className='bg-[#f0f0f0] text-[#505050] h-9 hidden md:block'>
@@ -34,6 +36,14 @@ function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> 
                 className='flex items-center py-1 hover:text-gray-300 cursor-pointer ml-6'
                 renderPopover={
                   <div className='bg-white text-sm relative shadow-md rounded-md border border-gray-200'>
+                    {isAllowedRole && (
+                      <Link
+                        to={path.dashboard}
+                        className='block py-3 px-4 hover:bg-slate-100 hover:text-cyan-500 w-full text-left'
+                      >
+                        Quản lý website
+                      </Link>
+                    )}
                     <Link
                       to={path.profile}
                       className='block py-3 px-4 hover:bg-slate-100 hover:text-cyan-500 w-full text-left'

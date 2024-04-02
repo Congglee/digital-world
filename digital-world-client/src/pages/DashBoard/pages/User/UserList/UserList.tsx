@@ -18,8 +18,8 @@ import AddUserDrawer from '../components/AddUserDrawer'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
 import { toast } from 'react-toastify'
 import { pdf } from '@react-pdf/renderer'
-import { PDFUsersTableDocument } from '../components/PDFViewUsersTable/PDFViewUsersTable'
 import { saveAs } from 'file-saver'
+import PDFUsersTableDocument from '../components/PDFUsersTable'
 
 const exportDataHeaders = [
   'ID',
@@ -217,6 +217,7 @@ export default function UserList() {
         csvData={csvExportUsersData}
         csvFileName='danh_sach_nguoi_dung'
         handleDownloadPdf={handleDownloadPdf}
+        pdfViewDocument={<PDFUsersTableDocument users={usersList!} />}
       >
         <Button variant='outline' className='space-x-2 bg-blue-500' onClick={() => setAddUserDrawerOpen(true)}>
           <PlusCircle />

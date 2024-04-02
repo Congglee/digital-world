@@ -23,7 +23,7 @@ import {
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
 import { convertHTMLToPlainText, formatCurrency } from 'src/utils/utils'
-import { PDFProductsTableDocument } from '../components/PDFViewProductsTable/PDFViewProductsTable'
+import PDFProductsTableDocument from '../components/PDFProductsTable'
 
 const exportDataHeaders = [
   'ID',
@@ -231,6 +231,7 @@ export default function ProductList() {
         csvData={csvExportProductsData}
         csvFileName='danh_sach_san_pham.csv'
         handleDownloadPdf={handleDownloadPdf}
+        pdfViewDocument={<PDFProductsTableDocument products={productsData?.data.products!} />}
       >
         <Link to={path.addProduct}>
           <Button variant='outline' className='w-full space-x-2 bg-blue-500'>

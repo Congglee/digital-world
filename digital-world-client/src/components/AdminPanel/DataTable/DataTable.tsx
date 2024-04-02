@@ -103,7 +103,7 @@ export default function DataTable<TData extends { _id: string }, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  No results.
+                  Không có dữ liệu
                 </TableCell>
               </TableRow>
             )}

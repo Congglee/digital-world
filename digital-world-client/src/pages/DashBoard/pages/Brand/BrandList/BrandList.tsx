@@ -14,8 +14,8 @@ import { Checkbox } from 'src/components/ui/checkbox'
 import { useDeleteBrandMutation, useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 import { Brand } from 'src/types/brand.type'
 import AddBrandDialog from '../components/AddBrandDialog'
-import { PDFBrandsTableDocument } from '../components/PDFViewBrandsTable/PDFViewBrandsTable'
 import UpdateBrandDialog from '../components/UpdateBrandDialog'
+import PDFBrandsTableDocument from '../components/PDFBrandsTable'
 
 const exportDataHeaders = ['ID', 'Tên thương hiệu']
 
@@ -113,6 +113,7 @@ export default function BrandList() {
         csvData={csvExportBrandsData}
         csvFileName='danh_sach_thuong_hieu'
         handleDownloadPdf={handleDownloadPdf}
+        pdfViewDocument={<PDFBrandsTableDocument brands={brandsData?.data.brands!} />}
       >
         <Button variant='outline' className='space-x-2 bg-blue-500' onClick={() => setAddBrandDialogOpen(true)}>
           <PlusCircle />

@@ -1,5 +1,6 @@
 import { Document, Font, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
-import { Category } from 'src/types/category.type'
+import { Brand } from 'src/types/brand.type'
+import { chunkSubstr } from 'src/utils/utils'
 
 Font.register({
   family: 'Roboto',
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     flexGrow: 1
   },
   tableColHeader: {
-    width: '33.33%',
+    width: '50%',
     borderStyle: 'solid',
     borderColor: '#bfbfbf',
     borderBottomColor: '#000',
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0
   },
   tableCol: {
-    width: '33.33%',
+    width: '50%',
     borderStyle: 'solid',
     borderColor: '#bfbfbf',
     borderWidth: 1,
@@ -76,17 +77,6 @@ const styles = StyleSheet.create({
   }
 })
 
-function chunkSubstr(str: string, size: number) {
-  const numChunks = Math.ceil(str.length / size)
-  const chunks = new Array(numChunks)
-
-  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-    chunks[i] = str.substring(o, size)
-  }
-
-  return chunks
-}
-
 Font.registerHyphenationCallback((word) => {
   if (word.length > 12) {
     return chunkSubstr(word, 10)
@@ -95,9 +85,9 @@ Font.registerHyphenationCallback((word) => {
   }
 })
 
-export function PDFCategoriesTableDocument({ categories }: { categories: Category[] }) {
+export default function PDFBrandsTableDocument({ brands }: { brands: Brand[] }) {
   return (
-    <Document title='Danh sách danh mục'>
+    <Document title='Danh sách thương hiệu'>
       <Page size='A4' style={styles.body} wrap>
         <View style={styles.table}>
           <View style={styles.tableRow}>
@@ -105,22 +95,16 @@ export function PDFCategoriesTableDocument({ categories }: { categories: Categor
               <Text style={styles.tableCellHeader}>ID</Text>
             </View>
             <View style={[styles.tableColHeader]}>
-              <Text style={styles.tableCellHeader}>Tên danh mục</Text>
-            </View>
-            <View style={[styles.tableColHeader]}>
-              <Text style={styles.tableCellHeader}>Thương hiệu</Text>
+              <Text style={styles.tableCellHeader}>Tên thương hiệu</Text>
             </View>
           </View>
-          {categories?.map((category) => (
-            <View style={styles.tableRow} key={category._id}>
+          {brands?.map((brand) => (
+            <View style={styles.tableRow} key={brand._id}>
               <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{category._id}</Text>
+                <Text style={styles.tableCell}>{brand._id}</Text>
               </View>
               <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{category.name}</Text>
-              </View>
-              <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{category.brands.map((brand) => brand.name).join(' - ')}</Text>
+                <Text style={styles.tableCell}>{brand.name}</Text>
               </View>
             </View>
           ))}

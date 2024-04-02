@@ -5,7 +5,13 @@ import { Button } from 'src/components/ui/button'
 import DataTableFacetedFilter from '../DataTableFacetedFilter'
 import DataTableViewOptions from '../DateViewTableOptions'
 import { useAppSelector } from 'src/redux/hook'
-import { isBlockedOptions, rolesOptions } from 'src/constants/options'
+import {
+  deliveryStatusOptions,
+  isBlockedOptions,
+  orderStatusOptions,
+  paymentStatusOptions,
+  rolesOptions
+} from 'src/constants/options'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -18,17 +24,21 @@ export default function DataTableToolbar<TData>({ table, placeholder }: DataTabl
   const { categoriesOptions } = useAppSelector((state) => state.category)
 
   return (
-    <div className='flex items-center justify-between'>
-      <div className='flex flex-1 items-center space-x-2'>
+    <div className='flex flex-wrap items-start justify-between'>
+      <div className='flex flex-wrap flex-col w-full sm:flex-row sm:flex-1 sm:items-center gap-2'>
         <Input
           placeholder={placeholder}
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+          value={
+            (table.getColumn('name')?.getFilterValue() as string) ??
+            (table.getColumn('order_code')?.getFilterValue() as string) ??
+            ''
+          }
+          onChange={(event) => {
+            table.getColumn('name') && table.getColumn('name')?.setFilterValue(event.target.value)
+            table.getColumn('order_code') && table.getColumn('order_code')?.setFilterValue(event.target.value)
+          }}
           className='h-8 w-[150px] lg:w-[250px]'
         />
-        {/* {table.getColumn('name') && (
-          <DataTableFacetedFilter column={table.getColumn('name')} title='Tên danh mục' options={categoriesName} />
-        )} */}
         {table.getColumn('brand') && (
           <DataTableFacetedFilter column={table.getColumn('brand')} title='Thương hiệu' options={brandsOptions} />
         )}
@@ -43,6 +53,27 @@ export default function DataTableToolbar<TData>({ table, placeholder }: DataTabl
             column={table.getColumn('is_blocked')}
             title='Trạng thái'
             options={isBlockedOptions}
+          />
+        )}
+        {table.getColumn('order_status') && (
+          <DataTableFacetedFilter
+            column={table.getColumn('order_status')}
+            title='Trạng thái đơn hàng'
+            options={orderStatusOptions}
+          />
+        )}
+        {table.getColumn('delivery_status') && (
+          <DataTableFacetedFilter
+            column={table.getColumn('delivery_status')}
+            title='Trạng thái vận chuyển'
+            options={deliveryStatusOptions}
+          />
+        )}
+        {table.getColumn('payment_status') && (
+          <DataTableFacetedFilter
+            column={table.getColumn('payment_status')}
+            title='Trạng thái thanh toán'
+            options={paymentStatusOptions}
           />
         )}
         {isFiltered && (
