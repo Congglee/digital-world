@@ -4,6 +4,7 @@ import { UserModel } from "../database/models/user.model";
 import { STATUS } from "../constants/status";
 import { omitBy } from "lodash";
 import { ORDER, USERS_SORT_BY } from "../constants/sort";
+import mongoose from "mongoose";
 
 const addUser = async (req, res) => {
   const form = req.body;
@@ -262,6 +263,22 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const deleteManyUsers = async (req, res) => {
+  const list_id = req.body.list_id.map((id) => new mongoose.Types.ObjectId(id));
+  const userDB = await UserModel.find({ _id: { $in: list_id } }).lean();
+  const deletedData = await UserModel.deleteMany({
+    _id: { $in: list_id },
+  }).lean();
+  if (userDB.length > 0) {
+    return responseSuccess(res, {
+      message: `Xóa ${deletedData.deletedCount} người dùng thành công`,
+      data: { deleted_cound: deletedData.deletedCount },
+    });
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
+  }
+};
+
 const userController = {
   addUser,
   getUsers,
@@ -271,6 +288,7 @@ const userController = {
   updateUser,
   updateMe,
   deleteUser,
+  deleteManyUsers,
 };
 
 export default userController;

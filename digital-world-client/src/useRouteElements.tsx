@@ -18,6 +18,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ResetPassword from './pages/ResetPassword'
 import { useAppSelector } from './redux/hook'
+import SendMailOrder from './pages/DashBoard/pages/Order/SendMailOrder'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -80,7 +81,7 @@ export default function useRouteElements() {
               element: <DashboardLayout />,
               children: [
                 {
-                  path: path.dashboard,
+                  index: true,
                   element: <Overview />
                 },
                 {
@@ -114,6 +115,10 @@ export default function useRouteElements() {
                 {
                   path: path.updateUserOrder,
                   element: <UpdateUserOrder />
+                },
+                {
+                  path: path.sendMailOrder,
+                  element: <SendMailOrder />
                 }
               ]
             }
@@ -127,7 +132,6 @@ export default function useRouteElements() {
       element: <MainLayout />,
       children: [
         {
-          path: '',
           index: true,
           element: <Home />
         }

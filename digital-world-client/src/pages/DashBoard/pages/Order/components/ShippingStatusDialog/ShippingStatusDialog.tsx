@@ -71,6 +71,8 @@ export default function ShippingStatusDialog({
     if (!open) {
       form.reset({ delivery_status: order.delivery_status })
       setIsInProgress(order.delivery_status.includes('Đang giao') ? true : false)
+      setAddress((prevAddress) => ({ ...prevAddress, place: initialSearchTextValue }))
+      setAutoCompleteAddress([])
     }
   }, [open])
 
@@ -83,7 +85,7 @@ export default function ShippingStatusDialog({
     setAddress({ ...address, place: event.target.value })
     setSearchTextValue(event.target.value)
   }
-  const debouncedSearchValue = useDebounce(searchTextValue, 500)
+  const debouncedSearchValue = useDebounce(searchTextValue, 800)
 
   useEffect(() => {
     if (debouncedSearchValue) {
@@ -108,13 +110,20 @@ export default function ShippingStatusDialog({
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
+      let deliveryStatus = data.delivery_status
+      if (data.delivery_status.includes('Đang giao')) {
+        if (address.place) {
+          deliveryStatus = `Đang giao đến ${address.place}`
+        } else {
+          deliveryStatus = 'Đang giao'
+        }
+      } else {
+        deliveryStatus = data.delivery_status
+      }
       const payloadData = {
         order_status: order.order_status,
         payment_status: order.payment_status,
-        delivery_status:
-          data.delivery_status === 'Đang giao'
-            ? `${data.delivery_status}${address.place ? ` đến ${address.place}` : ''}`
-            : data.delivery_status
+        delivery_status: deliveryStatus
       }
       await updateUserOrder({ id: order._id, payload: payloadData })
     } catch (error) {
@@ -205,12 +214,12 @@ export default function ShippingStatusDialog({
                       value={address.place}
                       onChange={handleChange}
                     />
-                    <ul className='absolute top-12 bg-foreground overflow-hidden rounded-md text-black z-50 p-0 w-full divide-y-2'>
+                    <ul className='absolute top-12 bg-accent overflow-hidden rounded-md text-foreground z-50 p-0 w-full divide-y-2'>
                       {autoCompleteAddress.map((address, index) => (
                         <li
                           key={index}
                           onClick={() => handleAutoCompleteAddressClick(address)}
-                          className='list-none px-4 py-2 hover:bg-accent hover:text-muted-foreground hover:cursor-pointer text-sm'
+                          className='list-none px-4 py-2 hover:bg-accent-foreground hover:text-muted-foreground hover:cursor-pointer text-sm'
                         >
                           {address.formatted}
                         </li>

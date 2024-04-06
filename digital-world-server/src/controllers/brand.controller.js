@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { BRANDS_SORT_BY, ORDER } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { BrandModel } from "../database/models/brand.model";
@@ -121,12 +122,40 @@ const deleteBrand = async (req, res) => {
   }
 };
 
+const deleteManyBrands = async (req, res) => {
+  const list_id = req.body.list_id.map((id) => new mongoose.Types.ObjectId(id));
+  const brandDB = await BrandModel.find({ _id: { $in: list_id } }).lean();
+  const deletedData = await BrandModel.deleteMany({
+    _id: { $in: list_id },
+  }).lean();
+  if (brandDB.length > 0) {
+    const brandDBNames = brandDB.map((brand) => brand.name);
+    await Promise.all([
+      ProductModel.updateMany(
+        { brand: { $in: brandDBNames } },
+        { $set: { brand: "Unbranded" } }
+      ),
+      CategoryModel.updateMany(
+        { brands: { $in: list_id } },
+        { $pull: { brands: { $in: list_id } } }
+      ),
+    ]);
+
+    return responseSuccess(res, {
+      message: `Xóa ${deletedData.deletedCount} thương hiệu thành công`,
+      data: { deleted_cound: deletedData.deletedCount },
+    });
+  }
+  throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy thương hiệu");
+};
+
 const brandController = {
   addBrand,
   getBrand,
   getBrands,
   updateBrand,
   deleteBrand,
+  deleteManyBrands,
 };
 
 export default brandController;

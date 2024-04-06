@@ -13,8 +13,8 @@ import {
 } from "../utils/crypt";
 import { signToken } from "../utils/jwt";
 import {
-  generateRegistrationEmail,
-  generateResetPasswordEmail,
+  registrationEmailTemplate,
+  resetPasswordEmailTemplate,
   sendMail,
 } from "../utils/mail.js";
 import { ErrorHandler, responseSuccess } from "../utils/response";
@@ -50,7 +50,7 @@ const registerController = async (req, res) => {
     }).save();
 
     if (userAdd) {
-      const html = generateRegistrationEmail(token);
+      const html = registrationEmailTemplate(token);
       await sendMail({
         email,
         html,
@@ -225,7 +225,7 @@ const forgotPasswordController = async (req, res) => {
     userInDB.password_reset_expires = passwordResetExpires;
     await userInDB.save();
 
-    const html = generateResetPasswordEmail(resetToken);
+    const html = resetPasswordEmailTemplate(resetToken);
     await sendMail({
       email,
       html,

@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { CircleUserRound } from 'lucide-react'
+import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'src/components/AdminPanel/DataTable'
 import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHeader'
@@ -17,6 +18,50 @@ import { formatCurrency, getAvatarUrl } from 'src/utils/utils'
 export default function OrderList() {
   const { data: ordersData } = useGetOrdersQuery()
   const navigate = useNavigate()
+
+  const csvExportOrdersData = useMemo(() => {
+    const headers = [
+      'Mã đơn hàng',
+      'Khách',
+      'Email',
+      'Số điện thoại',
+      'Sản phẩm',
+      'Số lượng sản phẩm',
+      'Giá sản phẩm',
+      'Thành tiền',
+      'Ngày đặt',
+      'Địa chỉ giao hàng',
+      'Phương thức thanh toán',
+      'Trạng thái đơn hàng',
+      'Trạng thái vận chuyển',
+      'Trạng thái thanh toán',
+      'Tổng tiền'
+    ]
+
+    const rows = ordersData
+      ? ordersData.data.orders.flatMap((order) =>
+          order.products.map((product) => [
+            order.order_code,
+            order.order_by.user_name,
+            order.order_by.user_email,
+            order.order_by.user_phone,
+            product.product_name,
+            product.buy_count,
+            `${formatCurrency(product.product_price)}đ`,
+            `${formatCurrency(product.buy_count * product.product_price)}đ`,
+            format(order.date_of_order, 'dd/MM/yy'),
+            order.delivery_at,
+            order.payment_method,
+            order.order_status,
+            order.delivery_status,
+            order.payment_status,
+            `${formatCurrency(order.total_amount)}đ`
+          ])
+        )
+      : []
+
+    return [headers, ...rows]
+  }, [ordersData])
 
   const columns: ColumnDef<Order>[] = [
     {
@@ -148,8 +193,12 @@ export default function OrderList() {
           row={row}
           enableEditing={true}
           enableDeleting={false}
+          enableSendMail={true}
           onEdit={() => {
             navigate(path.updateUserOrder.replace(':order_id', row.original._id))
+          }}
+          onSendMail={() => {
+            navigate(path.sendMailOrder.replace(':order_id', row.original._id))
           }}
         />
       )
@@ -158,7 +207,12 @@ export default function OrderList() {
 
   return (
     <>
-      <PageHeading heading='Đơn hàng' />
+      <PageHeading
+        heading='Đơn hàng'
+        hasPdfDownload={false}
+        csvData={csvExportOrdersData}
+        csvFileName='danh_sach_don_hang.csv'
+      />
       <DataTable data={ordersData?.data.orders || []} columns={columns} placeholder='Lọc đơn hàng...' />
     </>
   )

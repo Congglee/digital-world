@@ -27,7 +27,7 @@ const sendMail = async ({ email, html, subject }) => {
   return info;
 };
 
-const generateRegistrationEmail = (token) => {
+const registrationEmailTemplate = (token) => {
   return `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f7f7f7; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
              <div style="text-align: center; margin-bottom: 20px;">
@@ -44,7 +44,7 @@ const generateRegistrationEmail = (token) => {
   `;
 };
 
-const generateResetPasswordEmail = (token) => {
+const resetPasswordEmailTemplate = (token) => {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f7f7f7; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
@@ -60,4 +60,4 @@ const generateResetPasswordEmail = (token) => {
     </div>`;
 };
 
-export { sendMail, generateRegistrationEmail, generateResetPasswordEmail };
+export { sendMail, registrationEmailTemplate, resetPasswordEmailTemplate };

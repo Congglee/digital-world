@@ -5,7 +5,7 @@ export default function RichTextEditor({
   onChange,
   editorHeight = 350
 }: {
-  value: string
+  value?: string
   onChange: (...event: any[]) => void
   editorHeight?: number
 }) {
@@ -21,8 +21,9 @@ export default function RichTextEditor({
           'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
         content_style: 'body { font-family: "Inter", sans-serif; font-size: 14px }'
       }}
-      initialValue={value}
-      onChange={(e) => onChange(e.target.getContent())}
+      initialValue={value || '<p></p>'}
+      onEditorChange={(newValue, editor) => onChange(newValue)}
+      // onChange={(e) => onChange(e.target.getContent())}
     />
   )
 }

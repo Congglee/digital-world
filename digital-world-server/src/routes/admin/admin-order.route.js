@@ -3,7 +3,7 @@ import helpersMiddleware from "../../middleware/helpers.middleware";
 import authMiddleware from "../../middleware/auth.middleware";
 import { wrapAsync } from "../../utils/response";
 import orderMiddleware from "../../middleware/order.middleware";
-import OrderController from "../../controllers/order.controller";
+import orderController from "../../controllers/order.controller";
 
 const adminOrderRouter = Router();
 
@@ -13,7 +13,7 @@ adminOrderRouter.get(
   authMiddleware.verifyAdmin,
   orderMiddleware.getOrdersRules(),
   helpersMiddleware.entityValidator,
-  wrapAsync(OrderController.getOrders)
+  wrapAsync(orderController.getOrders)
 );
 
 adminOrderRouter.get(
@@ -22,14 +22,14 @@ adminOrderRouter.get(
   authMiddleware.verifyAdmin,
   helpersMiddleware.idRule("order_id"),
   helpersMiddleware.idValidator,
-  wrapAsync(OrderController.getOrder)
+  wrapAsync(orderController.getOrder)
 );
 
 adminOrderRouter.get(
   "/get-all-orders",
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,
-  wrapAsync(OrderController.getAllOrders)
+  wrapAsync(orderController.getAllOrders)
 );
 
 adminOrderRouter.put(
@@ -40,7 +40,7 @@ adminOrderRouter.put(
   helpersMiddleware.idValidator,
   orderMiddleware.updateUserOrderRules(),
   helpersMiddleware.entityValidator,
-  wrapAsync(OrderController.updateUserOrder)
+  wrapAsync(orderController.updateUserOrder)
 );
 
 export default adminOrderRouter;

@@ -1,10 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import { pdf } from '@react-pdf/renderer'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { ArrowDownUp, CheckIcon, List, Loader, Truck } from 'lucide-react'
+import { saveAs } from 'file-saver'
+import { ArrowDownUp, CheckIcon, List, Loader, Send, Truck } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from 'src/components/ui/card'
@@ -17,11 +20,8 @@ import path from 'src/constants/path'
 import { useGetOrderQuery, useUpdateUserOrderMutation } from 'src/redux/apis/order.api'
 import { OrderSchema, orderSchema } from 'src/utils/rules'
 import { cn, formatCurrency, getAvatarUrl } from 'src/utils/utils'
-import ShippingStatusDialog from '../components/ShippingStatusDialog'
-import { toast } from 'react-toastify'
-import { pdf } from '@react-pdf/renderer'
 import PDFInvoiceDetailDocument from '../components/PDFInvoiceDetail'
-import { saveAs } from 'file-saver'
+import ShippingStatusDialog from '../components/ShippingStatusDialog'
 
 type FormData = Pick<OrderSchema, 'order_status' | 'payment_status'>
 const updateUserOrderSchema = orderSchema.pick(['order_status', 'payment_status'])
@@ -80,6 +80,12 @@ export default function UpdateUserOrder() {
         pdfViewDocument={<PDFInvoiceDetailDocument order={order!} />}
         hasCsvDownload={false}
       >
+        <Link to={`${path.orderDashBoard}/send-mail/${order._id}`}>
+          <Button type='button' className='w-full space-x-2 bg-green-500 text-foreground hover:text-primary-foreground'>
+            <Send className='size-5' />
+            <span>Gửi mail</span>
+          </Button>
+        </Link>
         <Link to={path.orderDashBoard}>
           <Button variant='outline' className='w-full space-x-2 bg-blue-500'>
             <List />

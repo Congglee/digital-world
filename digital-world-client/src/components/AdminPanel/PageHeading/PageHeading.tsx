@@ -73,7 +73,7 @@ export default function PageHeading({
                               <>
                                 <DropdownMenuItem>
                                   <BlobProvider document={pdfViewDocument}>
-                                    {({ url, blob }) => (
+                                    {({ url }) => (
                                       <Link to={url!} target='_blank' className='flex items-center'>
                                         <Eye className='mr-2 h-4 w-4' />
                                         <span>Xem file PDF</span>

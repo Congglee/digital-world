@@ -61,4 +61,13 @@ adminUserRouter.delete(
   wrapAsync(userController.deleteUser)
 );
 
+adminUserRouter.delete(
+  "/delete-many-users",
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  helpersMiddleware.listIdRule("list_id"),
+  helpersMiddleware.idValidator,
+  wrapAsync(userController.deleteManyUsers)
+);
+
 export default adminUserRouter;

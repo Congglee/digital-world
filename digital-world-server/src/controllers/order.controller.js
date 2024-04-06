@@ -7,6 +7,7 @@ import { ProductModel } from "../database/models/product.model";
 import { UserModel } from "../database/models/user.model";
 import { ErrorHandler, responseSuccess } from "../utils/response";
 import { generateOrderCode } from "../utils/utils";
+import { sendMail } from "../utils/mail";
 
 const addOrder = async (req, res) => {
   const form = req.body;
@@ -200,7 +201,7 @@ const getAllOrders = async (req, res) => {
   return responseSuccess(res, response);
 };
 
-const OrderController = {
+const orderController = {
   addOrder,
   updateUserOrder,
   updateMyOrder,
@@ -209,4 +210,4 @@ const OrderController = {
   getAllOrders,
 };
 
-export default OrderController;
+export default orderController;

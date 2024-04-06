@@ -122,12 +122,27 @@ export const userSchema = yup.object({
 
 export const orderSchema = yup.object({
   order_status: yup.string().trim().required('Trạng thái đơn hàng là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
-  delivery_status: yup
+  delivery_status: yup.string().trim().required('Trạng thái vận chuyển là bắt buộc'),
+  payment_status: yup.string().trim().required('Trạng thái thanh toán là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  email: yup
     .string()
-    .trim()
-    .required('Trạng thái vận chuyển là bắt buộc')
+    .required('Email là bắt buộc')
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 'Email không đúng định dạng')
+    .min(5, 'Độ dài từ 5 - 160 ký tự')
     .max(160, 'Độ dài từ 5 - 160 ký tự'),
-  payment_status: yup.string().trim().required('Trạng thái thanh toán là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự')
+  subject: yup.string().trim().required('Tiêu đề là bắt buộc'),
+  content: yup.string().trim().required('Nội dung mail là bắt buộc')
+})
+
+export const mailSchema = yup.object({
+  email: yup
+    .string()
+    .required('Email là bắt buộc')
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 'Email không đúng định dạng')
+    .min(5, 'Độ dài từ 5 - 160 ký tự')
+    .max(160, 'Độ dài từ 5 - 160 ký tự'),
+  subject: yup.string().trim().required('Tiêu đề là bắt buộc'),
+  content: yup.string().trim().required('Nội dung mail là bắt buộc')
 })
 
 export type CategorySchema = yup.InferType<typeof categorySchema>
@@ -135,5 +150,6 @@ export type ProductSchema = yup.InferType<typeof productSchema>
 export type BrandSchema = yup.InferType<typeof brandSchema>
 export type UserSchema = yup.InferType<typeof userSchema>
 export type OrderSchema = yup.InferType<typeof orderSchema>
+export type MailSchema = yup.InferType<typeof mailSchema>
 
 export type Schema = yup.InferType<typeof schema>

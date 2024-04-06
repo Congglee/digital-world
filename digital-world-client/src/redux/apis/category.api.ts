@@ -12,6 +12,7 @@ export const URL_GET_ALL_CATEGORIES = `${ADMIN_CATEGORY_URL}/get-categories`
 export const URL_ADD_CATEGORY = `${ADMIN_CATEGORY_URL}/add-category`
 export const URL_UPDATE_CATEGORY = `${ADMIN_CATEGORY_URL}/update-category`
 export const URL_DELETE_CATEGORY = `${ADMIN_CATEGORY_URL}/delete-category`
+export const URL_DELETE_CATEGORIES = `${ADMIN_CATEGORY_URL}/delete-many-categories`
 
 const reducerPath = 'category/api' as const
 const tagTypes = ['Category'] as const
@@ -69,6 +70,21 @@ export const categoryApi = createApi({
         }
       },
       invalidatesTags: tagTypes
+    }),
+    deleteManyCategories: build.mutation<
+      AxiosResponse<SuccessResponse<{ deleted_cound: number }>>,
+      { list_id: string[] }
+    >({
+      query: (payload) => ({ url: URL_DELETE_CATEGORIES, method: 'DELETE', data: payload }),
+      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled
+          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      invalidatesTags: tagTypes
     })
   })
 })
@@ -77,5 +93,6 @@ export const {
   useGetAllCategoriesQuery,
   useAddCategoryMutation,
   useDeleteCategoryMutation,
-  useUpdateCategoryMutation
+  useUpdateCategoryMutation,
+  useDeleteManyCategoriesMutation
 } = categoryApi

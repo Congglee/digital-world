@@ -1,7 +1,7 @@
 import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
-import { PlusCircle } from 'lucide-react'
+import { PlusCircle, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
@@ -11,7 +11,7 @@ import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
-import { useDeleteBrandMutation, useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
+import { useDeleteBrandMutation, useDeleteManyBrandsMutation, useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 import { Brand } from 'src/types/brand.type'
 import AddBrandDialog from '../components/AddBrandDialog'
 import UpdateBrandDialog from '../components/UpdateBrandDialog'
@@ -23,9 +23,12 @@ export default function BrandList() {
   const { data: brandsData } = useGetAllBrandsQuery()
   const [addBrandDialogOpen, setAddBrandDialogOpen] = useState<boolean>(false)
   const [deleteBrandDialogOpen, setDeleteBrandDialogOpen] = useState<boolean>(false)
+  const [deleteBrandsDialogOpen, setDeleteBrandsDialogOpen] = useState<boolean>(false)
   const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null)
+  const [selectedBrandsIds, setSelectedBrandsIds] = useState<string[]>([])
   const [updateBrandDialogOpen, setUpdateBrandDialogOpen] = useState<boolean>(false)
   const [deleteBrand, deleteBrandResult] = useDeleteBrandMutation()
+  const [deleteManyBrands, deleteManyBrandsResult] = useDeleteManyBrandsMutation()
 
   const csvExportBrandsData = useMemo(() => {
     return brandsData && [exportDataHeaders, ...brandsData.data.brands.map((brand) => [brand._id, brand.name])]
@@ -33,6 +36,10 @@ export default function BrandList() {
 
   const handleDeleteBrand = async (id: string) => {
     await deleteBrand(id)
+  }
+
+  const handleDeleteManyBrands = async (brandsIds: string[]) => {
+    await deleteManyBrands({ list_id: brandsIds })
   }
 
   const handleDownloadPdf = () => {
@@ -46,6 +53,12 @@ export default function BrandList() {
       toast.success(deleteBrandResult.data.data.message)
     }
   }, [deleteBrandResult.isSuccess])
+
+  useEffect(() => {
+    if (deleteManyBrandsResult.isSuccess) {
+      toast.success(deleteManyBrandsResult.data.data.message)
+    }
+  }, [deleteManyBrandsResult.isSuccess])
 
   const columns: ColumnDef<Brand>[] = [
     {
@@ -61,7 +74,15 @@ export default function BrandList() {
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value)
+            const brandId = row.original._id
+            if (!row.getIsSelected()) {
+              setSelectedBrandsIds((prevIds) => [...prevIds, brandId])
+            } else {
+              setSelectedBrandsIds((prevIds) => prevIds.filter((id) => id !== brandId))
+            }
+          }}
           aria-label='Select row'
           className='translate-y-[2px]'
         />
@@ -119,8 +140,27 @@ export default function BrandList() {
           <PlusCircle />
           <span>Thêm thương hiệu</span>
         </Button>
+        <Button
+          variant='destructive'
+          className='space-x-2'
+          onClick={() => {
+            if (selectedBrandsIds.length > 0) {
+              setDeleteBrandsDialogOpen(true)
+            } else {
+              toast.info('Vui lòng chọn một thương hiệu')
+            }
+          }}
+        >
+          <Trash2 className='size-5' />
+          <span>Xóa</span>
+        </Button>
       </PageHeading>
-      <DataTable data={brandsData?.data.brands || []} columns={columns} placeholder='Lọc thương hiệu...' />
+      <DataTable
+        data={brandsData?.data.brands || []}
+        columns={columns}
+        placeholder='Lọc thương hiệu...'
+        handleSelectedRowsIds={setSelectedBrandsIds}
+      />
       <AddBrandDialog open={addBrandDialogOpen} onOpenChange={setAddBrandDialogOpen} />
       <UpdateBrandDialog
         open={updateBrandDialogOpen}
@@ -137,6 +177,18 @@ export default function BrandList() {
           if (!deleteBrandResult.isLoading) {
             handleDeleteBrand(selectedBrand?._id!)
             setSelectedBrand(null)
+          }
+        }}
+      />
+      <ConfirmDialog
+        open={deleteBrandsDialogOpen}
+        onOpenStateChange={setDeleteBrandsDialogOpen}
+        title='Bạn có chắc là muốn xóa những thương hiệu này chứ?'
+        description='Thương hiệu sản phẩm sau khi bị xóa không thể khôi phục'
+        onConfirm={() => {
+          if (!deleteManyBrandsResult.isLoading) {
+            handleDeleteManyBrands(selectedBrandsIds)
+            setSelectedBrandsIds([])
           }
         }}
       />

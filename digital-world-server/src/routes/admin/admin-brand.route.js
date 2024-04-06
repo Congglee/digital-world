@@ -54,4 +54,13 @@ adminBrandRouter.delete(
   wrapAsync(brandController.deleteBrand)
 );
 
+adminBrandRouter.delete(
+  "/delete-many-brands",
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  helpersMiddleware.listIdRule("list_id"),
+  helpersMiddleware.idValidator,
+  wrapAsync(brandController.deleteManyBrands)
+);
+
 export default adminBrandRouter;

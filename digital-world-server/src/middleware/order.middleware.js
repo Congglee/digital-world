@@ -60,9 +60,7 @@ const updateUserOrderRules = () => {
       .withMessage("Trạng thái đơn hàng phải ít hơn 160 kí tự"),
     body("delivery_status")
       .exists({ checkFalsy: true })
-      .withMessage("Trạng thái vận chuyển không được để trống")
-      .isLength({ max: 160 })
-      .withMessage("Trạng thái vận chuyển phải ít hơn 160 kí tự"),
+      .withMessage("Trạng thái vận chuyển không được để trống"),
     body("payment_status")
       .exists({ checkFalsy: true })
       .withMessage("Trạng thái thanh toán không được để trống")

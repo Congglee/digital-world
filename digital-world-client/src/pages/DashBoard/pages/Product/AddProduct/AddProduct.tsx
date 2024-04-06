@@ -412,7 +412,7 @@ export default function AddProduct() {
                   <FormItem>
                     <FormLabel>Thông số kỹ thuật</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value as string} onChange={field.onChange} />
+                      <RichTextEditor onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -427,7 +427,7 @@ export default function AddProduct() {
                   <FormItem>
                     <FormLabel>Mô tả sản phẩm</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value as string} onChange={field.onChange} editorHeight={500} />
+                      <RichTextEditor onChange={field.onChange} editorHeight={500} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -10,6 +10,7 @@ import { brandApi } from './apis/brand.api'
 import { userApi } from './apis/user.api'
 import { locationApi } from './apis/location.api'
 import { orderApi } from './apis/order.api'
+import { mailApi } from './apis/mail.api'
 
 const persistConfig = {
   key: 'root',
@@ -29,7 +30,8 @@ const store = configureStore({
       brandApi.middleware,
       productApi.middleware,
       orderApi.middleware,
-      locationApi.middleware
+      locationApi.middleware,
+      mailApi.middleware
     ])
 } as ConfigureStoreOptions)
 

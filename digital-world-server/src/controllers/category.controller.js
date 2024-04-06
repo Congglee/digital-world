@@ -3,6 +3,7 @@ import { STATUS } from "../constants/status";
 import { CategoryModel } from "../database/models/category.model";
 import { ProductModel } from "../database/models/product.model";
 import { ErrorHandler, responseSuccess } from "../utils/response";
+import mongoose from "mongoose";
 
 const addCategory = async (req, res) => {
   const { name, brands } = req.body;
@@ -121,12 +122,44 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+const deleteManyCategories = async (req, res) => {
+  const list_id = req.body.list_id.map((id) => new mongoose.Types.ObjectId(id));
+  const categoryDB = await CategoryModel.find({ _id: { $in: list_id } }).lean();
+  const deletedData = await CategoryModel.deleteMany({
+    _id: { $in: list_id },
+  }).lean();
+  if (categoryDB.length > 0) {
+    const uncategorized = await CategoryModel.findOne({
+      name: "Uncategorized",
+    });
+    const categoryIds = categoryDB.map((category) => category._id);
+    const products = await ProductModel.find({
+      category: { $in: categoryIds },
+    });
+    if (products.length > 0) {
+      await ProductModel.updateMany(
+        { category: { $in: categoryIds } },
+        {
+          $set: { category: uncategorized._id, brand: "Unbranded" },
+        }
+      );
+    }
+    return responseSuccess(res, {
+      message: `Xóa ${deletedData.deletedCount} danh mục thành công`,
+      data: { deleted_cound: deletedData.deletedCount },
+    });
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy danh mục");
+  }
+};
+
 const categoryController = {
   addCategory,
   getCategories,
   getCategory,
   updateCategory,
   deleteCategory,
+  deleteManyCategories,
 };
 
 export default categoryController;

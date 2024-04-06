@@ -22,7 +22,8 @@ const path = {
   brandDashBoard: '/dashboard/brands',
   userDashBoard: '/dashboard/users',
   orderDashBoard: '/dashboard/orders',
-  updateUserOrder: '/dashboard/orders/:order_id'
+  updateUserOrder: '/dashboard/orders/:order_id',
+  sendMailOrder: '/dashboard/orders/send-mail/:order_id'
 } as const
 
 export default path

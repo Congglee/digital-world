@@ -172,6 +172,8 @@ export default function UpdateProduct() {
     setProductImages(updatedProductImages)
   }
 
+  if (!product) return null
+
   return (
     <>
       <PageHeading heading='Cập nhật sản phẩm' isDownload={false}>
@@ -458,7 +460,7 @@ export default function UpdateProduct() {
                   <FormItem>
                     <FormLabel>Thông số kỹ thuật</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value!} onChange={field.onChange} />
+                      <RichTextEditor value={product.overview} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -473,7 +475,7 @@ export default function UpdateProduct() {
                   <FormItem>
                     <FormLabel>Mô tả sản phẩm</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value!} onChange={field.onChange} editorHeight={500} />
+                      <RichTextEditor value={product.description} onChange={field.onChange} editorHeight={500} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

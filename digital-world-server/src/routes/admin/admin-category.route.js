@@ -54,4 +54,13 @@ adminCategoryRouter.delete(
   wrapAsync(categoryController.deleteCategory)
 );
 
+adminCategoryRouter.delete(
+  "/delete-many-categories",
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  helpersMiddleware.listIdRule("list_id"),
+  helpersMiddleware.idValidator,
+  wrapAsync(categoryController.deleteManyCategories)
+);
+
 export default adminCategoryRouter;

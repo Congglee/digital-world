@@ -70,10 +70,10 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
   const [provinceId, setProvinceId] = useState('')
   const [districtId, setDistrictId] = useState('')
   const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, {
-    skip: provinceId && provinceId !== '' ? false : true
+    skip: provinceId ? false : true
   })
   const { data: wardsData } = useGetDistrictWardsQuery(districtId, {
-    skip: districtId && districtId !== '' ? false : true
+    skip: districtId ? false : true
   })
   const [updateUserMutation, { data, isLoading, isSuccess }] = useUpdateUserMutation()
 

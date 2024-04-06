@@ -14,7 +14,7 @@ import { allowedRoles } from 'src/constants/data'
 
 function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> }) {
   const { isAuthenticated, profile } = useAppSelector((state) => state.auth)
-  const isAllowedRole = profile.roles.some((role: string) => allowedRoles.includes(role))
+  const isAllowedRole = profile && profile.roles.some((role: string) => allowedRoles.includes(role))
 
   return (
     <div className='bg-[#f0f0f0] text-[#505050] h-9 hidden md:block'>

@@ -1,5 +1,5 @@
 import { Row } from '@tanstack/react-table'
-import { FoldHorizontalIcon, LockKeyhole, Pencil, Trash2 } from 'lucide-react'
+import { FoldHorizontalIcon, LockKeyhole, Mail, Pencil, Trash2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,9 +15,12 @@ interface DataTableRowActionsProps<TData> {
   enableDeleting?: boolean
   enableEditing?: boolean
   enableEditPassword?: boolean
+  enableSendMail?: boolean
+
   onDelete?: () => void
   onEdit?: () => void
   onEditPassword?: () => void
+  onSendMail?: () => void
 }
 
 export default function DataTableRowActions<TData>({
@@ -25,8 +28,10 @@ export default function DataTableRowActions<TData>({
   enableDeleting,
   enableEditing,
   enableEditPassword,
+  enableSendMail,
   onEdit,
   onEditPassword,
+  onSendMail,
   onDelete
 }: DataTableRowActionsProps<TData>) {
   return (
@@ -60,6 +65,21 @@ export default function DataTableRowActions<TData>({
             >
               <LockKeyhole className='w-4 h-4 mr-2' />
               Đổi mật khẩu
+            </DropdownMenuItem>
+          </>
+        )}
+        {enableSendMail && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              disabled={!enableSendMail}
+              className='cursor-pointer'
+              onClick={() => {
+                if (onSendMail) onSendMail()
+              }}
+            >
+              <Mail className='w-4 h-4 mr-2' />
+              Gửi mail
             </DropdownMenuItem>
           </>
         )}

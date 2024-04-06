@@ -1,12 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { Circle, CircleUserRound, PlusCircle } from 'lucide-react'
+import { Circle, CircleUserRound, PlusCircle, Trash2 } from 'lucide-react'
 import DataTable from 'src/components/AdminPanel/DataTable'
 import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHeader'
 import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
-import { useDeleteUserMutation, useGetUsersQuery } from 'src/redux/apis/user.api'
+import { useDeleteManyUsersMutation, useDeleteUserMutation, useGetUsersQuery } from 'src/redux/apis/user.api'
 import { Role, User } from 'src/types/user.type'
 import { getAvatarUrl } from 'src/utils/utils'
 import UpdateUserDrawer from '../components/UpdateUserDrawer'
@@ -43,10 +43,13 @@ export default function UserList() {
   const [updateUserDrawerOpen, setUpdateUserDrawerOpen] = useState<boolean>(false)
   const [changePasswordDrawerOpen, setChangePasswordDrawerOpen] = useState<boolean>(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [selectedUsersIds, setSelectedUsersIds] = useState<string[]>([])
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState<boolean>(false)
+  const [deleteUsersDialogOpen, setDeleteUsersDialogOpen] = useState<boolean>(false)
   const { profile } = useAppSelector((state) => state.auth)
   const usersList = usersData?.data.users.filter((user) => user._id !== profile._id)
   const [deleteUser, deleteUserResult] = useDeleteUserMutation()
+  const [deleteManyUsers, deleteManyUsersResult] = useDeleteManyUsersMutation()
 
   const csvExportUsersData = useMemo(() => {
     return (
@@ -70,8 +73,12 @@ export default function UserList() {
     )
   }, [usersList])
 
-  const handleDeleteProduct = async (id: string) => {
+  const handleDeleteUser = async (id: string) => {
     await deleteUser(id)
+  }
+
+  const handleDeleteManyUsers = async (usersIds: string[]) => {
+    await deleteManyUsers({ list_id: usersIds })
   }
 
   const handleDownloadPdf = () => {
@@ -85,6 +92,12 @@ export default function UserList() {
       toast.success(deleteUserResult.data.data.message)
     }
   }, [deleteUserResult.isSuccess])
+
+  useEffect(() => {
+    if (deleteManyUsersResult.isSuccess) {
+      toast.success(deleteManyUsersResult.data.data.message)
+    }
+  }, [deleteManyUsersResult.isSuccess])
 
   const columns: ColumnDef<User>[] = [
     {
@@ -100,7 +113,15 @@ export default function UserList() {
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value)
+            const userId = row.original._id
+            if (!row.getIsSelected()) {
+              setSelectedUsersIds((prevIds) => [...prevIds, userId])
+            } else {
+              setSelectedUsersIds((prevIds) => prevIds.filter((id) => id !== userId))
+            }
+          }}
           aria-label='Select row'
           className='translate-y-[2px]'
         />
@@ -223,8 +244,27 @@ export default function UserList() {
           <PlusCircle />
           <span>Thêm tài khoản</span>
         </Button>
+        <Button
+          variant='destructive'
+          className='space-x-2'
+          onClick={() => {
+            if (selectedUsersIds.length > 0) {
+              setDeleteUsersDialogOpen(true)
+            } else {
+              toast.info('Vui lòng chọn một người dùng')
+            }
+          }}
+        >
+          <Trash2 className='size-5' />
+          <span>Xóa</span>
+        </Button>
       </PageHeading>
-      <DataTable data={usersList || []} columns={columns} placeholder='Lọc tài khoản...' />
+      <DataTable
+        data={usersList || []}
+        columns={columns}
+        placeholder='Lọc tài khoản...'
+        handleSelectedRowsIds={setSelectedUsersIds}
+      />
       <AddUserDrawer
         open={addUserDrawerOpen}
         onOpenChange={setAddUserDrawerOpen}
@@ -246,12 +286,24 @@ export default function UserList() {
       <ConfirmDialog
         open={deleteUserDialogOpen}
         onOpenStateChange={setDeleteUserDialogOpen}
-        title='Bạn có chắc là muốn xóa người dùng này chứ?'
+        title='Bạn có chắc là muốn xóa tài khoản người dùng này chứ?'
         description='Người dùng sau khi bị xóa không thể khôi phục'
         onConfirm={() => {
           if (!deleteUserResult.isLoading) {
-            handleDeleteProduct(selectedUser?._id!)
+            handleDeleteUser(selectedUser?._id!)
             setSelectedUser(null)
+          }
+        }}
+      />
+      <ConfirmDialog
+        open={deleteUsersDialogOpen}
+        onOpenStateChange={setDeleteUsersDialogOpen}
+        title='Bạn có chắc là muốn xóa những tài khoản người dùng này chứ?'
+        description='Tài khoản sau khi bị xóa không thể khôi phục'
+        onConfirm={() => {
+          if (!deleteManyUsersResult.isLoading) {
+            handleDeleteManyUsers(selectedUsersIds)
+            setSelectedUsersIds([])
           }
         }}
       />

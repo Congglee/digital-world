@@ -10,6 +10,7 @@ export const URL_GET_USER = `${ADMIN_USER_URL}/get-user`
 export const URL_ADD_USER = `${ADMIN_USER_URL}/add-user`
 export const URL_UPDATE_USER = `${ADMIN_USER_URL}/update-user`
 export const URL_DELETE_USER = `${ADMIN_USER_URL}/delete-user`
+export const URL_DELETE_USERS = `${ADMIN_USER_URL}/delete-many-users`
 
 const reducerPath = 'user/api' as const
 const tagTypes = ['User'] as const
@@ -49,10 +50,22 @@ export const userApi = createApi({
       deleteUser: build.mutation<AxiosResponse<SuccessResponse<string>>, string>({
         query: (id) => ({ url: `${URL_DELETE_USER}/${id}`, method: 'DELETE' }),
         invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
-      })
+      }),
+      deleteManyUsers: build.mutation<AxiosResponse<SuccessResponse<{ deleted_cound: number }>>, { list_id: string[] }>(
+        {
+          query: (payload) => ({ url: URL_DELETE_USERS, method: 'DELETE', data: payload }),
+          invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+        }
+      )
     }
   }
 })
 
-export const { useGetUsersQuery, useGetUserQuery, useAddUserMutation, useUpdateUserMutation, useDeleteUserMutation } =
-  userApi
+export const {
+  useGetUsersQuery,
+  useGetUserQuery,
+  useAddUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+  useDeleteManyUsersMutation
+} = userApi

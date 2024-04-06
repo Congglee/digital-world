@@ -6,12 +6,14 @@ import { Brand, BrandList } from 'src/types/brand.type'
 import { setBrandsOptionsFilter } from '../slices/brand.slice'
 import { BrandSchema } from 'src/utils/rules'
 import { categoryApi } from './category.api'
+import { productApi } from './product.api'
 
 export const ADMIN_BRAND_URL = 'admin/brands/'
 export const URL_GET_ALL_BRANDS = `${ADMIN_BRAND_URL}/get-brands`
 export const URL_ADD_BRAND = `${ADMIN_BRAND_URL}/add-brand`
 export const URL_UPDATE_BRAND = `${ADMIN_BRAND_URL}/update-brand`
 export const URL_DELETE_BRAND = `${ADMIN_BRAND_URL}/delete-brand`
+export const URL_DELETE_BRANDS = `${ADMIN_BRAND_URL}/delete-many-brands`
 
 const reducerPath = 'brand/api' as const
 const tagTypes = ['Brand'] as const
@@ -58,6 +60,20 @@ export const brandApi = createApi({
         try {
           await queryFulfilled
           dispatch(categoryApi.endpoints.getAllCategories.initiate(undefined, { forceRefetch: true }))
+          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      invalidatesTags: tagTypes
+    }),
+    deleteManyBrands: build.mutation<AxiosResponse<SuccessResponse<{ deleted_cound: number }>>, { list_id: string[] }>({
+      query: (payload) => ({ url: URL_DELETE_BRANDS, method: 'DELETE', data: payload }),
+      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled
+          dispatch(categoryApi.endpoints.getAllCategories.initiate(undefined, { forceRefetch: true }))
+          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
         } catch (error) {
           console.log(error)
         }
@@ -67,4 +83,10 @@ export const brandApi = createApi({
   })
 })
 
-export const { useGetAllBrandsQuery, useAddBrandMutation, useDeleteBrandMutation, useUpdateBrandMutation } = brandApi
+export const {
+  useGetAllBrandsQuery,
+  useAddBrandMutation,
+  useDeleteBrandMutation,
+  useUpdateBrandMutation,
+  useDeleteManyBrandsMutation
+} = brandApi

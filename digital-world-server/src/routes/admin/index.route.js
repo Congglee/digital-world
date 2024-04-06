@@ -3,6 +3,7 @@ import adminUserRouter from "./admin-user.route";
 import adminProductRouter from "./admin-product.route";
 import adminBrandRouter from "./admin-brand.route";
 import adminOrderRouter from "./admin-order.route";
+import adminMailRouter from "./admin-mail.route";
 
 const adminRoutes = {
   prefix: "/admin/",
@@ -12,6 +13,7 @@ const adminRoutes = {
     { path: "categories", route: adminCategoryRouter },
     { path: "brands", route: adminBrandRouter },
     { path: "orders", route: adminOrderRouter },
+    { path: "mail", route: adminMailRouter },
   ],
 };
 
