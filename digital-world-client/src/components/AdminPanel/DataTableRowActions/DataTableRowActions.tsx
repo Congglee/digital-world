@@ -1,5 +1,5 @@
 import { Row } from '@tanstack/react-table'
-import { FoldHorizontalIcon, LockKeyhole, Mail, Pencil, Trash2 } from 'lucide-react'
+import { Eye, FoldHorizontalIcon, LockKeyhole, Mail, Pencil, Trash2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,11 +16,13 @@ interface DataTableRowActionsProps<TData> {
   enableEditing?: boolean
   enableEditPassword?: boolean
   enableSendMail?: boolean
+  enableViewDetail?: boolean
 
   onDelete?: () => void
   onEdit?: () => void
   onEditPassword?: () => void
   onSendMail?: () => void
+  onViewDetail?: () => void
 }
 
 export default function DataTableRowActions<TData>({
@@ -29,9 +31,11 @@ export default function DataTableRowActions<TData>({
   enableEditing,
   enableEditPassword,
   enableSendMail,
+  enableViewDetail,
   onEdit,
   onEditPassword,
   onSendMail,
+  onViewDetail,
   onDelete
 }: DataTableRowActionsProps<TData>) {
   return (
@@ -43,6 +47,21 @@ export default function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
+        {enableViewDetail && (
+          <>
+            <DropdownMenuItem
+              disabled={!enableViewDetail}
+              className='cursor-pointer'
+              onClick={() => {
+                if (onViewDetail) onViewDetail()
+              }}
+            >
+              <Eye className='w-4 h-4 mr-2' />
+              Xem chi tiết
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem
           disabled={!enableEditing}
           onClick={() => {

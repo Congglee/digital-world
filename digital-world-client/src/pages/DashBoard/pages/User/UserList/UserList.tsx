@@ -236,7 +236,7 @@ export default function UserList() {
       <PageHeading
         heading='Tài khoản người dùng'
         csvData={csvExportUsersData}
-        csvFileName='danh_sach_nguoi_dung'
+        csvFileName='danh_sach_nguoi_dung.csv'
         handleDownloadPdf={handleDownloadPdf}
         pdfViewDocument={<PDFUsersTableDocument users={usersList!} />}
       >

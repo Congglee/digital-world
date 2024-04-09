@@ -37,7 +37,7 @@ function generateOrderNotifyMail(order: Order) {
         <strong>Mã đơn hàng:</strong> ${order.order_code}
       </div>
       <div style="margin-bottom: 10px;">
-        <strong>Ngày đặt hàng:</strong> ${format(order.date_of_order, 'dd/MM/yy')}
+        <strong>Ngày đặt hàng:</strong> ${format(order.date_of_order, 'dd/MM/yyyy')}
       </div>
       <div style="margin-bottom: 10px;">
         <strong>Trạng thái đơn hàng:</strong> ${order.order_status}

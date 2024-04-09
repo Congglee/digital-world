@@ -109,6 +109,11 @@ export default function PDFBrandsTableDocument({ brands }: { brands: Brand[] }) 
             </View>
           ))}
         </View>
+        <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+          fixed
+        />
       </Page>
     </Document>
   )

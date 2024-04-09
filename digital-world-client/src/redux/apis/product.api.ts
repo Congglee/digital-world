@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import { SuccessResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 import { Product, ProductList } from 'src/types/product.type'
-import { ProductSchema } from 'src/utils/rules'
+import { ProductSchema, RatingSchema } from 'src/utils/rules'
 
 export const PRODUCT_URL = 'products/'
 export const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
@@ -14,6 +14,9 @@ export const URL_ADD_PRODUCT = `${ADMIN_PRODUCT_URL}/add-product`
 export const URL_UPDATE_PRODUCT = `${ADMIN_PRODUCT_URL}/update-product`
 export const URL_DELETE_PRODUCT = `${ADMIN_PRODUCT_URL}/delete-product`
 export const URL_DELETE_PRODUCTS = `${ADMIN_PRODUCT_URL}/delete-many-products`
+export const URL_DELETE_RATING = `${ADMIN_PRODUCT_URL}/delete-rating`
+export const URL_DELETE_RATINGS = `${ADMIN_PRODUCT_URL}/delete-many-ratings`
+export const URL_UPDATE_RATING_STATUS = `${ADMIN_PRODUCT_URL}/update-rating-status`
 
 const reducerPath = 'product/api' as const
 const tagTypes = ['Product'] as const
@@ -46,20 +49,52 @@ export const productApi = createApi({
       invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
     }),
     deleteManyProducts: build.mutation<
-      AxiosResponse<SuccessResponse<{ deleted_cound: number }>>,
+      AxiosResponse<SuccessResponse<{ deleted_count: number }>>,
       { list_id: string[] }
     >({
       query: (payload) => ({ url: URL_DELETE_PRODUCTS, method: 'DELETE', data: payload }),
       invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+    }),
+    deleteRating: build.mutation<AxiosResponse<SuccessResponse<string>>, { product_id: string; rating_id: string }>({
+      query: ({ product_id, rating_id }) => ({
+        url: `${URL_DELETE_RATING}/${product_id}/${rating_id}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+    }),
+    deleteManyRatings: build.mutation<
+      AxiosResponse<SuccessResponse<{ deleted_count: number }>>,
+      { product_id: string; payload: { list_id: string[] } }
+    >({
+      query: ({ product_id, payload }) => ({
+        url: `${URL_DELETE_RATINGS}/${product_id}`,
+        method: 'DELETE',
+        data: payload
+      }),
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+    }),
+    updateRatingStatus: build.mutation<
+      AxiosResponse<SuccessResponse<string>>,
+      { product_id: string; rating_id: string; payload: Pick<RatingSchema, 'publish'> }
+    >({
+      query: ({ product_id, rating_id, payload }) => ({
+        url: `${URL_UPDATE_RATING_STATUS}/${product_id}/${rating_id}`,
+        method: 'PUT',
+        data: payload
+      }),
+      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Product', id: args.product_id }])
     })
   })
 })
 
 export const {
   useGetProductsQuery,
-  useDeleteProductMutation,
   useAddProductMutation,
   useGetProductDetailQuery,
   useUpdateProductMutation,
-  useDeleteManyProductsMutation
+  useDeleteProductMutation,
+  useDeleteManyProductsMutation,
+  useDeleteRatingMutation,
+  useDeleteManyRatingsMutation,
+  useUpdateRatingStatusMutation
 } = productApi

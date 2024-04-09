@@ -6,11 +6,13 @@ import MainLayout from './layouts/MainLayout'
 import BrandList from './pages/DashBoard/pages/Brand/BrandList'
 import CategoryList from './pages/DashBoard/pages/Category/CategoryList'
 import OrderList from './pages/DashBoard/pages/Order/OrderList'
+import SendMailOrder from './pages/DashBoard/pages/Order/SendMailOrder'
 import UpdateUserOrder from './pages/DashBoard/pages/Order/UpdateUserOrder'
 import Overview from './pages/DashBoard/pages/Overview'
 import AddProduct from './pages/DashBoard/pages/Product/AddProduct'
 import ProductList from './pages/DashBoard/pages/Product/ProductList'
 import UpdateProduct from './pages/DashBoard/pages/Product/UpdateProduct'
+import RatingList from './pages/DashBoard/pages/Rating/RatingList'
 import UserList from './pages/DashBoard/pages/User/UserList'
 import ForgotPassword from './pages/ForgotPassword'
 import Home from './pages/Home'
@@ -18,7 +20,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ResetPassword from './pages/ResetPassword'
 import { useAppSelector } from './redux/hook'
-import SendMailOrder from './pages/DashBoard/pages/Order/SendMailOrder'
+import RatingDetail from './pages/DashBoard/pages/Rating/RatingDetail'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -107,6 +109,14 @@ export default function useRouteElements() {
                 {
                   path: path.updateProduct,
                   element: <UpdateProduct />
+                },
+                {
+                  path: path.ratingDashboard,
+                  element: <RatingList />
+                },
+                {
+                  path: path.detailRatingDashboard,
+                  element: <RatingDetail />
                 },
                 {
                   path: path.orderDashBoard,

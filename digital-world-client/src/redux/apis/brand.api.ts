@@ -67,7 +67,7 @@ export const brandApi = createApi({
       },
       invalidatesTags: tagTypes
     }),
-    deleteManyBrands: build.mutation<AxiosResponse<SuccessResponse<{ deleted_cound: number }>>, { list_id: string[] }>({
+    deleteManyBrands: build.mutation<AxiosResponse<SuccessResponse<{ deleted_count: number }>>, { list_id: string[] }>({
       query: (payload) => ({ url: URL_DELETE_BRANDS, method: 'DELETE', data: payload }),
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
         try {

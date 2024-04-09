@@ -1,3 +1,14 @@
+export interface Rating {
+  _id: string
+  star: number
+  posted_by: string
+  user_name: string
+  user_avatar: string
+  comment: string
+  date: string
+  publish: boolean
+}
+
 export interface Product {
   _id: string
   name: string
@@ -13,6 +24,7 @@ export interface Product {
   price_before_discount: number
   quantity: number
   sold: number
+  ratings: Rating[]
   total_ratings: number
   view: number
   brand: string

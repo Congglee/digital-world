@@ -72,7 +72,7 @@ export const categoryApi = createApi({
       invalidatesTags: tagTypes
     }),
     deleteManyCategories: build.mutation<
-      AxiosResponse<SuccessResponse<{ deleted_cound: number }>>,
+      AxiosResponse<SuccessResponse<{ deleted_count: number }>>,
       { list_id: string[] }
     >({
       query: (payload) => ({ url: URL_DELETE_CATEGORIES, method: 'DELETE', data: payload }),

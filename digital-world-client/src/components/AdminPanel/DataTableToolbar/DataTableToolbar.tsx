@@ -10,6 +10,7 @@ import {
   isBlockedOptions,
   orderStatusOptions,
   paymentStatusOptions,
+  ratingsOptions,
   rolesOptions
 } from 'src/constants/options'
 
@@ -37,13 +38,19 @@ export default function DataTableToolbar<TData>({ table, placeholder }: DataTabl
             table.getColumn('name') && table.getColumn('name')?.setFilterValue(event.target.value)
             table.getColumn('order_code') && table.getColumn('order_code')?.setFilterValue(event.target.value)
           }}
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 sm:w-[150px] lg:w-[250px]'
         />
         {table.getColumn('brand') && (
           <DataTableFacetedFilter column={table.getColumn('brand')} title='Thương hiệu' options={brandsOptions} />
         )}
         {table.getColumn('category') && (
           <DataTableFacetedFilter column={table.getColumn('category')} title='Danh mục' options={categoriesOptions} />
+        )}
+        {table.getColumn('total_ratings') && (
+          <DataTableFacetedFilter column={table.getColumn('total_ratings')} title='Đánh giá' options={ratingsOptions} />
+        )}
+        {table.getColumn('star') && (
+          <DataTableFacetedFilter column={table.getColumn('star')} title='Đánh giá' options={ratingsOptions} />
         )}
         {table.getColumn('roles') && (
           <DataTableFacetedFilter column={table.getColumn('roles')} title='Vai trò' options={rolesOptions} />

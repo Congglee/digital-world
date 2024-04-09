@@ -146,7 +146,7 @@ const deleteManyCategories = async (req, res) => {
     }
     return responseSuccess(res, {
       message: `Xóa ${deletedData.deletedCount} danh mục thành công`,
-      data: { deleted_cound: deletedData.deletedCount },
+      data: { deleted_count: deletedData.deletedCount },
     });
   } else {
     throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy danh mục");

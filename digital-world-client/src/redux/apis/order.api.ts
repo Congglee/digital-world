@@ -35,7 +35,7 @@ export const orderApi = createApi({
       { id: string; payload: Pick<OrderSchema, 'order_status' | 'delivery_status' | 'payment_status'> }
     >({
       query: ({ id, payload }) => ({ url: `${URL_UPDATE_USER_ORDER}/${id}`, method: 'PUT', data: payload }),
-      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Order', id: args.id }, ...tagTypes])
     })
   })
 })

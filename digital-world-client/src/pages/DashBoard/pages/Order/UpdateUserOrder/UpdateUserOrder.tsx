@@ -28,7 +28,7 @@ const updateUserOrderSchema = orderSchema.pick(['order_status', 'payment_status'
 
 export default function UpdateUserOrder() {
   const { order_id } = useParams()
-  const { data: orderData, refetch } = useGetOrderQuery(order_id!)
+  const { data: orderData } = useGetOrderQuery(order_id!)
   const order = orderData?.data.data
 
   const form = useForm<FormData>({
@@ -56,13 +56,8 @@ export default function UpdateUserOrder() {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.data.message)
-      refetch()
     }
   }, [isSuccess])
-
-  const handleRefetchOrder = () => {
-    refetch()
-  }
 
   const handleDownloadPdf = () => {
     pdf(<PDFInvoiceDetailDocument order={order!} />)
@@ -365,12 +360,7 @@ export default function UpdateUserOrder() {
           </CardContent>
         </Card>
       </div>
-      <ShippingStatusDialog
-        open={shippingStatusDialogOpen}
-        onOpenChange={setShippingStatusDialogOpen}
-        order={order}
-        handleRefetchOrder={handleRefetchOrder}
-      />
+      <ShippingStatusDialog open={shippingStatusDialogOpen} onOpenChange={setShippingStatusDialogOpen} order={order} />
     </>
   )
 }

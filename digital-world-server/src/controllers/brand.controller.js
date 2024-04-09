@@ -143,7 +143,7 @@ const deleteManyBrands = async (req, res) => {
 
     return responseSuccess(res, {
       message: `Xóa ${deletedData.deletedCount} thương hiệu thành công`,
-      data: { deleted_cound: deletedData.deletedCount },
+      data: { deleted_count: deletedData.deletedCount },
     });
   }
   throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy thương hiệu");

@@ -25,7 +25,6 @@ interface ShippingStatusDialogProps {
   open: boolean
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
   order: Order
-  handleRefetchOrder: () => void
 }
 
 type FormData = Pick<OrderSchema, 'delivery_status'>
@@ -40,12 +39,7 @@ function getAddressFromDeliveryStatus(deliveryStatus: string) {
   return ''
 }
 
-export default function ShippingStatusDialog({
-  open,
-  onOpenChange,
-  order,
-  handleRefetchOrder
-}: ShippingStatusDialogProps) {
+export default function ShippingStatusDialog({ open, onOpenChange, order }: ShippingStatusDialogProps) {
   const form = useForm<FormData>({
     resolver: yupResolver(updateUserOrderSchema),
     defaultValues: { delivery_status: '' }
@@ -134,7 +128,6 @@ export default function ShippingStatusDialog({
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.data.message)
-      handleRefetchOrder()
     }
   }, [isSuccess])
 

@@ -99,6 +99,16 @@ const ratingProductRules = () => {
   ];
 };
 
+const updateRatingStatusRules = () => {
+  return [
+    body("publish")
+      .exists()
+      .withMessage("publish không được để trống")
+      .isBoolean()
+      .withMessage("publish không đúng định dạng"),
+  ];
+};
+
 const updateProductRules = () => {
   return addProductRules();
 };
@@ -109,6 +119,7 @@ const ProductMiddleware = {
   getAllProductsRules,
   updateProductRules,
   ratingProductRules,
+  updateRatingStatusRules,
 };
 
 export default ProductMiddleware;

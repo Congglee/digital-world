@@ -51,7 +51,7 @@ export const userApi = createApi({
         query: (id) => ({ url: `${URL_DELETE_USER}/${id}`, method: 'DELETE' }),
         invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
       }),
-      deleteManyUsers: build.mutation<AxiosResponse<SuccessResponse<{ deleted_cound: number }>>, { list_id: string[] }>(
+      deleteManyUsers: build.mutation<AxiosResponse<SuccessResponse<{ deleted_count: number }>>, { list_id: string[] }>(
         {
           query: (payload) => ({ url: URL_DELETE_USERS, method: 'DELETE', data: payload }),
           invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)

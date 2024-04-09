@@ -177,7 +177,7 @@ export default function ProductList() {
         return (
           <div className='font-medium flex items-center space-x-1'>
             <Star className='size-4 fill-yellow-400 text-yellow-400' />
-            <span>{formatCurrency(row.getValue('total_ratings'))}</span>
+            <span className='font-semibold'>{row.getValue('total_ratings')}</span>
           </div>
         )
       }

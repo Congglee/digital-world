@@ -21,6 +21,10 @@ const path = {
   categoryDashboard: '/dashboard/categories',
   brandDashBoard: '/dashboard/brands',
   userDashBoard: '/dashboard/users',
+
+  ratingDashboard: '/dashboard/ratings',
+  detailRatingDashboard: '/dashboard/ratings/:product_id',
+
   orderDashBoard: '/dashboard/orders',
   updateUserOrder: '/dashboard/orders/:order_id',
   sendMailOrder: '/dashboard/orders/send-mail/:order_id'

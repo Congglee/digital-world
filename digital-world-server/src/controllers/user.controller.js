@@ -272,7 +272,7 @@ const deleteManyUsers = async (req, res) => {
   if (userDB.length > 0) {
     return responseSuccess(res, {
       message: `Xóa ${deletedData.deletedCount} người dùng thành công`,
-      data: { deleted_cound: deletedData.deletedCount },
+      data: { deleted_count: deletedData.deletedCount },
     });
   } else {
     throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");

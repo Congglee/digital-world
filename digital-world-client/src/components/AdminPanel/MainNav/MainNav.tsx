@@ -42,9 +42,10 @@ const NavMenus = [
     children: [path.addProduct, path.updateProduct]
   },
   {
-    path: '',
+    path: path.ratingDashboard,
     label: 'Đánh giá',
-    icon: <Star className='w-5 h-5' />
+    icon: <Star className='w-5 h-5' />,
+    children: [path.detailRatingDashboard]
   },
   {
     path: path.userDashBoard,

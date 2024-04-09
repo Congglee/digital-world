@@ -15,11 +15,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from 'src/components/ui/dropdown-menu'
-import { CSV, PDF } from 'src/utils/icons'
+import { CSV, PDF, Preview } from 'src/utils/icons'
 import CalendarDateRangePicker from '../CalendarDateRangePicker'
 
 interface PageHeadingProps {
   heading: string
+  description?: string
   children?: React.ReactNode
   isDownload?: boolean
   hasPdfDownload?: boolean
@@ -33,6 +34,7 @@ interface PageHeadingProps {
 
 export default function PageHeading({
   heading,
+  description = '',
   isDownload = true,
   hasPdfDownload = true,
   hasCsvDownload = true,
@@ -45,8 +47,11 @@ export default function PageHeading({
   return (
     <>
       <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-3'>
-        <h2 className='text-3xl font-bold tracking-tight'>{heading}</h2>
-        <div className='flex flex-col flex-wrap sm:flex-row sm:items-center sm:space-x-2 gap-1'>
+        <div className='flex-1 space-y-0.5'>
+          <h2 className='text-2xl font-bold tracking-tight'>{heading}</h2>
+          <p className='text-muted-foreground'>{description}</p>
+        </div>
+        <div className='flex-shrink-0 flex flex-col flex-wrap sm:flex-row sm:items-center sm:space-x-2 gap-1'>
           <CalendarDateRangePicker />
           {isDownload && (
             <DropdownMenu>
@@ -75,7 +80,7 @@ export default function PageHeading({
                                   <BlobProvider document={pdfViewDocument}>
                                     {({ url }) => (
                                       <Link to={url!} target='_blank' className='flex items-center'>
-                                        <Eye className='mr-2 h-4 w-4' />
+                                        <Preview className='mr-2 h-4 w-4' />
                                         <span>Xem file PDF</span>
                                       </Link>
                                     )}

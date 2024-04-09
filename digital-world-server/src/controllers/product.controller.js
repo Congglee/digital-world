@@ -240,7 +240,7 @@ const deleteManyProducts = async (req, res) => {
     );
     return responseSuccess(res, {
       message: `Xóa ${deletedData.deletedCount} sản phẩm thành công`,
-      data: { deleted_cound: deletedData.deletedCount },
+      data: { deleted_count: deletedData.deletedCount },
     });
   } else {
     throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
@@ -266,62 +266,6 @@ const searchProduct = async (req, res) => {
   return responseSuccess(res, response);
 };
 
-const ratingProduct = async (req, res) => {
-  const form = req.body;
-  const { star, comment, product_id } = form;
-  const productDB = await ProductModel.findById(product_id);
-  if (productDB) {
-    const alreadyRatingProduct = productDB.ratings.find(
-      (item) => item.posted_by.toString() === req.jwtDecoded.id
-    );
-    if (alreadyRatingProduct) {
-      await ProductModel.updateOne(
-        {
-          ratings: { $elemMatch: alreadyRatingProduct },
-        },
-        {
-          $set: {
-            "ratings.$.star": star,
-            "ratings.$.comment": comment,
-            "ratings.$.date": new Date().toISOString(),
-          },
-        },
-        { new: true }
-      );
-    } else {
-      await productDB.updateOne(
-        {
-          $push: {
-            ratings: {
-              star,
-              comment,
-              posted_by: req.jwtDecoded.id,
-              date: new Date().toISOString(),
-            },
-          },
-        },
-        { new: true }
-      );
-    }
-
-    const ratingCount = productDB.ratings.length;
-    if (ratingCount > 0) {
-      const sumRatings = productDB.ratings.reduce(
-        (sum, item) => sum + item.star,
-        0
-      );
-      productDB.total_ratings =
-        Math.round((sumRatings * 10) / ratingCount) / 10;
-    } else {
-      productDB.total_ratings = 0;
-    }
-    await productDB.save();
-    return responseSuccess(res, { message: "Đánh giá sản phẩm thành công" });
-  } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
-  }
-};
-
 const ProductController = {
   addProduct,
   getProducts,
@@ -331,7 +275,6 @@ const ProductController = {
   deleteProduct,
   deleteManyProducts,
   searchProduct,
-  ratingProduct,
 };
 
 export default ProductController;

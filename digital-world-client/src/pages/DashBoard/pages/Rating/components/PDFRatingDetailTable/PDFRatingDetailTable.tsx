@@ -1,5 +1,7 @@
-import { Document, Font, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
-import { Category } from 'src/types/category.type'
+import { Document, Font, Image, Page, Polygon, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
+import { format } from 'date-fns'
+import config from 'src/constants/config'
+import { Rating } from 'src/types/product.type'
 import { chunkSubstr } from 'src/utils/utils'
 
 Font.register({
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
     flexGrow: 1
   },
   tableColHeader: {
-    width: '33.33%',
+    width: '16.6666667%',
     borderStyle: 'solid',
     borderColor: '#bfbfbf',
     borderBottomColor: '#000',
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0
   },
   tableCol: {
-    width: '33.33%',
+    width: '16.6666667%',
     borderStyle: 'solid',
     borderColor: '#bfbfbf',
     borderWidth: 1,
@@ -85,32 +87,65 @@ Font.registerHyphenationCallback((word) => {
   }
 })
 
-export default function PDFCategoriesTableDocument({ categories }: { categories: Category[] }) {
+export default function PDFRatingDetailTable({ ratings, productName }: { ratings: Rating[]; productName: string }) {
   return (
-    <Document title='Danh sách danh mục'>
+    <Document title={`Danh sách đánh giá của sản phẩm ${productName}`}>
       <Page size='A4' style={styles.body} wrap>
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={[styles.tableColHeader]}>
-              <Text style={styles.tableCellHeader}>ID</Text>
+              <Text style={styles.tableCellHeader}>RatingID</Text>
             </View>
             <View style={[styles.tableColHeader]}>
-              <Text style={styles.tableCellHeader}>Tên danh mục</Text>
+              <Text style={styles.tableCellHeader}>Khách hàng</Text>
             </View>
             <View style={[styles.tableColHeader]}>
-              <Text style={styles.tableCellHeader}>Thương hiệu</Text>
+              <Text style={styles.tableCellHeader}>Avatar</Text>
+            </View>
+            <View style={[styles.tableColHeader]}>
+              <Text style={styles.tableCellHeader}>Đánh giá</Text>
+            </View>
+            <View style={[styles.tableColHeader]}>
+              <Text style={styles.tableCellHeader}>Bình luận</Text>
+            </View>
+            <View style={[styles.tableColHeader]}>
+              <Text style={styles.tableCellHeader}>Ngày đăng</Text>
             </View>
           </View>
-          {categories?.map((category) => (
-            <View style={styles.tableRow} key={category._id}>
+          {ratings?.map((rating) => (
+            <View style={styles.tableRow} key={rating._id}>
               <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{category._id}</Text>
+                <Text style={styles.tableCell}>{rating._id}</Text>
               </View>
               <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{category.name}</Text>
+                <Text style={styles.tableCell}>{rating.user_name}</Text>
               </View>
               <View style={[styles.tableCol]}>
-                <Text style={styles.tableCell}>{category.brands.map((brand) => brand.name).join(' - ')}</Text>
+                <Image src={rating.user_avatar ? rating.user_avatar : config.defaultUserImageUrl} />
+              </View>
+              <View style={[styles.tableCol]}>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <>
+                    <Text style={[styles.tableCell, { marginRight: 3 }]}>{rating.star}</Text>
+                    <Svg
+                      width={8}
+                      height={8}
+                      viewBox='0 0 24 24'
+                      fill='yellow'
+                      stroke='currentColor'
+                      strokeWidth={2}
+                      strokeLinejoin='round'
+                    >
+                      <Polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2' />
+                    </Svg>
+                  </>
+                </View>
+              </View>
+              <View style={[styles.tableCol]}>
+                <Text style={styles.tableCell}>{rating.comment}</Text>
+              </View>
+              <View style={[styles.tableCol]}>
+                <Text style={styles.tableCell}>{format(rating.date, 'dd/MM/yyyy')}</Text>
               </View>
             </View>
           ))}

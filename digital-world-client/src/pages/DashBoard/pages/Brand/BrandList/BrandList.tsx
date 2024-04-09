@@ -132,7 +132,7 @@ export default function BrandList() {
       <PageHeading
         heading='Thương hiệu'
         csvData={csvExportBrandsData}
-        csvFileName='danh_sach_thuong_hieu'
+        csvFileName='danh_sach_thuong_hieu.csv'
         handleDownloadPdf={handleDownloadPdf}
         pdfViewDocument={<PDFBrandsTableDocument brands={brandsData?.data.brands!} />}
       >

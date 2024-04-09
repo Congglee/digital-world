@@ -20,7 +20,6 @@ import {
 import { Brand } from 'src/types/brand.type'
 import { Category } from 'src/types/category.type'
 import AddCategoryDialog from '../components/AddCategoryDialog'
-
 import PDFCategoriesTableDocument from '../components/PDFCategoriesTable'
 import UpdateCategoryDialog from '../components/UpdateCategoryDialog'
 
@@ -166,7 +165,7 @@ export default function CategoryList() {
       <PageHeading
         heading='Danh mục'
         csvData={csvExportCategoriesData}
-        csvFileName='danh_sach_danh_muc'
+        csvFileName='danh_sach_danh_muc.csv'
         handleDownloadPdf={handleDownloadPdf}
         pdfViewDocument={<PDFCategoriesTableDocument categories={categoriesData?.data.categories!} />}
       >
