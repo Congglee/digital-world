@@ -11,12 +11,12 @@ import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
-import { useGetOrdersQuery } from 'src/redux/apis/order.api'
+import { useGetAllOrdersQuery } from 'src/redux/apis/order.api'
 import { Order } from 'src/types/order.type'
 import { formatCurrency, getAvatarUrl } from 'src/utils/utils'
 
 export default function OrderList() {
-  const { data: ordersData } = useGetOrdersQuery()
+  const { data: ordersData } = useGetAllOrdersQuery()
   const navigate = useNavigate()
 
   const csvExportOrdersData = useMemo(() => {

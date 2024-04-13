@@ -16,6 +16,15 @@ adminCategoryRouter.get(
   wrapAsync(categoryController.getCategories)
 );
 
+adminCategoryRouter.get(
+  "/get-all-categories",
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  categoryMiddleware.getCategoriesRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(categoryController.getAllCategories)
+);
+
 adminCategoryRouter.post(
   "/add-category",
   authMiddleware.verifyAccessToken,

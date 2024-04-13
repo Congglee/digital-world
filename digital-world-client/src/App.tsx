@@ -1,3 +1,4 @@
+import { ThemeProvider } from './components/ThemeProvider/ThemeProvider'
 import useRouteElements from './useRouteElements'
 
 function App() {

@@ -1,31 +1,20 @@
 import { ArrowDownUp, CheckIcon } from 'lucide-react'
-import { UseFormSetValue } from 'react-hook-form'
 import { Button } from 'src/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
 import { FormControl } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { VietNamDistrict } from 'src/types/location.type'
-import { UserSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-
-type FormData = Omit<UserSchema, 'confirm_password' | 'new_password'>
 
 interface DistrictPickerProps {
   value?: string
   districts: VietNamDistrict[]
-  setValue?: UseFormSetValue<FormData>
   provinceId: string
-  handleSetDistrictId: React.Dispatch<React.SetStateAction<string>>
+  handleSelectDistrict?: (districtId: string, districValue: string, wardValue: string) => void
 }
 
-export default function DistrictPicker({
-  value,
-  setValue,
-  provinceId,
-  districts,
-  handleSetDistrictId
-}: DistrictPickerProps) {
+export default function DistrictPicker({ value, provinceId, districts, handleSelectDistrict }: DistrictPickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -52,9 +41,8 @@ export default function DistrictPicker({
                     value={district.district_name}
                     key={district.district_id}
                     onSelect={() => {
-                      handleSetDistrictId(district.district_id.toString())
-                      setValue && setValue('district', district.district_name)
-                      setValue && setValue('ward', '')
+                      handleSelectDistrict &&
+                        handleSelectDistrict(district.district_id.toString(), district.district_name, '')
                     }}
                   >
                     {district.district_name}

@@ -13,9 +13,12 @@ import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'src/components/ui/sheet'
 import { Switch } from 'src/components/ui/switch'
 import { rolesOptions } from 'src/constants/options'
-import { useGetDistrictWardsQuery, useGetProvinceDistrictsQuery } from 'src/redux/apis/location.api'
+import {
+  useGetAllVNProvincesQuery,
+  useGetDistrictWardsQuery,
+  useGetProvinceDistrictsQuery
+} from 'src/redux/apis/location.api'
 import { useUpdateUserMutation } from 'src/redux/apis/user.api'
-import { VietNamProvince } from 'src/types/location.type'
 import { Role, User } from 'src/types/user.type'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
@@ -28,7 +31,6 @@ interface UpdateUserDrawerProps {
   selectedUser: User | null
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
   onAfterUpdate: React.Dispatch<React.SetStateAction<User | null>>
-  provinces: VietNamProvince[]
 }
 
 type FormData = Pick<
@@ -61,7 +63,7 @@ const initialFormState = {
   is_blocked: false
 }
 
-export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, provinces }: UpdateUserDrawerProps) {
+export default function UpdateUserDrawer({ open, onOpenChange, selectedUser }: UpdateUserDrawerProps) {
   const form = useForm<FormData>({
     resolver: yupResolver(updateUserSchema),
     defaultValues: initialFormState
@@ -69,6 +71,7 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
 
   const [provinceId, setProvinceId] = useState('')
   const [districtId, setDistrictId] = useState('')
+  const { data: provinceData } = useGetAllVNProvincesQuery()
   const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, {
     skip: provinceId ? false : true
   })
@@ -79,14 +82,6 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
 
   useEffect(() => {
     if (selectedUser) {
-      const selectedProvince = provinces.find((province) => province.province_name === selectedUser.province)
-      setProvinceId(selectedProvince?.province_id.toString()!)
-
-      const selectedDistrict = districtsData?.data.results.find(
-        (district) => district.district_name === selectedUser.district
-      )
-      setDistrictId(selectedDistrict?.district_id.toString()!)
-
       form.reset({
         name: selectedUser.name,
         email: selectedUser.email,
@@ -101,6 +96,47 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
       })
     }
   }, [selectedUser])
+
+  useEffect(() => {
+    if (provinceData) {
+      const selectedProvince = provinceData.data.results.find(
+        (province) => province.province_name === form.watch('province')
+      )
+      if (selectedProvince) {
+        setProvinceId(selectedProvince.province_id.toString())
+      }
+    }
+    if (districtsData) {
+      const selectedDistrict = districtsData.data.results.find(
+        (district) => district.district_name === form.watch('district')
+      )
+      if (selectedDistrict) {
+        setDistrictId(selectedDistrict.district_id.toString())
+      }
+    }
+  }, [provinceData, districtsData, form.watch('province'), form.watch('district')])
+
+  // console.log(selectedUser)
+  // console.log(form.watch('province'))
+  // console.log(provinceData)
+
+  const handleSelectProvince = (provinceId: string, provinceValue: string, districValue: string, wardValue: string) => {
+    setProvinceId(provinceId)
+    setDistrictId('')
+    form.setValue('province', provinceValue)
+    form.setValue('district', districValue)
+    form.setValue('ward', wardValue)
+  }
+
+  const handleSelectDistrict = (districtId: string, districValue: string, wardValue: string) => {
+    setDistrictId(districtId)
+    form.setValue('district', districValue)
+    form.setValue('ward', wardValue)
+  }
+
+  const handleSelectWard = (wardValue: string) => {
+    form.setValue('ward', wardValue)
+  }
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
@@ -201,9 +237,8 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
                           <FormLabel htmlFor='province'>Tỉnh</FormLabel>
                           <ProvincePicker
                             value={field.value}
-                            provinces={provinces}
-                            setValue={form.setValue}
-                            handleSetProvinceId={setProvinceId}
+                            provinces={provinceData?.data.results || []}
+                            handleSelectProvince={handleSelectProvince}
                           />
                           <FormMessage />
                         </FormItem>
@@ -218,9 +253,8 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
                           <DistrictPicker
                             value={field.value}
                             districts={districtsData?.data.results || []}
-                            setValue={form.setValue}
                             provinceId={provinceId}
-                            handleSetDistrictId={setDistrictId}
+                            handleSelectDistrict={handleSelectDistrict}
                           />
                           <FormMessage />
                         </FormItem>
@@ -234,9 +268,9 @@ export default function UpdateUserDrawer({ open, onOpenChange, selectedUser, pro
                           <FormLabel htmlFor='ward'>Phường</FormLabel>
                           <WardPicker
                             value={field.value}
-                            setValue={form.setValue}
                             wards={wardsData?.data.results || []}
                             districtId={districtId}
+                            handleSelectWard={handleSelectWard}
                           />
                           <FormMessage />
                         </FormItem>

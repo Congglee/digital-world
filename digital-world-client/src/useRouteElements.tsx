@@ -21,6 +21,10 @@ import Register from './pages/Register'
 import ResetPassword from './pages/ResetPassword'
 import { useAppSelector } from './redux/hook'
 import RatingDetail from './pages/DashBoard/pages/Rating/RatingDetail'
+import SettingsLayout from './pages/DashBoard/pages/Settings/layouts/SettingsLayout'
+import SettingsProfile from './pages/DashBoard/pages/Settings/pages/SettingsProfile'
+import SettingsSendMail from './pages/DashBoard/pages/Settings/pages/SettingsSendMail'
+import SettingsAppearance from './pages/DashBoard/pages/Settings/pages/SettingsAppearance'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -129,6 +133,24 @@ export default function useRouteElements() {
                 {
                   path: path.sendMailOrder,
                   element: <SendMailOrder />
+                },
+                {
+                  path: path.settingsDashboard,
+                  element: <SettingsLayout />,
+                  children: [
+                    {
+                      index: true,
+                      element: <SettingsProfile />
+                    },
+                    {
+                      path: path.settingsSendMail,
+                      element: <SettingsSendMail />
+                    },
+                    {
+                      path: path.settingsAppearance,
+                      element: <SettingsAppearance />
+                    }
+                  ]
                 }
               ]
             }

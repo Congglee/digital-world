@@ -14,7 +14,7 @@ interface MenuNavProps extends React.HTMLAttributes<HTMLElement> {
   horizontalScroll?: boolean
 }
 
-const NavMenus = [
+const navMenus = [
   {
     path: path.home,
     label: 'Website',
@@ -59,9 +59,10 @@ const NavMenus = [
     children: [path.updateUserOrder, path.sendMailOrder]
   },
   {
-    path: '/examples/dashboard',
+    path: path.settingsDashboard,
     label: 'Cài đặt',
-    icon: <Settings />
+    icon: <Settings />,
+    children: [path.settingsSendMail]
   }
 ]
 
@@ -75,7 +76,7 @@ function MenuNav({ className, horizontalScroll = false, ...props }: MenuNavProps
       {...props}
       ref={scrollRef}
     >
-      {NavMenus.map((menu, idx) => (
+      {navMenus.map((menu, idx) => (
         <Button asChild variant='ghost' key={idx}>
           <NavLink to={menu.path} end={!menu.children}>
             {({ isActive }) => (

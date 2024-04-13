@@ -1,3 +1,12 @@
+export interface ListConfig {
+  page?: number | string
+  limit?: number | string
+  sort_by?: 'createdAt' | 'view' | 'sold' | 'price'
+  order?: 'asc' | 'desc'
+  exclude?: string
+  category?: string
+}
+
 export interface UploadResponse {
   message: string
   data: { url: string }[]

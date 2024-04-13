@@ -14,7 +14,7 @@ import path from 'src/constants/path'
 import { useSendNotifyMailMutation } from 'src/redux/apis/mail.api'
 import { useGetOrderQuery } from 'src/redux/apis/order.api'
 import { Order } from 'src/types/order.type'
-import { OrderSchema, orderSchema } from 'src/utils/rules'
+import { MailSchema, mailSchema } from 'src/utils/rules'
 import { formatCurrency } from 'src/utils/utils'
 
 function generateOrderNotifyMail(order: Order) {
@@ -121,8 +121,8 @@ function generateOrderNotifyMail(order: Order) {
   </body>`
 }
 
-type FormData = Pick<OrderSchema, 'email' | 'subject' | 'content'>
-const sendOrderMailSchema = orderSchema.pick(['email', 'subject', 'content'])
+type FormData = Pick<MailSchema, 'email' | 'subject' | 'content'>
+const sendOrderMailSchema = mailSchema.pick(['email', 'subject', 'content'])
 
 export default function SendMailOrder() {
   const { order_id } = useParams()
@@ -162,7 +162,7 @@ export default function SendMailOrder() {
 
   return (
     <>
-      <PageHeading heading='Gửi mail thông báo đơn hàng' isDownload={false}>
+      <PageHeading heading='Gửi mail thông báo đơn hàng' hasDownload={false}>
         <Link to={path.orderDashBoard}>
           <Button variant='outline' className='w-full space-x-2 bg-blue-500'>
             <List />

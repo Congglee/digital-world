@@ -16,6 +16,15 @@ adminBrandRouter.get(
   wrapAsync(brandController.getBrands)
 );
 
+adminBrandRouter.get(
+  "/get-all-brands",
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  brandMiddleware.getBrandsRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(brandController.getAllBrands)
+);
+
 adminBrandRouter.post(
   "/add-brand",
   authMiddleware.verifyAccessToken,

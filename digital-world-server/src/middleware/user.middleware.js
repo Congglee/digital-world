@@ -185,10 +185,6 @@ const updateMeRules = () => {
       .withMessage("Avatar phải là string url")
       .isLength({ max: 1000 })
       .withMessage("URL avatar không được lớn hơn 1000 ký tự"),
-    body("is_blocked")
-      .if((value) => value !== undefined)
-      .isBoolean()
-      .withMessage("Trạng thái tài khoản không đúng định dạng"),
     body("password")
       .if((value) => value !== undefined)
       .isString()

@@ -176,7 +176,7 @@ export default function UpdateProduct() {
 
   return (
     <>
-      <PageHeading heading='Cập nhật sản phẩm' isDownload={false}>
+      <PageHeading heading='Cập nhật sản phẩm' hasDownload={false}>
         <Link to={path.productsDashboard}>
           <Button variant='outline' className='w-full space-x-2 bg-blue-500'>
             <List />
@@ -246,10 +246,11 @@ export default function UpdateProduct() {
                     </FormControl>
                     <Button
                       type='button'
+                      variant='outline'
                       onClick={() => {
                         thumbFileInputRef.current?.click()
                       }}
-                      className='text-sm text-gray-600 shadow-sm space-x-2'
+                      className='text-sm text-card-foreground shadow-sm space-x-2'
                     >
                       <ImageUp className='size-5' />
                       <span>Chọn ảnh</span>
@@ -285,10 +286,11 @@ export default function UpdateProduct() {
                     </FormControl>
                     <Button
                       type='button'
+                      variant='outline'
                       onClick={() => {
                         imagesFilesInputRef.current?.click()
                       }}
-                      className='text-sm text-gray-600 shadow-sm space-x-2'
+                      className='text-sm text-card-foreground shadow-sm space-x-2'
                     >
                       <ImageUp className='size-5' />
                       <span>Chọn ảnh</span>

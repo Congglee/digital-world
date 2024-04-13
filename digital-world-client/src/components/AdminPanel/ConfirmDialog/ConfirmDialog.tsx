@@ -23,7 +23,7 @@ interface confirmDialogProps {
 export default function ConfirmDialog(props: confirmDialogProps) {
   return (
     <AlertDialog open={props.open} onOpenChange={props.onOpenStateChange}>
-      <AlertDialogContent className='text-white'>
+      <AlertDialogContent className='text-foreground'>
         <AlertDialogHeader>
           <AlertDialogTitle>{props.title}</AlertDialogTitle>
           <AlertDialogDescription>{props.description}</AlertDialogDescription>

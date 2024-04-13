@@ -4,17 +4,27 @@ import { User, UserList } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 
-export const ADMIN_USER_URL = 'admin/users'
+export const USER_URL = 'users'
+export const ADMIN_USER_URL = `admin/${USER_URL}`
+
 export const URL_GET_USERS = `${ADMIN_USER_URL}/get-users`
+export const URL_GET_ALL_USERS = `${ADMIN_USER_URL}/get-all-users`
 export const URL_GET_USER = `${ADMIN_USER_URL}/get-user`
 export const URL_ADD_USER = `${ADMIN_USER_URL}/add-user`
 export const URL_UPDATE_USER = `${ADMIN_USER_URL}/update-user`
 export const URL_DELETE_USER = `${ADMIN_USER_URL}/delete-user`
 export const URL_DELETE_USERS = `${ADMIN_USER_URL}/delete-many-users`
 
+export const URL_GET_ME = `${USER_URL}/get-me`
+export const URL_UPDATE_PROFILE = `${USER_URL}/update-me`
+
 const reducerPath = 'user/api' as const
 const tagTypes = ['User'] as const
 
+type BodyUpdateProfile = Omit<User, '_id' | 'roles' | 'is_blocked' | 'email' | 'createdAt' | 'updatedAt'> & {
+  password?: string
+  newPassword?: string
+}
 type BodyUpdateUser = Omit<User, '_id' | 'createdAt' | 'updatedAt' | 'email'> | { password?: string }
 type BodyAddUser = Pick<
   User,
@@ -27,8 +37,8 @@ export const userApi = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => {
     return {
-      getUsers: build.query<SuccessResponse<UserList>, void>({
-        query: () => ({ url: URL_GET_USERS, method: 'GET' }),
+      getAllUsers: build.query<SuccessResponse<UserList>, void>({
+        query: () => ({ url: URL_GET_ALL_USERS, method: 'GET' }),
         transformResponse: (response: AxiosResponse<SuccessResponse<UserList>>) => response.data,
         providesTags: tagTypes
       }),
@@ -36,6 +46,14 @@ export const userApi = createApi({
         query: (id) => ({ url: `${URL_GET_USER}/${id}`, method: 'GET' }),
         providesTags: (result, _error, _args) =>
           result ? [{ type: 'User' as const, id: result?.data.data._id }] : tagTypes
+      }),
+      getMe: build.query<AxiosResponse<SuccessResponse<User>>, void>({
+        query: () => ({ url: URL_GET_ME, method: 'GET' })
+      }),
+      updateProfile: build.mutation<SuccessResponse<User>, BodyUpdateProfile>({
+        query: (payload) => ({ url: URL_UPDATE_PROFILE, method: 'PUT', data: payload }),
+        transformResponse: (response: AxiosResponse<SuccessResponse<User>>) => response.data,
+        invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
       }),
       addUser: build.mutation<SuccessResponse<User>, BodyAddUser>({
         query: (payload) => ({ url: URL_ADD_USER, method: 'POST', data: payload }),
@@ -62,8 +80,10 @@ export const userApi = createApi({
 })
 
 export const {
-  useGetUsersQuery,
+  useGetAllUsersQuery,
   useGetUserQuery,
+  useGetMeQuery,
+  useUpdateProfileMutation,
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,

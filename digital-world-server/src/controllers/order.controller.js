@@ -197,7 +197,10 @@ const getAllOrders = async (req, res) => {
     .sort({ createdAt: -1 })
     .select({ __v: 0 })
     .lean();
-  const response = { message: "Lấy tất cả đơn hàng thành công", data: orders };
+  const response = {
+    message: "Lấy tất cả đơn hàng thành công",
+    data: { orders },
+  };
   return responseSuccess(res, response);
 };
 

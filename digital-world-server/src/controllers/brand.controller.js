@@ -64,6 +64,20 @@ const getBrands = async (req, res) => {
   return responseSuccess(res, response);
 };
 
+const getAllBrands = async (req, res) => {
+  const { exclude } = req.query;
+  let condition = exclude ? { _id: { $ne: exclude } } : {};
+  const brands = await BrandModel.find(condition)
+    .sort({ createdAt: -1 })
+    .select({ __v: 0 })
+    .lean();
+  const response = {
+    message: "Lấy tât cả thương hiệu thành công",
+    data: { brands },
+  };
+  return responseSuccess(res, response);
+};
+
 const getBrand = async (req, res) => {
   const brandDB = await BrandModel.findById(req.params.brand_id)
     .select({ __v: 0 })
@@ -153,6 +167,7 @@ const brandController = {
   addBrand,
   getBrand,
   getBrands,
+  getAllBrands,
   updateBrand,
   deleteBrand,
   deleteManyBrands,

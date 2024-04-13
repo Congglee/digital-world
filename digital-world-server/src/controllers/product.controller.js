@@ -139,7 +139,7 @@ const getAllProducts = async (req, res) => {
     .lean();
   const response = {
     message: "Lấy tất cả sản phẩm thành công",
-    data: products,
+    data: { products },
   };
   return responseSuccess(res, response);
 };

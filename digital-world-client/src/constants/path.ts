@@ -27,7 +27,11 @@ const path = {
 
   orderDashBoard: '/dashboard/orders',
   updateUserOrder: '/dashboard/orders/:order_id',
-  sendMailOrder: '/dashboard/orders/send-mail/:order_id'
+  sendMailOrder: '/dashboard/orders/send-mail/:order_id',
+
+  settingsDashboard: '/dashboard/settings',
+  settingsSendMail: '/dashboard/settings/mail',
+  settingsAppearance: '/dashboard/settings/appearance'
 } as const
 
 export default path

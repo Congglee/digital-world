@@ -8,7 +8,7 @@ import { productApi } from './product.api'
 import { setCategoriesOptionsFilter } from '../slices/category.slice'
 
 export const ADMIN_CATEGORY_URL = 'admin/categories/'
-export const URL_GET_ALL_CATEGORIES = `${ADMIN_CATEGORY_URL}/get-categories`
+export const URL_GET_ALL_CATEGORIES = `${ADMIN_CATEGORY_URL}/get-all-categories`
 export const URL_ADD_CATEGORY = `${ADMIN_CATEGORY_URL}/add-category`
 export const URL_UPDATE_CATEGORY = `${ADMIN_CATEGORY_URL}/update-category`
 export const URL_DELETE_CATEGORY = `${ADMIN_CATEGORY_URL}/delete-category`
@@ -60,7 +60,8 @@ export const categoryApi = createApi({
         // anything you want to run when the query starts
         try {
           await queryFulfilled
-          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
+          // dispatch(productApi.endpoints.getProducts.initiate({}, { forceRefetch: true }))
+          dispatch(productApi.endpoints.getAllProducts.initiate(undefined, { forceRefetch: true }))
           // `onSuccess` side-effect
           // anything you want to run when the query succeeds
         } catch (error) {
@@ -79,7 +80,8 @@ export const categoryApi = createApi({
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
         try {
           await queryFulfilled
-          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
+          // dispatch(productApi.endpoints.getProducts.initiate({}, { forceRefetch: true }))
+          dispatch(productApi.endpoints.getAllProducts.initiate(undefined, { forceRefetch: true }))
         } catch (error) {
           console.log(error)
         }

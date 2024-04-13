@@ -1,5 +1,5 @@
 import { BlobProvider, DocumentProps } from '@react-pdf/renderer'
-import { Download, Eye, FileDown } from 'lucide-react'
+import { Download, FileDown } from 'lucide-react'
 import { CSVLink } from 'react-csv'
 import { Link } from 'react-router-dom'
 import { Button } from 'src/components/ui/button'
@@ -22,7 +22,7 @@ interface PageHeadingProps {
   heading: string
   description?: string
   children?: React.ReactNode
-  isDownload?: boolean
+  hasDownload?: boolean
   hasPdfDownload?: boolean
   hasCsvDownload?: boolean
 
@@ -35,7 +35,7 @@ interface PageHeadingProps {
 export default function PageHeading({
   heading,
   description = '',
-  isDownload = true,
+  hasDownload = true,
   hasPdfDownload = true,
   hasCsvDownload = true,
   children,
@@ -53,7 +53,7 @@ export default function PageHeading({
         </div>
         <div className='flex-shrink-0 flex flex-col flex-wrap sm:flex-row sm:items-center sm:space-x-2 gap-1'>
           <CalendarDateRangePicker />
-          {isDownload && (
+          {hasDownload && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className='space-x-2'>

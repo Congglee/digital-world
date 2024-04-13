@@ -64,6 +64,21 @@ const getCategories = async (req, res) => {
   return responseSuccess(res, response);
 };
 
+const getAllCategories = async (req, res) => {
+  const { exclude } = req.query;
+  let condition = exclude ? { _id: { $ne: exclude } } : {};
+  const categories = await CategoryModel.find(condition)
+    .populate({ path: "brands", select: "name" })
+    .sort({ createdAt: -1 })
+    .select({ __v: 0 })
+    .lean();
+  const response = {
+    message: "Lấy tất cả danh mục thành công",
+    data: { categories },
+  };
+  return responseSuccess(res, response);
+};
+
 const getCategory = async (req, res) => {
   const categoryDB = await CategoryModel.findById(req.params.category_id)
     .populate({ path: "brands", select: "name" })
@@ -156,6 +171,7 @@ const deleteManyCategories = async (req, res) => {
 const categoryController = {
   addCategory,
   getCategories,
+  getAllCategories,
   getCategory,
   updateCategory,
   deleteCategory,

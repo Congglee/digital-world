@@ -6,12 +6,11 @@ import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
-import { useDeleteManyUsersMutation, useDeleteUserMutation, useGetUsersQuery } from 'src/redux/apis/user.api'
+import { useDeleteManyUsersMutation, useDeleteUserMutation, useGetAllUsersQuery } from 'src/redux/apis/user.api'
 import { Role, User } from 'src/types/user.type'
 import { getAvatarUrl } from 'src/utils/utils'
 import UpdateUserDrawer from '../components/UpdateUserDrawer'
 import { useEffect, useMemo, useState } from 'react'
-import { useGetAllVNProvincesQuery } from 'src/redux/apis/location.api'
 import { useAppSelector } from 'src/redux/hook'
 import ChangePasswordDrawer from '../components/ChangePasswordDrawer'
 import AddUserDrawer from '../components/AddUserDrawer'
@@ -37,8 +36,7 @@ const exportDataHeaders = [
 ]
 
 export default function UserList() {
-  const { data: usersData } = useGetUsersQuery()
-  const { data: vnProvincesData } = useGetAllVNProvincesQuery()
+  const { data: usersData } = useGetAllUsersQuery()
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState<boolean>(false)
   const [updateUserDrawerOpen, setUpdateUserDrawerOpen] = useState<boolean>(false)
   const [changePasswordDrawerOpen, setChangePasswordDrawerOpen] = useState<boolean>(false)
@@ -265,17 +263,12 @@ export default function UserList() {
         placeholder='Lọc tài khoản...'
         handleSelectedRowsIds={setSelectedUsersIds}
       />
-      <AddUserDrawer
-        open={addUserDrawerOpen}
-        onOpenChange={setAddUserDrawerOpen}
-        provinces={vnProvincesData?.data.results || []}
-      />
+      <AddUserDrawer open={addUserDrawerOpen} onOpenChange={setAddUserDrawerOpen} />
       <UpdateUserDrawer
         open={updateUserDrawerOpen}
         onOpenChange={setUpdateUserDrawerOpen}
         selectedUser={selectedUser}
         onAfterUpdate={setSelectedUser}
-        provinces={vnProvincesData?.data.results || []}
       />
       <ChangePasswordDrawer
         open={changePasswordDrawerOpen}

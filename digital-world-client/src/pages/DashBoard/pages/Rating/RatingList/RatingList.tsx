@@ -10,13 +10,13 @@ import PageHeading from 'src/components/AdminPanel/PageHeading'
 import ProductRating from 'src/components/ProductRating'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
-import { useGetProductsQuery } from 'src/redux/apis/product.api'
+import { useGetAllProductsQuery } from 'src/redux/apis/product.api'
 import { Product, Rating } from 'src/types/product.type'
 
 const exportDataHeaders = ['ProductID', 'Tên sản phẩm', 'Đánh giá', 'Số lượt đánh giá', 'Cập nhật vào']
 
 export default function RatingList() {
-  const { data: productsData } = useGetProductsQuery()
+  const { data: productsData } = useGetAllProductsQuery()
   const ratedProducts = useMemo(() => {
     return productsData ? productsData.data.products.filter((product) => product.total_ratings > 0) : []
   }, [productsData])

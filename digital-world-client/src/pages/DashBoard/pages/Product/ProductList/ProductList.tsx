@@ -18,7 +18,7 @@ import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import {
   useDeleteManyProductsMutation,
   useDeleteProductMutation,
-  useGetProductsQuery
+  useGetAllProductsQuery
 } from 'src/redux/apis/product.api'
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
@@ -38,7 +38,7 @@ const exportDataHeaders = [
 ]
 
 export default function ProductList() {
-  const { data: productsData } = useGetProductsQuery()
+  const { data: productsData } = useGetAllProductsQuery()
   useGetAllBrandsQuery()
   useGetAllCategoriesQuery()
 
@@ -189,6 +189,7 @@ export default function ProductList() {
       cell: ({ row }) => {
         return <div className='font-medium'>{row.getValue('brand')}</div>
       },
+      enableGlobalFilter: true,
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id))
       }
@@ -259,6 +260,8 @@ export default function ProductList() {
         columns={columns}
         placeholder='Lọc sản phẩm...'
         handleSelectedRowsIds={setSelectedProductsIds}
+        // queryConfig={queryConfig}
+        // pageCount={productsData?.data.pagination.page_size!}
       />
       <ConfirmDialog
         open={deleteProductDialogOpen}

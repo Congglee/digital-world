@@ -9,6 +9,7 @@ export const ORDER_URL = 'orders/'
 export const ADMIN_ORDER_URL = `admin/${ORDER_URL}`
 
 export const URL_GET_ORDERS = `${ADMIN_ORDER_URL}/get-orders`
+export const URL_GET_ALL_ORDERS = `${ADMIN_ORDER_URL}/get-all-orders`
 export const URL_GET_ORDER = `${ORDER_URL}/get-order`
 export const URL_UPDATE_USER_ORDER = `${ADMIN_ORDER_URL}/update-user-order`
 
@@ -20,8 +21,8 @@ export const orderApi = createApi({
   tagTypes,
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => ({
-    getOrders: build.query<SuccessResponse<OrderList>, void>({
-      query: () => ({ url: URL_GET_ORDERS, method: 'GET' }),
+    getAllOrders: build.query<SuccessResponse<OrderList>, void>({
+      query: () => ({ url: URL_GET_ALL_ORDERS, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<OrderList>>) => response.data,
       providesTags: tagTypes
     }),
@@ -40,4 +41,4 @@ export const orderApi = createApi({
   })
 })
 
-export const { useGetOrdersQuery, useGetOrderQuery, useUpdateUserOrderMutation } = orderApi
+export const { useGetAllOrdersQuery, useGetOrderQuery, useUpdateUserOrderMutation } = orderApi

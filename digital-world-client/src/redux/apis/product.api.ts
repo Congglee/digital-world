@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
-import { SuccessResponse } from 'src/types/utils.type'
+import { ListConfig, SuccessResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 import { Product, ProductList } from 'src/types/product.type'
 import { ProductSchema, RatingSchema } from 'src/utils/rules'
@@ -8,6 +8,7 @@ import { ProductSchema, RatingSchema } from 'src/utils/rules'
 export const PRODUCT_URL = 'products/'
 export const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
 
+export const URL_GET_ALL_PRODUCTS = 'get-all-products'
 export const URL_GET_PRODUCTS = 'get-products'
 export const URL_GET_PRODUCT = 'get-product'
 export const URL_ADD_PRODUCT = `${ADMIN_PRODUCT_URL}/add-product`
@@ -26,8 +27,13 @@ export const productApi = createApi({
   tagTypes,
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => ({
-    getProducts: build.query<SuccessResponse<ProductList>, void>({
-      query: () => ({ url: `${PRODUCT_URL}${URL_GET_PRODUCTS}`, method: 'GET' }),
+    getAllProducts: build.query<SuccessResponse<ProductList>, void>({
+      query: () => ({ url: `${ADMIN_PRODUCT_URL}/${URL_GET_ALL_PRODUCTS}`, method: 'GET' }),
+      transformResponse: (response: AxiosResponse<SuccessResponse<ProductList>>) => response.data,
+      providesTags: tagTypes
+    }),
+    getProducts: build.query<SuccessResponse<ProductList>, ListConfig>({
+      query: (params) => ({ url: `${PRODUCT_URL}${URL_GET_PRODUCTS}`, method: 'GET', params }),
       transformResponse: (response: AxiosResponse<SuccessResponse<ProductList>>) => response.data,
       providesTags: tagTypes
     }),
@@ -88,6 +94,7 @@ export const productApi = createApi({
 })
 
 export const {
+  useGetAllProductsQuery,
   useGetProductsQuery,
   useAddProductMutation,
   useGetProductDetailQuery,

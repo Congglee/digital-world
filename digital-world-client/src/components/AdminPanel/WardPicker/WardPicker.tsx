@@ -1,24 +1,20 @@
 import { ArrowDownUp, CheckIcon } from 'lucide-react'
-import { UseFormSetValue } from 'react-hook-form'
 import { Button } from 'src/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
 import { FormControl } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { VietNamWard } from 'src/types/location.type'
-import { UserSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-
-type FormData = Omit<UserSchema, 'confirm_password' | 'new_password'>
 
 interface WardPickerProps {
   value?: string
   wards: VietNamWard[]
-  setValue?: UseFormSetValue<FormData>
   districtId: string
+  handleSelectWard: (wardValue: string) => void
 }
 
-export default function WardPicker({ value, wards, setValue, districtId }: WardPickerProps) {
+export default function WardPicker({ value, wards, districtId, handleSelectWard }: WardPickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -45,7 +41,7 @@ export default function WardPicker({ value, wards, setValue, districtId }: WardP
                     value={ward.ward_name}
                     key={ward.ward_id}
                     onSelect={() => {
-                      setValue && setValue('ward', ward.ward_name)
+                      handleSelectWard && handleSelectWard(ward.ward_name)
                     }}
                   >
                     {ward.ward_name}

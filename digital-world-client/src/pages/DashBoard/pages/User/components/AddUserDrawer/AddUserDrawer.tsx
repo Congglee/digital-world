@@ -13,9 +13,12 @@ import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'src/components/ui/sheet'
 import { Switch } from 'src/components/ui/switch'
 import { rolesOptions } from 'src/constants/options'
-import { useGetDistrictWardsQuery, useGetProvinceDistrictsQuery } from 'src/redux/apis/location.api'
+import {
+  useGetAllVNProvincesQuery,
+  useGetDistrictWardsQuery,
+  useGetProvinceDistrictsQuery
+} from 'src/redux/apis/location.api'
 import { useAddUserMutation } from 'src/redux/apis/user.api'
-import { VietNamProvince } from 'src/types/location.type'
 import { Role } from 'src/types/user.type'
 import { isEntityError } from 'src/utils/helper'
 import { UserSchema, userSchema } from 'src/utils/rules'
@@ -27,7 +30,6 @@ import WardPicker from 'src/components/AdminPanel/WardPicker'
 interface AddUserDrawerProps {
   open: boolean
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
-  provinces: VietNamProvince[]
 }
 
 export type FormData = Pick<
@@ -72,16 +74,35 @@ const initialFormState = {
   is_blocked: false
 }
 
-export default function AddUserDrawer({ open, onOpenChange, provinces }: AddUserDrawerProps) {
+export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps) {
   const form = useForm<FormData>({
     resolver: yupResolver(addUserSchema),
     defaultValues: initialFormState
   })
   const [provinceId, setProvinceId] = useState('')
   const [districtId, setDistrictId] = useState('')
+  const { data: provinceData } = useGetAllVNProvincesQuery()
   const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, { skip: provinceId ? false : true })
   const { data: wardsData } = useGetDistrictWardsQuery(districtId, { skip: districtId ? false : true })
   const [addUserMutaton, { data, isLoading, isSuccess, isError, error }] = useAddUserMutation()
+
+  const handleSelectProvince = (provinceId: string, provinceValue: string, districValue: string, wardValue: string) => {
+    setProvinceId(provinceId)
+    setDistrictId('')
+    form.setValue('province', provinceValue)
+    form.setValue('district', districValue)
+    form.setValue('ward', wardValue)
+  }
+
+  const handleSelectDistrict = (districtId: string, districValue: string, wardValue: string) => {
+    setDistrictId(districtId)
+    form.setValue('district', districValue)
+    form.setValue('ward', wardValue)
+  }
+
+  const handleSelectWard = (wardValue: string) => {
+    form.setValue('ward', wardValue)
+  }
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
@@ -220,9 +241,8 @@ export default function AddUserDrawer({ open, onOpenChange, provinces }: AddUser
                           <FormLabel htmlFor='province'>Tỉnh</FormLabel>
                           <ProvincePicker
                             value={field.value}
-                            provinces={provinces}
-                            setValue={form.setValue}
-                            handleSetProvinceId={setProvinceId}
+                            provinces={provinceData?.data.results || []}
+                            handleSelectProvince={handleSelectProvince}
                           />
                           <FormMessage />
                         </FormItem>
@@ -237,9 +257,8 @@ export default function AddUserDrawer({ open, onOpenChange, provinces }: AddUser
                           <DistrictPicker
                             value={field.value}
                             districts={districtsData?.data.results || []}
-                            setValue={form.setValue}
                             provinceId={provinceId}
-                            handleSetDistrictId={setDistrictId}
+                            handleSelectDistrict={handleSelectDistrict}
                           />
                           <FormMessage />
                         </FormItem>
@@ -253,9 +272,9 @@ export default function AddUserDrawer({ open, onOpenChange, provinces }: AddUser
                           <FormLabel htmlFor='ward'>Phường</FormLabel>
                           <WardPicker
                             value={field.value}
-                            setValue={form.setValue}
                             wards={wardsData?.data.results || []}
                             districtId={districtId}
+                            handleSelectWard={handleSelectWard}
                           />
                           <FormMessage />
                         </FormItem>

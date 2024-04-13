@@ -1,24 +1,19 @@
 import { ArrowDownUp, CheckIcon } from 'lucide-react'
-import { UseFormSetValue } from 'react-hook-form'
 import { Button } from 'src/components/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
 import { FormControl } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { VietNamProvince } from 'src/types/location.type'
-import { UserSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-
-type FormData = Omit<UserSchema, 'confirm_password' | 'new_password'>
 
 interface ProvincePickerProps {
   value?: string
   provinces: VietNamProvince[]
-  setValue?: UseFormSetValue<FormData>
-  handleSetProvinceId: React.Dispatch<React.SetStateAction<string>>
+  handleSelectProvince?: (provinceId: string, provinceValue: string, districValue: string, wardValue: string) => void
 }
 
-export default function ProvincePicker({ value, provinces, setValue, handleSetProvinceId }: ProvincePickerProps) {
+export default function ProvincePicker({ value, provinces, handleSelectProvince }: ProvincePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -44,10 +39,8 @@ export default function ProvincePicker({ value, provinces, setValue, handleSetPr
                   value={province.province_name}
                   key={province.province_id}
                   onSelect={() => {
-                    handleSetProvinceId(province.province_id.toString())
-                    setValue && setValue('province', province.province_name)
-                    setValue && setValue('district', '')
-                    setValue && setValue('ward', '')
+                    handleSelectProvince &&
+                      handleSelectProvince(province.province_id.toString(), province.province_name, '', '')
                   }}
                 >
                   {province.province_name}

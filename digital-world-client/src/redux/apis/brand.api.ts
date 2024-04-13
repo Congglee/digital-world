@@ -9,7 +9,7 @@ import { categoryApi } from './category.api'
 import { productApi } from './product.api'
 
 export const ADMIN_BRAND_URL = 'admin/brands/'
-export const URL_GET_ALL_BRANDS = `${ADMIN_BRAND_URL}/get-brands`
+export const URL_GET_ALL_BRANDS = `${ADMIN_BRAND_URL}/get-all-brands`
 export const URL_ADD_BRAND = `${ADMIN_BRAND_URL}/add-brand`
 export const URL_UPDATE_BRAND = `${ADMIN_BRAND_URL}/update-brand`
 export const URL_DELETE_BRAND = `${ADMIN_BRAND_URL}/delete-brand`
@@ -60,7 +60,8 @@ export const brandApi = createApi({
         try {
           await queryFulfilled
           dispatch(categoryApi.endpoints.getAllCategories.initiate(undefined, { forceRefetch: true }))
-          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
+          // dispatch(productApi.endpoints.getProducts.initiate({}, { forceRefetch: true }))
+          dispatch(productApi.endpoints.getAllProducts.initiate(undefined, { forceRefetch: true }))
         } catch (error) {
           console.log(error)
         }
@@ -73,7 +74,8 @@ export const brandApi = createApi({
         try {
           await queryFulfilled
           dispatch(categoryApi.endpoints.getAllCategories.initiate(undefined, { forceRefetch: true }))
-          dispatch(productApi.endpoints.getProducts.initiate(undefined, { forceRefetch: true }))
+          // dispatch(productApi.endpoints.getProducts.initiate({}, { forceRefetch: true }))
+          dispatch(productApi.endpoints.getAllProducts.initiate(undefined, { forceRefetch: true }))
         } catch (error) {
           console.log(error)
         }

@@ -108,7 +108,10 @@ const getAllUsers = async (req, res) => {
     .sort({ createdAt: -1 })
     .select({ __v: 0, password: 0 })
     .lean();
-  const response = { message: "Lấy tất cả người dùng thành công", data: users };
+  const response = {
+    message: "Lấy tất cả người dùng thành công",
+    data: { users },
+  };
   return responseSuccess(res, response);
 };
 
