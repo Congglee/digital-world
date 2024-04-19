@@ -235,7 +235,7 @@ function DropdownMenu({
       className={cn(
         'gap-10 py-[30px] absolute top-full bg-white z-30 text-black opacity-0 invisible transition-all duration-300 flex translate-y-10 group shadow-[0_2px_20px_#00000017]',
         'group-hover:opacity-100 group-hover:visible group-hover:translate-y-0',
-        { 'left-0 w-full max-w-full': fullWidth },
+        { 'left-4 right-4': fullWidth },
         { '-ml-8 max-w-[280px]': !fullWidth }
       )}
     >
@@ -322,7 +322,7 @@ function MobileHeader({ setActive }: { setActive: React.Dispatch<React.SetStateA
         </button>
       </div>
       <Link to={path.home} className='flex items-center justify-center flex-grow w-full h-full'>
-        <img src={logo} alt='' />
+        <img src={logo} alt='logo' />
       </Link>
       <div>
         <Link to={path.cart} className='relative'>
@@ -363,8 +363,8 @@ export default function Header() {
         </div>
       </div>
       <MegaMenu
-        wrapperClass='hidden md:block container border-t-2 border-t-purple shadow-[0_0_5px_#0003] relative'
-        innerClass='flex items-center'
+        wrapperClass='hidden md:block container relative'
+        innerClass='flex items-center border-t-2 border-t-purple shadow-[0_0_5px_#0003] px-5'
       />
     </header>
   )
