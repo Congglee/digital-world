@@ -15,8 +15,13 @@ export default function useQueryConfig() {
       limit: queryParams.limit || '20',
       sort_by: queryParams.sort_by,
       exclude: queryParams.exclude,
+      name: queryParams.name,
       order: queryParams.order,
-      category: queryParams.category
+      price_max: queryParams.price_max,
+      price_min: queryParams.price_min,
+      rating_filter: queryParams.rating_filter,
+      category: queryParams.category,
+      brand: queryParams.brand
     },
     isUndefined
   )

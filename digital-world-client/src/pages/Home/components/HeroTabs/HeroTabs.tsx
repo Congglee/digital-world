@@ -19,7 +19,7 @@ export default function HeroTabs({ products }: { products: Product[] }) {
 
   return (
     <>
-      <ul className='pb-[15px] mb-5 border-b-2 border-purple divide-y-2 md:divide-x-2 md:divide-y-0 divide-[#ebebeb] flex flex-col md:flex-row'>
+      <ul className='pb-4 mb-5 border-b-2 border-purple divide-y-2 md:divide-x-2 md:divide-y-0 divide-[#ebebeb] flex flex-col md:flex-row'>
         <li className='py-[5px] md:py-0 md:px-5 first:pl-0 cursor-pointer'>
           <button
             className={cn(

@@ -1,9 +1,12 @@
 import { AlignJustify, Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ProductRating from 'src/components/ProductRating'
+import { Product } from 'src/types/product.type'
 import { formatCurrency } from 'src/utils/utils'
 
-export default function DailyDeals() {
+export default function DailyDeals({ product }: { product: Product | null }) {
+  if (!product) return null
+
   return (
     <div className='p-5 border border-[#ebebeb] text-center'>
       <div className='text-center'>
@@ -14,26 +17,24 @@ export default function DailyDeals() {
       </div>
       <div className='mb-[15px]'>
         <Link to='/products'>
-          <img
-            src='https://res.cloudinary.com/di3eto0bg/image/upload/v1710561566/digital-world/pyyhdcx9njojzseusqse.jpg'
-            alt='daily-deal'
-          />
+          <img src={product.thumb} alt='daily deal product thumbnail' />
         </Link>
         <div className='flex flex-col items-center'>
           <Link to='/products' className='line-clamp-2 hover:text-purple text-[#2b3743] mb-2'>
-            LAPTOP ACER GAMING NITRO 5 TIGER AN515-58-773Y (NH.QFKSV.001) (I7 12700H/8GB RAM/512GB SSD/RTX3050TI 4G/15.6
-            INCH FHD 144HZ/WIN 11/ĐEN) (2022)
+            {product.name}
           </Link>
           <div className='mb-[15px]'>
             <ProductRating
-              rating={5}
+              rating={product.total_ratings}
               activeClassname='w-4 h-4 fill-[#f1b400] text-[#f1b400]'
               nonActiveClassname='w-4 h-4 fill-current text-gray-300'
             />
           </div>
-          <div className='mb-[15px]'>
-            <span>{formatCurrency(8891502)} VND</span>
+          <div className='mb-[15px] space-x-1'>
+            <span className='text-gray-500 line-through'>{formatCurrency(product.price_before_discount)} VND</span>
+            <span>{formatCurrency(product.price)} VND</span>
           </div>
+
           <div className='w-full grid grid-cols-3 gap-1 '>
             <div className='flex flex-col px-[5px] py-[10px] text-center bg-[#f4f4f4]'>
               <span className='font-semibold text-lg text-[#151515]'>0</span>
@@ -52,7 +53,7 @@ export default function DailyDeals() {
       </div>
       <Link
         to='/products'
-        className='flex items-center justify-center px-[15px] py-[11px] bg-purple text-white uppercase gap-2 text-sm hover:bg-black hover:text-white transition-colors duration-300'
+        className='flex items-center justify-center px-[15px] py-[11px] bg-purple text-white uppercase gap-2 text-sm hover:bg-black transition-colors duration-300'
       >
         <AlignJustify className='size-5' />
         Tùy chọn

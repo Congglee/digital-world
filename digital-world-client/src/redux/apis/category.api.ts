@@ -7,8 +7,10 @@ import { CategorySchema } from 'src/utils/rules'
 import { productApi } from './product.api'
 import { setCategoriesOptionsFilter } from '../slices/category.slice'
 
-export const ADMIN_CATEGORY_URL = 'admin/categories/'
-export const URL_GET_ALL_CATEGORIES = `${ADMIN_CATEGORY_URL}/get-all-categories`
+export const CATEGORY_URL = 'categories'
+export const ADMIN_CATEGORY_URL = `admin/${CATEGORY_URL}`
+
+export const URL_GET_ALL_CATEGORIES = `get-all-categories`
 export const URL_ADD_CATEGORY = `${ADMIN_CATEGORY_URL}/add-category`
 export const URL_UPDATE_CATEGORY = `${ADMIN_CATEGORY_URL}/update-category`
 export const URL_DELETE_CATEGORY = `${ADMIN_CATEGORY_URL}/delete-category`
@@ -23,7 +25,7 @@ export const categoryApi = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => ({
     getAllCategories: build.query<SuccessResponse<CategoryList>, void>({
-      query: () => ({ url: URL_GET_ALL_CATEGORIES, method: 'GET' }),
+      query: () => ({ url: `${CATEGORY_URL}/${URL_GET_ALL_CATEGORIES}`, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<CategoryList>>) => response.data,
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
         try {

@@ -6,7 +6,7 @@ export default function HotCollectionsSection() {
   return (
     <>
       <div className='text-[#151515] border-b-2 border-purple mb-5'>
-        <h2 className='text-xl uppercase py-[15px] font-semibold'>Bộ sưu tập hot</h2>
+        <h2 className='text-xl uppercase py-3 font-semibold'>Bộ sưu tập hot</h2>
       </div>
       <div className='grid xs:grid-cols-2 md:grid-cols-3 gap-4 mb-5'>
         {hotCollections.map((collection) => (
@@ -22,7 +22,7 @@ export default function HotCollectionsSection() {
               <ul>
                 {collection.brands.map((brand, idx) => (
                   <li className='mb-[5px]' key={idx}>
-                    <Link to='#' className='text-gray-500 flex items-center text-sm hover:text-purple'>
+                    <Link to='/' className='text-gray-500 flex items-center text-sm hover:text-purple'>
                       <ChevronRight className='size-4 flex-shrink-0' />
                       <span>{brand}</span>
                     </Link>

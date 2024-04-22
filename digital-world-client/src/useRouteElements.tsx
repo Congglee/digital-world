@@ -10,7 +10,7 @@ import SendMailOrder from './pages/DashBoard/pages/Order/SendMailOrder'
 import UpdateUserOrder from './pages/DashBoard/pages/Order/UpdateUserOrder'
 import Overview from './pages/DashBoard/pages/Overview'
 import AddProduct from './pages/DashBoard/pages/Product/AddProduct'
-import ProductList from './pages/DashBoard/pages/Product/ProductList'
+import ProductListDashboard from './pages/DashBoard/pages/Product/ProductList'
 import UpdateProduct from './pages/DashBoard/pages/Product/UpdateProduct'
 import RatingList from './pages/DashBoard/pages/Rating/RatingList'
 import UserList from './pages/DashBoard/pages/User/UserList'
@@ -25,6 +25,7 @@ import SettingsLayout from './pages/DashBoard/pages/Settings/layouts/SettingsLay
 import SettingsProfile from './pages/DashBoard/pages/Settings/pages/SettingsProfile'
 import SettingsSendMail from './pages/DashBoard/pages/Settings/pages/SettingsSendMail'
 import SettingsAppearance from './pages/DashBoard/pages/Settings/pages/SettingsAppearance'
+import ProductList from './pages/ProductList'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -104,7 +105,7 @@ export default function useRouteElements() {
                 },
                 {
                   path: path.productsDashboard,
-                  element: <ProductList />
+                  element: <ProductListDashboard />
                 },
                 {
                   path: path.addProduct,
@@ -166,6 +167,10 @@ export default function useRouteElements() {
         {
           index: true,
           element: <Home />
+        },
+        {
+          path: path.products,
+          element: <ProductList />
         }
       ]
     }

@@ -73,4 +73,12 @@ export const generateNameId = ({ name, id }: { name: string; id: string }) => {
   return removeSpecialCharacter(name).replace(/\s/g, '-') + `-i-${id}`
 }
 
+export function scrollToTop() {
+  document.documentElement.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'instant'
+  })
+}
+
 export const getAvatarUrl = (avatarName?: string) => (avatarName ? avatarName : userImage)

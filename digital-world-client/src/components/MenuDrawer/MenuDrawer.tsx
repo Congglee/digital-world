@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
 import { useOnClickOutside } from 'src/hooks/useOutsideClick'
+import useSearchProducts from 'src/hooks/useSearchProducts'
 import { useAppSelector } from 'src/redux/hook'
 import { cn } from 'src/utils/utils'
 
@@ -16,6 +17,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
   const { active, setActive, handleLogout } = props
   const menuDrawerRef = useRef<HTMLDivElement | null>(null)
   const { isAuthenticated } = useAppSelector((state) => state.auth)
+  const { onSubmitSearch, register } = useSearchProducts()
 
   useOnClickOutside(menuDrawerRef, () => {
     setActive(false)
@@ -24,7 +26,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
   return (
     <div
       className={cn(
-        'md:hidden fixed top-0 bottom-0 left-0 bg-[#1c1d1d] px-[10px] w-3/5 z-50',
+        'md:hidden fixed top-0 bottom-0 left-0 bg-[#1c1d1d] px-[10px] w-full sm:max-w-md z-50',
         { 'animate-drawer-up': active },
         { 'animate-drawer-down': !active }
       )}
@@ -76,11 +78,12 @@ export default function MenuDrawer(props: MenuDrawerProps) {
         </div>
       </div>
       <div>
-        <form className='relative h-10 bg-white'>
+        <form className='relative h-10 bg-white' onSubmit={onSubmitSearch}>
           <input
             type='search'
             placeholder='Tìm kiếm...'
             className='border-2 border-purple py-2 pl-[10px] pr-10 bg-white  w-full h-10 outline-none'
+            {...register('search_text')}
           />
           <span className='absolute top-0 right-0'>
             <button className='bg-purple text-white w-10 h-10 flex items-center justify-center'>

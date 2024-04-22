@@ -14,6 +14,13 @@ commonProductRouter.get(
 );
 
 commonProductRouter.get(
+  "/get-all-products",
+  productMiddleware.getAllProductsRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(ProductController.getAllProducts)
+);
+
+commonProductRouter.get(
   "/get-product/:product_id",
   helpersMiddleware.idRule("product_id"),
   helpersMiddleware.idValidator,

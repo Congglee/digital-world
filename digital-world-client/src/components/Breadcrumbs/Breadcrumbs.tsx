@@ -14,6 +14,8 @@ function translatePathname(pathname: string, tokenPathName?: string) {
       return 'Quên mật khẩu'
     case 'reset-password':
       return 'Đổi mật khẩu'
+    case 'products':
+      return 'Sản phẩm'
     case tokenPathName:
       return ''
     case `reset-password/${tokenPathName}`:

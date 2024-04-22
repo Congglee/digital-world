@@ -13,7 +13,7 @@ export default function FeaturedProductsSection({ products }: { products: Produc
   return (
     <>
       <div className='text-[#151515] border-b-2 border-purple mb-5'>
-        <h2 className='text-xl uppercase py-[15px] font-semibold'>Sản phẩm nổi bật</h2>
+        <h2 className='text-xl uppercase py-3 font-semibold'>Sản phẩm nổi bật</h2>
       </div>
       <div className='grid md:grid-cols-3 gap-4 mb-5'>
         {featuredProducts.map((product, idx) => (

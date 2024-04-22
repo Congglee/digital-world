@@ -21,8 +21,8 @@ export default function NewArrivalsSection({ products }: { products: Product[] }
   return (
     <>
       <div className='text-[#151515] border-b-2 border-purple mb-5 flex flex-col md:flex-row md:items-center md:justify-between'>
-        <h2 className='text-xl uppercase md:py-[15px] font-semibold'>Sản phẩm mới</h2>
-        <ul className='flex flex-col md:flex-row md:items-center divide-y md:divide-y-0 md:divide-x divide-[#ebebeb] mb-[10px]'>
+        <h2 className='text-xl uppercase md:py-3 font-semibold'>Sản phẩm mới</h2>
+        <ul className='flex flex-col md:flex-row md:items-center divide-y md:divide-y-0 md:divide-x divide-[#ebebeb] mb-[10px] md:mb-0'>
           <li className='py-[5px] px-[10px] md:py-0 md:px-5'>
             <button
               className={cn('text-gray-500 text-sm hover:text-purple', activeTab === 0 && 'text-purple')}

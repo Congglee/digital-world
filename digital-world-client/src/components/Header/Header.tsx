@@ -11,6 +11,7 @@ import Popover from '../Popover'
 import { useLogoutMutation } from 'src/redux/apis/auth.api'
 import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
 import { allowedRoles } from 'src/constants/data'
+import useSearchProducts from 'src/hooks/useSearchProducts'
 
 function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> }) {
   const { isAuthenticated, profile } = useAppSelector((state) => state.auth)
@@ -116,7 +117,7 @@ function MegaMenu({ wrapperClass, innerClass }: { wrapperClass?: string; innerCl
         </div>
         <div className='py-4 group'>
           <Link
-            to={path.home}
+            to={path.products}
             className='px-[15px] text-[#2b3743] uppercase flex items-center gap-1 text-sm hover:text-purple'
           >
             Sản phẩm
@@ -268,6 +269,8 @@ function PromoSection() {
 }
 
 function DesktopHeader() {
+  const { onSubmitSearch, register } = useSearchProducts()
+
   return (
     <div className='hidden md:flex items-start justify-between text-sm'>
       <div className='flex items-center gap-[15px]'>
@@ -284,11 +287,12 @@ function DesktopHeader() {
       </div>
       <div className='flex items-center flex-col-reverse lg:flex-row gap-5'>
         <div>
-          <form className='relative h-10 bg-white'>
+          <form className='relative h-10 bg-white' onSubmit={onSubmitSearch}>
             <input
               type='search'
               placeholder='Tìm kiếm...'
               className='border-2 border-purple py-2 pl-[10px] pr-10 bg-white  w-full h-10 outline-none'
+              {...register('search_text')}
             />
             <span className='absolute top-0 right-0'>
               <button className='bg-purple text-white w-10 h-10 flex items-center justify-center'>

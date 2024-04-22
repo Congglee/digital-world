@@ -36,6 +36,7 @@ export interface Product {
 
 export interface ProductList {
   products: Product[]
+  total_products: number
   pagination: {
     page: number
     limit: number

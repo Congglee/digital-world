@@ -1,9 +1,10 @@
 import commonAuthRouter from "./common-auth.route";
-import commonMediaRouter from "./common-media.route";
-import commonUserRouter from "./common-user.route";
-import commonProductRouter from "./common-product.route";
+import commonBrandRouter from "./common-brand.route";
 import commonCategoryRouter from "./common-category.route";
 import commonLocationRouter from "./common-location.route";
+import commonMediaRouter from "./common-media.route";
+import commonProductRouter from "./common-product.route";
+import commonUserRouter from "./common-user.route";
 
 const commonRoutes = {
   prefix: "/",
@@ -23,6 +24,10 @@ const commonRoutes = {
     {
       path: "categories",
       route: commonCategoryRouter,
+    },
+    {
+      path: "brands",
+      route: commonBrandRouter,
     },
     {
       path: "media",

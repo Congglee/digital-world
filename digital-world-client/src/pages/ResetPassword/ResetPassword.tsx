@@ -40,7 +40,7 @@ export default function ResetPassword() {
   }, [isSuccess])
 
   return (
-    <div>
+    <>
       <Breadcrumbs />
       <div className='flex mt-5 mb-10 px-4 justify-center'>
         <div className='max-w-[495px] w-full text-[#505050]'>
@@ -82,6 +82,6 @@ export default function ResetPassword() {
           </form>
         </div>
       </div>
-    </div>
+    </>
   )
 }

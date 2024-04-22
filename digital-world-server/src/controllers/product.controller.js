@@ -96,7 +96,7 @@ const getProducts = async (req, res) => {
     };
   }
   if (brand) {
-    const brandQuery = brand.split(",").map((item) => ({
+    const brandQuery = brand.split(" ").map((item) => ({
       brand: { $regex: item.trim(), $options: "i" },
     }));
     condition.$or = brandQuery;
@@ -116,6 +116,7 @@ const getProducts = async (req, res) => {
     message: "Lấy các sản phẩm thành công",
     data: {
       products,
+      total_products: totalProducts,
       pagination: {
         page,
         limit,

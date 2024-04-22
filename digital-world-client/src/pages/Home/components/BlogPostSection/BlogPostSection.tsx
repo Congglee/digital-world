@@ -7,7 +7,7 @@ export default function BlogPostSection() {
   return (
     <>
       <div className='text-[#151515] border-b-2 border-purple mb-5'>
-        <h2 className='text-xl uppercase py-[15px] font-semibold'>Bài viết</h2>
+        <h2 className='text-xl uppercase py-3 font-semibold'>Bài viết</h2>
       </div>
       <Carousel opts={{ align: 'start', loop: true }}>
         <CarouselContent>

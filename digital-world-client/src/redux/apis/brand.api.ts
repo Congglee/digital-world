@@ -8,8 +8,10 @@ import { BrandSchema } from 'src/utils/rules'
 import { categoryApi } from './category.api'
 import { productApi } from './product.api'
 
-export const ADMIN_BRAND_URL = 'admin/brands/'
-export const URL_GET_ALL_BRANDS = `${ADMIN_BRAND_URL}/get-all-brands`
+export const BRAND_URL = 'brands'
+export const ADMIN_BRAND_URL = `admin/${BRAND_URL}`
+
+export const URL_GET_ALL_BRANDS = 'get-all-brands'
 export const URL_ADD_BRAND = `${ADMIN_BRAND_URL}/add-brand`
 export const URL_UPDATE_BRAND = `${ADMIN_BRAND_URL}/update-brand`
 export const URL_DELETE_BRAND = `${ADMIN_BRAND_URL}/delete-brand`
@@ -24,7 +26,7 @@ export const brandApi = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => ({
     getAllBrands: build.query<SuccessResponse<BrandList>, void>({
-      query: () => ({ url: URL_GET_ALL_BRANDS, method: 'GET' }),
+      query: () => ({ url: `${BRAND_URL}/${URL_GET_ALL_BRANDS}`, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<BrandList>>) => response.data,
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
         try {

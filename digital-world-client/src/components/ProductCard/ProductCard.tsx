@@ -39,7 +39,13 @@ function getProductLabel(product: Product): ProductLabel | null {
   return null
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+interface ProductCardProps {
+  product: Product
+  actionButtonsClassname?: string
+  overviewClassname?: string
+}
+
+export default function ProductCard({ product, actionButtonsClassname, overviewClassname }: ProductCardProps) {
   const labelColors = {
     green: 'bg-[#00ff27] after:border-r-[#00ff27]',
     cyan: 'bg-[#00d5d5] after:border-r-[#00d5d5]',
@@ -87,8 +93,8 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      <div className='opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute size-full top-0 left-0 py-[10px] px-5 bg-white overflow-hidden transition-all duration-300 ease-in'>
-        <div className='pb-[10px] border-b border-b-[#ebebeb] mb-[10px] overflow-hidden flex items-start gap-5'>
+      <div className='opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute size-full top-0 left-0 py-[10px] bg-white overflow-hidden transition-all duration-300 ease-in'>
+        <div className='pb-[10px] border-b border-b-[#ebebeb] mb-[10px] overflow-hidden flex items-start gap-5 px-5'>
           <h3 className='overflow-hidden line-clamp-2 text-[#2b3743] hover:text-purple'>
             <Link to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}>
               {product.name}
@@ -102,12 +108,17 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
         <div
-          className='mb-[15px] text-[13px] leading-5 text-[#505050]'
+          className={cn('mb-[15px] text-[13px] leading-5 text-[#505050] px-5', overviewClassname)}
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(product.overview)
           }}
         />
-        <div className='relative w-full group-hover:bottom-0 left-0 -bottom-10 flex items-center justify-center gap-[10px] transition-all duration-400'>
+        <div
+          className={cn(
+            'relative w-full group-hover:bottom-0 left-0 -bottom-10 flex items-center justify-center gap-[10px] transition-all duration-400 px-5',
+            actionButtonsClassname
+          )}
+        >
           <div className='size-10 bg-white text-[#2a2a2a] border border-[#c5cfd6] rounded-full flex items-center justify-center transition-colors duration-300 hover:bg-[#2a2a2a] hover:text-white cursor-pointer'>
             <AlignJustify className='size-4' />
           </div>

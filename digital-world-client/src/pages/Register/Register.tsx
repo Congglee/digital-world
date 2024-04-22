@@ -65,7 +65,7 @@ export default function Register() {
   }, [isError])
 
   return (
-    <div>
+    <>
       <Breadcrumbs />
       <div className='flex mt-5 mb-10 px-4 justify-center'>
         <div className='max-w-[495px] w-full'>
@@ -118,8 +118,7 @@ export default function Register() {
           </form>
         </div>
       </div>
-
       <FinalRegisterModal open={open} closeModal={closeModal} />
-    </div>
+    </>
   )
 }

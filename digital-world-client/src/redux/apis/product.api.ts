@@ -5,7 +5,7 @@ import axiosBaseQuery from '../helper'
 import { Product, ProductList } from 'src/types/product.type'
 import { ProductSchema, RatingSchema } from 'src/utils/rules'
 
-export const PRODUCT_URL = 'products/'
+export const PRODUCT_URL = 'products'
 export const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
 
 export const URL_GET_ALL_PRODUCTS = 'get-all-products'
@@ -28,12 +28,12 @@ export const productApi = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => ({
     getAllProducts: build.query<SuccessResponse<ProductList>, void>({
-      query: () => ({ url: `${ADMIN_PRODUCT_URL}/${URL_GET_ALL_PRODUCTS}`, method: 'GET' }),
+      query: () => ({ url: `${PRODUCT_URL}/${URL_GET_ALL_PRODUCTS}`, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<ProductList>>) => response.data,
       providesTags: tagTypes
     }),
     getProducts: build.query<SuccessResponse<ProductList>, ListConfig>({
-      query: (params) => ({ url: `${PRODUCT_URL}${URL_GET_PRODUCTS}`, method: 'GET', params }),
+      query: (params) => ({ url: `${PRODUCT_URL}/${URL_GET_PRODUCTS}`, method: 'GET', params }),
       transformResponse: (response: AxiosResponse<SuccessResponse<ProductList>>) => response.data,
       providesTags: tagTypes
     }),
@@ -42,7 +42,7 @@ export const productApi = createApi({
       invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
     }),
     getProductDetail: build.query<AxiosResponse<SuccessResponse<Product>>, string>({
-      query: (id) => ({ url: `${PRODUCT_URL}${URL_GET_PRODUCT}/${id}`, method: 'GET' }),
+      query: (id) => ({ url: `${PRODUCT_URL}/${URL_GET_PRODUCT}/${id}`, method: 'GET' }),
       providesTags: (result, _error, _args) =>
         result ? [{ type: 'Product' as const, id: result?.data.data._id }] : tagTypes
     }),

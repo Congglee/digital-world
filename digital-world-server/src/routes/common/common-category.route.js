@@ -14,7 +14,14 @@ commonCategoryRouter.get(
 );
 
 commonCategoryRouter.get(
-  "/:category_id",
+  "/get-all-categories",
+  categoryMiddleware.getCategoriesRules(),
+  helpersMiddleware.entityValidator,
+  wrapAsync(categoryController.getAllCategories)
+);
+
+commonCategoryRouter.get(
+  "/get-category/:category_id",
   helpersMiddleware.idRule("category_id"),
   helpersMiddleware.idValidator,
   wrapAsync(categoryController.getCategory)
