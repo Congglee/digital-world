@@ -6,6 +6,7 @@ const path = {
   wishlist: '/wishlist',
   cart: '/cart',
   products: '/products',
+  productDetail: '/products/:nameId',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password/:token',
   user: '/user',

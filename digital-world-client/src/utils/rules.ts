@@ -157,7 +157,13 @@ export const mailSchema = yup.object({
 })
 
 export const ratingSchema = yup.object({
-  publish: yup.boolean().required('Vui lòng chọn trạng thái hiển thị của đánh giá')
+  publish: yup.boolean().required('Vui lòng chọn trạng thái hiển thị của đánh giá'),
+  star: yup
+    .number()
+    .required('Số sao đánh giá sản phẩm là bắt buộc')
+    .min(1, 'Vui lòng chọn số sao đánh giá')
+    .max(5, 'Số sao đánh giá sản phẩm không được lớn hơn 5'),
+  comment: yup.string().trim()
 })
 
 export type CategorySchema = yup.InferType<typeof categorySchema>

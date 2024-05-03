@@ -58,7 +58,7 @@ export default function Login() {
 
   return (
     <>
-      <Breadcrumbs />
+      <Breadcrumbs currentPageName='Đăng nhập' />
       <div className='flex mt-5 mb-10 px-4 justify-center'>
         <div className='max-w-[495px] w-full'>
           <form className='pb-8 mb-4' onSubmit={onSubmit} noValidate>

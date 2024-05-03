@@ -1,8 +1,9 @@
 import { AlignJustify, Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ProductRating from 'src/components/ProductRating'
+import path from 'src/constants/path'
 import { Product } from 'src/types/product.type'
-import { formatCurrency } from 'src/utils/utils'
+import { formatCurrency, generateNameId } from 'src/utils/utils'
 
 export default function DailyDeals({ product }: { product: Product | null }) {
   if (!product) return null
@@ -16,11 +17,14 @@ export default function DailyDeals({ product }: { product: Product | null }) {
         </div>
       </div>
       <div className='mb-[15px]'>
-        <Link to='/products'>
+        <Link to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}>
           <img src={product.thumb} alt='daily deal product thumbnail' />
         </Link>
         <div className='flex flex-col items-center'>
-          <Link to='/products' className='line-clamp-2 hover:text-purple text-[#2b3743] mb-2'>
+          <Link
+            to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}
+            className='line-clamp-2 hover:text-purple text-[#2b3743] mb-2'
+          >
             {product.name}
           </Link>
           <div className='mb-[15px]'>

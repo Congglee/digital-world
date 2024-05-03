@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from '../ui/button'
 import { Moon } from 'src/utils/icons'
 
-export function ModeToggle() {
+export default function ModeToggle() {
   const { setTheme } = useTheme()
 
   return (

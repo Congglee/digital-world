@@ -1,11 +1,15 @@
+import { cn } from 'src/utils/utils'
+
 export default function ProductRating({
   rating,
   activeClassname = 'w-3 h-3 fill-yellow-300 text-yellow-300',
-  nonActiveClassname = 'w-3 h-3 fill-current text-gray-300'
+  nonActiveClassname = 'w-3 h-3 fill-current text-gray-300',
+  wrapperClassname
 }: {
   rating: number
   activeClassname?: string
   nonActiveClassname?: string
+  wrapperClassname?: string
 }) {
   const handleWidth = (order: number) => {
     if (order <= rating) {
@@ -20,7 +24,7 @@ export default function ProductRating({
   }
 
   return (
-    <div className='flex items-center'>
+    <div className={cn('flex items-center', wrapperClassname)}>
       {Array(5)
         .fill(0)
         .map((_, index) => (

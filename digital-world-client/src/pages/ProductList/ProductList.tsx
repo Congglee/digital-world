@@ -21,7 +21,7 @@ export default function ProductList() {
 
   return (
     <>
-      <Breadcrumbs />
+      <Breadcrumbs currentPageName='Sản phẩm' />
       <div className='py-5 container'>
         <div className='grid grid-cols-12 gap-6 mb-10'>
           <button

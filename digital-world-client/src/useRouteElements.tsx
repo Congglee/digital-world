@@ -26,6 +26,7 @@ import SettingsProfile from './pages/DashBoard/pages/Settings/pages/SettingsProf
 import SettingsSendMail from './pages/DashBoard/pages/Settings/pages/SettingsSendMail'
 import SettingsAppearance from './pages/DashBoard/pages/Settings/pages/SettingsAppearance'
 import ProductList from './pages/ProductList'
+import ProductDetail from './pages/ProductDetail'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -171,6 +172,10 @@ export default function useRouteElements() {
         {
           path: path.products,
           element: <ProductList />
+        },
+        {
+          path: path.productDetail,
+          element: <ProductDetail />
         }
       ]
     }

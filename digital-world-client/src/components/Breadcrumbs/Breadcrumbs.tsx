@@ -1,68 +1,43 @@
 import { Fragment } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
+import useBreadcrumbs from 'use-react-router-breadcrumbs'
 
-function translatePathname(pathname: string, tokenPathName?: string) {
-  switch (pathname) {
-    case 'home':
-      return 'Trang chủ'
-    case 'login':
-      return 'Đăng nhập'
-    case 'register':
-      return 'Đăng ký'
-    case 'forgot-password':
-      return 'Quên mật khẩu'
-    case 'reset-password':
-      return 'Đổi mật khẩu'
-    case 'products':
-      return 'Sản phẩm'
-    case tokenPathName:
-      return ''
-    case `reset-password/${tokenPathName}`:
-      return 'Đổi mật khẩu'
-    default:
-      return pathname
-  }
+interface BreadcrumbsProps {
+  currentPageName?: string
 }
 
-export default function Breadcrumbs() {
-  const location = useLocation()
-  const { token } = useParams()
-
-  let currentLink = ''
-  const crumbs = location.pathname
-    .split('/')
-    .filter((crumb) => crumb !== '')
-    .map((crumb) => {
-      currentLink += `/${crumb}`
-      const translatedCrumb = token ? translatePathname(crumb, token) : translatePathname(crumb)
-      return (
-        <Fragment key={crumb}>
-          {crumb !== token && <span>›</span>}
-          <Link to={currentLink} className='capitalize text-[#1c1d1d] text-sm'>
-            {translatedCrumb}
-          </Link>
-        </Fragment>
-      )
-    })
-
-  if (crumbs.length === 0 || crumbs[0].key !== 'home') {
-    crumbs.unshift(
-      <Fragment key='home'>
-        <Link to={path.home} className='capitalize text-[#1c1d1d] text-sm'>
-          Trang chủ
-        </Link>
-      </Fragment>
-    )
-  }
+export default function Breadcrumbs({ currentPageName }: BreadcrumbsProps) {
+  const routes = [
+    { path: path.home, breadcrumb: 'Trang chủ' },
+    { path: path.products, breadcrumb: 'Sản phẩm' },
+    { path: path.productDetail, breadcrumb: currentPageName },
+    { path: path.login, breadcrumb: 'Đăng nhập' },
+    { path: path.register, breadcrumb: 'Đăng ký' },
+    { path: path.forgotPassword, breadcrumb: 'Quên mật khẩu' },
+    { path: path.resetPassword, breadcrumb: 'Đổi mật khẩu' },
+    { path: '/reset-password', breadcrumb: 'Đổi mật khẩu' }
+  ]
+  const breadcrumbs = useBreadcrumbs(routes)
 
   return (
     <div className='py-[15px] bg-[#f7f7f7]'>
       <div className='container'>
-        <h3 className='uppercase text-[#151515] mb-2 font-bold text-lg'>
-          {translatePathname(currentLink.replace('/', ''), token)}
-        </h3>
-        <nav className='flex items-center gap-1'>{crumbs}</nav>
+        <h3 className='uppercase text-[#151515] mb-2 font-bold text-lg'>{currentPageName}</h3>
+        <nav className='flex flex-wrap items-center gap-1'>
+          {breadcrumbs.map(({ match, breadcrumb }, index, self) => {
+            return (
+              match.route?.path !== path.resetPassword && (
+                <Fragment key={match.pathname}>
+                  <Link to={match.pathname} className='capitalize text-[#1c1d1d] text-sm'>
+                    {breadcrumb}
+                  </Link>
+                  {index !== self.length - 1 && <span>›</span>}
+                </Fragment>
+              )
+            )
+          })}
+        </nav>
       </div>
     </div>
   )

@@ -74,6 +74,29 @@ export const paymentStatusOptions = [
   }
 ]
 
+export const tabOptions = [
+  {
+    name: 'description',
+    label: 'Thông tin sản phẩm'
+  },
+  {
+    name: 'warranty',
+    label: 'Bảo hành'
+  },
+  {
+    name: 'delivery',
+    label: 'Vận chuyển'
+  },
+  {
+    name: 'payment',
+    label: 'Thanh toán'
+  },
+  {
+    name: 'rate',
+    label: 'Đánh giá của khách hàng'
+  }
+]
+
 interface RatingIconProps {
   rating: number
   activeClassname?: string

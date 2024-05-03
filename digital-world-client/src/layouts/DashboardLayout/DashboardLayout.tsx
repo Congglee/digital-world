@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { ThemeProvider } from 'src/components/ThemeProvider/ThemeProvider'
-import { ModeToggle } from 'src/components/ModeToggle/ModeToggle'
+import ModeToggle from 'src/components/ModeToggle'
 
 export default function DashboardLayout() {
   return (

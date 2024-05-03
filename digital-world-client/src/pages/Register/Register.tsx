@@ -66,7 +66,7 @@ export default function Register() {
 
   return (
     <>
-      <Breadcrumbs />
+      <Breadcrumbs currentPageName='Đăng ký' />
       <div className='flex mt-5 mb-10 px-4 justify-center'>
         <div className='max-w-[495px] w-full'>
           <form onSubmit={onSubmit} noValidate>

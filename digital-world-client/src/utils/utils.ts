@@ -73,6 +73,11 @@ export const generateNameId = ({ name, id }: { name: string; id: string }) => {
   return removeSpecialCharacter(name).replace(/\s/g, '-') + `-i-${id}`
 }
 
+export const getIdFromNameId = (nameId: string) => {
+  const arr = nameId.split('-i-')
+  return arr[arr.length - 1]
+}
+
 export function scrollToTop() {
   document.documentElement.scrollTo({
     top: 0,
