@@ -38,16 +38,14 @@ export default function CategoryList() {
   const [deleteManyCategories, deleteManyCategoriesResult] = useDeleteManyCategoriesMutation()
 
   const csvExportCategoriesData = useMemo(() => {
-    return (
-      categoriesData && [
-        exportDataHeaders,
-        ...categoriesData.data.categories.map((category) => [
+    const rows = categoriesData
+      ? categoriesData.data.categories.map((category) => [
           category._id,
           category.name,
           category.brands.map((brand) => brand.name).join(' - ')
         ])
-      ]
-    )
+      : []
+    return [exportDataHeaders, ...rows]
   }, [categoriesData])
 
   const handleDeleteCategory = async (id: string) => {

@@ -15,29 +15,29 @@ import { useGetAllOrdersQuery } from 'src/redux/apis/order.api'
 import { Order } from 'src/types/order.type'
 import { formatCurrency, getAvatarUrl } from 'src/utils/utils'
 
+const exportDataHeaders = [
+  'Mã đơn hàng',
+  'Khách',
+  'Email',
+  'Số điện thoại',
+  'Sản phẩm',
+  'Số lượng sản phẩm',
+  'Giá sản phẩm',
+  'Thành tiền',
+  'Ngày đặt',
+  'Địa chỉ giao hàng',
+  'Phương thức thanh toán',
+  'Trạng thái đơn hàng',
+  'Trạng thái vận chuyển',
+  'Trạng thái thanh toán',
+  'Tổng tiền'
+]
+
 export default function OrderList() {
   const { data: ordersData } = useGetAllOrdersQuery()
   const navigate = useNavigate()
 
   const csvExportOrdersData = useMemo(() => {
-    const headers = [
-      'Mã đơn hàng',
-      'Khách',
-      'Email',
-      'Số điện thoại',
-      'Sản phẩm',
-      'Số lượng sản phẩm',
-      'Giá sản phẩm',
-      'Thành tiền',
-      'Ngày đặt',
-      'Địa chỉ giao hàng',
-      'Phương thức thanh toán',
-      'Trạng thái đơn hàng',
-      'Trạng thái vận chuyển',
-      'Trạng thái thanh toán',
-      'Tổng tiền'
-    ]
-
     const rows = ordersData
       ? ordersData.data.orders.flatMap((order) =>
           order.products.map((product) => [
@@ -60,7 +60,7 @@ export default function OrderList() {
         )
       : []
 
-    return [headers, ...rows]
+    return [exportDataHeaders, ...rows]
   }, [ordersData])
 
   const columns: ColumnDef<Order>[] = [

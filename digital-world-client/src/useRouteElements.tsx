@@ -27,6 +27,9 @@ import SettingsSendMail from './pages/DashBoard/pages/Settings/pages/SettingsSen
 import SettingsAppearance from './pages/DashBoard/pages/Settings/pages/SettingsAppearance'
 import ProductList from './pages/ProductList'
 import ProductDetail from './pages/ProductDetail'
+import SettingsStore from 'src/pages/DashBoard/pages/Settings/pages/SettingsStore'
+import SettingsPayment from 'src/pages/DashBoard/pages/Settings/pages/SettingsPayment'
+import UserProfile from 'src/pages/DashBoard/pages/User/UserProfile'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -105,6 +108,10 @@ export default function useRouteElements() {
                   element: <UserList />
                 },
                 {
+                  path: path.userProfileDashboard,
+                  element: <UserProfile />
+                },
+                {
                   path: path.productsDashboard,
                   element: <ProductListDashboard />
                 },
@@ -142,6 +149,18 @@ export default function useRouteElements() {
                   children: [
                     {
                       index: true,
+                      element: <SettingsStore />
+                    },
+                    {
+                      path: path.settingsStore,
+                      element: <SettingsStore />
+                    },
+                    {
+                      path: path.settingsPayment,
+                      element: <SettingsPayment />
+                    },
+                    {
+                      path: path.settingsProfile,
                       element: <SettingsProfile />
                     },
                     {

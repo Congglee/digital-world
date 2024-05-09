@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { toast } from 'react-toastify'
 import userImage from 'src/assets/images/user.svg'
-import config from 'src/constants/config'
+import { config } from 'src/constants/config'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {

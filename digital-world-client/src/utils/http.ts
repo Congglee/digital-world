@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, type AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
-import config from 'src/constants/config'
+import { config } from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { URL_FINAL_REGISTER, URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN } from 'src/redux/apis/auth.api'
 import { AuthResponse, RefreshTokenResponse } from 'src/types/auth.type'

@@ -39,7 +39,15 @@ export default function ProductDetailTabs({ product, nameId }: ProductDetailTabs
 
   useEffect(() => {
     setActiveTab(tabOptions[0])
-  }, [nameId, isAuthenticated])
+    setShowReadMoreBtn(false)
+  }, [nameId, isAuthenticated, product])
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      const shouldShowReadMore = descriptionRef.current.scrollHeight !== descriptionRef.current.clientHeight
+      setShowReadMoreBtn(shouldShowReadMore)
+    }
+  }, [activeTab, product])
 
   return (
     <div className='flex flex-col mt-[30px] overflow-hidden'>

@@ -25,19 +25,7 @@ interface DataTableRowActionsProps<TData> {
   onViewDetail?: () => void
 }
 
-export default function DataTableRowActions<TData>({
-  row,
-  enableDeleting,
-  enableEditing,
-  enableEditPassword,
-  enableSendMail,
-  enableViewDetail,
-  onEdit,
-  onEditPassword,
-  onSendMail,
-  onViewDetail,
-  onDelete
-}: DataTableRowActionsProps<TData>) {
+export default function DataTableRowActions<TData>(props: DataTableRowActionsProps<TData>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -47,13 +35,13 @@ export default function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
-        {enableViewDetail && (
+        {props.enableViewDetail && (
           <>
             <DropdownMenuItem
-              disabled={!enableViewDetail}
+              disabled={!props.enableViewDetail}
               className='cursor-pointer'
               onClick={() => {
-                if (onViewDetail) onViewDetail()
+                if (props.onViewDetail) props.onViewDetail()
               }}
             >
               <Eye className='w-4 h-4 mr-2' />
@@ -63,23 +51,23 @@ export default function DataTableRowActions<TData>({
           </>
         )}
         <DropdownMenuItem
-          disabled={!enableEditing}
+          disabled={!props.enableEditing}
           onClick={() => {
-            if (onEdit) onEdit()
+            if (props.onEdit) props.onEdit()
           }}
           className='cursor-pointer'
         >
           <Pencil className='w-4 h-4 mr-2' />
           Cập nhật
         </DropdownMenuItem>
-        {enableEditPassword && (
+        {props.enableEditPassword && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              disabled={!enableEditPassword}
+              disabled={!props.enableEditPassword}
               className='cursor-pointer'
               onClick={() => {
-                if (onEditPassword) onEditPassword()
+                if (props.onEditPassword) props.onEditPassword()
               }}
             >
               <LockKeyhole className='w-4 h-4 mr-2' />
@@ -87,14 +75,14 @@ export default function DataTableRowActions<TData>({
             </DropdownMenuItem>
           </>
         )}
-        {enableSendMail && (
+        {props.enableSendMail && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              disabled={!enableSendMail}
+              disabled={!props.enableSendMail}
               className='cursor-pointer'
               onClick={() => {
-                if (onSendMail) onSendMail()
+                if (props.onSendMail) props.onSendMail()
               }}
             >
               <Mail className='w-4 h-4 mr-2' />
@@ -104,10 +92,10 @@ export default function DataTableRowActions<TData>({
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          disabled={!enableDeleting}
+          disabled={!props.enableDeleting}
           className='cursor-pointer'
           onClick={() => {
-            if (onDelete) onDelete()
+            if (props.onDelete) props.onDelete()
           }}
         >
           <Trash2 className='w-4 h-4 mr-2' />

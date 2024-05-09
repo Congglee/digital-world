@@ -67,18 +67,16 @@ export default function RatingDetail() {
   }, [deleteManyRatingsResult.isSuccess])
 
   const csvExportRatingsDetailData = useMemo(() => {
-    return (
-      product && [
-        exportDataHeaders,
-        ...product.ratings.map((rating) => [
+    const rows = product
+      ? product.ratings.map((rating) => [
           rating._id,
           rating.user_name,
           `${rating.star} sao`,
           rating.comment,
           format(rating.date, 'dd/MM/yyyy')
         ])
-      ]
-    )
+      : []
+    return [exportDataHeaders, ...rows]
   }, [product])
 
   const handleDownloadPdf = () => {

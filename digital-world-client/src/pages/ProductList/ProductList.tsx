@@ -43,15 +43,17 @@ export default function ProductList() {
           <div className='col-span-12 lg:col-span-9'>
             <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-5'>
               {productsData &&
-                productsData.data.products.map((product) => (
-                  <div className='col-span-1' key={product._id}>
-                    <ProductCard
-                      product={product}
-                      actionButtonsClassname='justify-start'
-                      overviewClassname='line-clamp-[9]'
-                    />
-                  </div>
-                ))}
+                productsData.data.products
+                  .filter((product) => product.is_published)
+                  .map((product) => (
+                    <div className='col-span-1' key={product._id}>
+                      <ProductCard
+                        product={product}
+                        actionButtonsClassname='justify-start'
+                        overviewClassname='line-clamp-[9]'
+                      />
+                    </div>
+                  ))}
             </div>
             {productsData && productsData.data.products.length > 0 && (
               <Pagination queryConfig={queryConfig} pageSize={productsData?.data.pagination.page_size || 1} />

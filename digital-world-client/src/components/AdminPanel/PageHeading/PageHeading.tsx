@@ -32,23 +32,25 @@ interface PageHeadingProps {
   pdfViewDocument?: React.ReactElement<DocumentProps>
 }
 
-export default function PageHeading({
-  heading,
-  description = '',
-  hasDownload = true,
-  hasPdfDownload = true,
-  hasCsvDownload = true,
-  children,
-  csvData = [],
-  csvFileName,
-  handleDownloadPdf,
-  pdfViewDocument
-}: PageHeadingProps) {
+export default function PageHeading(props: PageHeadingProps) {
+  const {
+    heading,
+    description = '',
+    hasDownload = true,
+    hasPdfDownload = true,
+    hasCsvDownload = true,
+    children,
+    csvData = [],
+    csvFileName,
+    handleDownloadPdf,
+    pdfViewDocument
+  } = props
+
   return (
     <>
       <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-3'>
         <div className='flex-1 space-y-0.5'>
-          <h2 className='text-2xl font-bold tracking-tight'>{heading}</h2>
+          <h2 className='text-2xl font-semibold tracking-tight uppercase'>{heading}</h2>
           <p className='text-muted-foreground'>{description}</p>
         </div>
         <div className='flex-shrink-0 flex flex-col flex-wrap sm:flex-row sm:items-center sm:space-x-2 gap-1'>

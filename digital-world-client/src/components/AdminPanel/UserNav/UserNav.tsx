@@ -11,12 +11,12 @@ import {
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
 import { useAppDispatch, useAppSelector } from 'src/redux/hook'
-import config from 'src/constants/config'
 import { useLogoutMutation } from 'src/redux/apis/auth.api'
 import { useEffect } from 'react'
 import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
+import { config } from 'src/constants/config'
 
 export default function UserNav() {
   const { profile } = useAppSelector((state) => state.auth)
@@ -54,7 +54,7 @@ export default function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link to={path.settingsDashboard} className='flex items-center justify-between w-full cursor-pointer'>
+            <Link to={path.settingsProfile} className='flex items-center justify-between w-full cursor-pointer'>
               <span>Hồ sơ cá nhân</span>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </Link>

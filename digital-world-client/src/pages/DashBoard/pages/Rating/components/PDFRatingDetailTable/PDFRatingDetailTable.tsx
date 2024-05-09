@@ -1,6 +1,6 @@
 import { Document, Font, Image, Page, Polygon, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
 import { format } from 'date-fns'
-import config from 'src/constants/config'
+import { config } from 'src/constants/config'
 import { Rating } from 'src/types/product.type'
 import { chunkSubstr } from 'src/utils/utils'
 

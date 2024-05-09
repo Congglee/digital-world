@@ -1,24 +1,24 @@
+import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
+import { saveAs } from 'file-saver'
 import { Circle, CircleUserRound, PlusCircle, Trash2 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
 import DataTable from 'src/components/AdminPanel/DataTable'
 import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHeader'
 import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
+import path from 'src/constants/path'
+import AddUserDrawer from 'src/pages/DashBoard/pages/User/components/AddUserDrawer'
+import PDFUsersTableDocument from 'src/pages/DashBoard/pages/User/components/PDFUsersTable'
 import { useDeleteManyUsersMutation, useDeleteUserMutation, useGetAllUsersQuery } from 'src/redux/apis/user.api'
+import { useAppSelector } from 'src/redux/hook'
 import { Role, User } from 'src/types/user.type'
 import { getAvatarUrl } from 'src/utils/utils'
-import UpdateUserDrawer from '../components/UpdateUserDrawer'
-import { useEffect, useMemo, useState } from 'react'
-import { useAppSelector } from 'src/redux/hook'
-import ChangePasswordDrawer from '../components/ChangePasswordDrawer'
-import AddUserDrawer from '../components/AddUserDrawer'
-import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
-import { toast } from 'react-toastify'
-import { pdf } from '@react-pdf/renderer'
-import { saveAs } from 'file-saver'
-import PDFUsersTableDocument from '../components/PDFUsersTable'
 
 const exportDataHeaders = [
   'ID',
@@ -38,8 +38,6 @@ const exportDataHeaders = [
 export default function UserList() {
   const { data: usersData } = useGetAllUsersQuery()
   const [addUserDrawerOpen, setAddUserDrawerOpen] = useState<boolean>(false)
-  const [updateUserDrawerOpen, setUpdateUserDrawerOpen] = useState<boolean>(false)
-  const [changePasswordDrawerOpen, setChangePasswordDrawerOpen] = useState<boolean>(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [selectedUsersIds, setSelectedUsersIds] = useState<string[]>([])
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState<boolean>(false)
@@ -48,12 +46,11 @@ export default function UserList() {
   const usersList = usersData?.data.users.filter((user) => user._id !== profile._id)
   const [deleteUser, deleteUserResult] = useDeleteUserMutation()
   const [deleteManyUsers, deleteManyUsersResult] = useDeleteManyUsersMutation()
+  const navigate = useNavigate()
 
   const csvExportUsersData = useMemo(() => {
-    return (
-      usersList && [
-        exportDataHeaders,
-        ...usersList.map((user) => [
+    const rows = usersList
+      ? usersList.map((user) => [
           user._id,
           user.name,
           user.email,
@@ -67,8 +64,8 @@ export default function UserList() {
           user.roles?.[0],
           user.is_blocked ? 'Bị khóa' : 'Hoạt động'
         ])
-      ]
-    )
+      : []
+    return [exportDataHeaders, ...rows]
   }, [usersList])
 
   const handleDeleteUser = async (id: string) => {
@@ -209,16 +206,11 @@ export default function UserList() {
       cell: ({ row }) => (
         <DataTableRowActions
           row={row}
-          enableEditing={true}
+          enableEditing={false}
           enableDeleting={true}
-          enableEditPassword={true}
-          onEdit={() => {
-            setSelectedUser(row.original)
-            setUpdateUserDrawerOpen(true)
-          }}
-          onEditPassword={() => {
-            setSelectedUser(row.original)
-            setChangePasswordDrawerOpen(true)
+          enableViewDetail={true}
+          onViewDetail={() => {
+            navigate(path.userProfileDashboard.replace(':user_id', row.original._id))
           }}
           onDelete={() => {
             setSelectedUser(row.original)
@@ -264,18 +256,6 @@ export default function UserList() {
         handleSelectedRowsIds={setSelectedUsersIds}
       />
       <AddUserDrawer open={addUserDrawerOpen} onOpenChange={setAddUserDrawerOpen} />
-      <UpdateUserDrawer
-        open={updateUserDrawerOpen}
-        onOpenChange={setUpdateUserDrawerOpen}
-        selectedUser={selectedUser}
-        onAfterUpdate={setSelectedUser}
-      />
-      <ChangePasswordDrawer
-        open={changePasswordDrawerOpen}
-        onOpenChange={setChangePasswordDrawerOpen}
-        selectedUser={selectedUser}
-        onAfterUpdate={setSelectedUser}
-      />
       <ConfirmDialog
         open={deleteUserDialogOpen}
         onOpenStateChange={setDeleteUserDialogOpen}

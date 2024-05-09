@@ -230,7 +230,7 @@ export default function UpdateUserOrder() {
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         <Card className='bg-accent'>
           <CardHeader>
-            <CardTitle>Khách hàng</CardTitle>
+            <CardTitle className='capitalize'>Khách hàng</CardTitle>
           </CardHeader>
           <CardContent>
             <div className='grid divide-y-2 divide-foreground'>
@@ -260,7 +260,7 @@ export default function UpdateUserOrder() {
         </Card>
         <Card className='bg-accent'>
           <CardHeader>
-            <CardTitle>Tóm tắt đơn hàng</CardTitle>
+            <CardTitle className='capitalize'>Tóm tắt đơn hàng</CardTitle>
           </CardHeader>
           <CardContent>
             <div className='grid divide-y-2 divide-foreground'>
@@ -285,7 +285,7 @@ export default function UpdateUserOrder() {
         </Card>
         <Card className='bg-accent'>
           <CardHeader>
-            <CardTitle>Giao hàng tới</CardTitle>
+            <CardTitle className='capitalize'>Giao hàng tới</CardTitle>
           </CardHeader>
           <CardContent>
             <div className='grid divide-y-2 divide-foreground'>
@@ -303,7 +303,7 @@ export default function UpdateUserOrder() {
 
         <Card className='bg-accent md:col-span-2'>
           <CardHeader>
-            <CardTitle>Sản phẩm</CardTitle>
+            <CardTitle className='capitalize'>Sản phẩm</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -340,7 +340,7 @@ export default function UpdateUserOrder() {
         </Card>
         <Card className='bg-accent col-span-1 md:col-span-2 lg:col-span-1 h-fit'>
           <CardHeader>
-            <CardTitle>Tổng đơn hàng</CardTitle>
+            <CardTitle className='capitalize'>Tổng đơn hàng</CardTitle>
           </CardHeader>
           <CardContent>
             <div className='grid divide-y-2 divide-foreground'>

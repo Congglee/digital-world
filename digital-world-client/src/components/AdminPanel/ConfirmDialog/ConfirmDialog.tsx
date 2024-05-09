@@ -10,7 +10,7 @@ import {
 } from 'src/components/ui/alert-dialog'
 import { Button } from 'src/components/ui/button'
 
-interface confirmDialogProps {
+interface ConfirmDialogProps {
   open: boolean
   title: string
   description?: string
@@ -20,7 +20,7 @@ interface confirmDialogProps {
   onConfirm: (...args: any[]) => unknown
 }
 
-export default function ConfirmDialog(props: confirmDialogProps) {
+export default function ConfirmDialog(props: ConfirmDialogProps) {
   return (
     <AlertDialog open={props.open} onOpenChange={props.onOpenStateChange}>
       <AlertDialogContent className='text-foreground'>

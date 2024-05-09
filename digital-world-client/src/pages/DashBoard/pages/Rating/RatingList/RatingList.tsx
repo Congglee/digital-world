@@ -23,18 +23,16 @@ export default function RatingList() {
   const navigate = useNavigate()
 
   const csvExportRatingListData = useMemo(() => {
-    return (
-      ratedProducts && [
-        exportDataHeaders,
-        ...ratedProducts.map((product) => [
+    const rows = ratedProducts
+      ? ratedProducts.map((product) => [
           product._id,
           product.name,
           `${product.total_ratings} sao`,
           product.ratings.length,
           format(product.updatedAt, 'dd/MM/yyyy')
         ])
-      ]
-    )
+      : []
+    return [exportDataHeaders, ...rows]
   }, [ratedProducts])
 
   const columns: ColumnDef<Product>[] = [

@@ -26,6 +26,15 @@ adminOrderRouter.get(
 );
 
 adminOrderRouter.get(
+  "/get-user-orders/:user_id",
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyAdmin,
+  helpersMiddleware.idRule("user_id"),
+  helpersMiddleware.idValidator,
+  wrapAsync(orderController.getUserOrders)
+);
+
+adminOrderRouter.get(
   "/get-all-orders",
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,

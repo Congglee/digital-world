@@ -11,7 +11,10 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 
 export default function SideBarNav({ className, items, ...props }: SidebarNavProps) {
   return (
-    <nav className={cn('flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1', className)} {...props}>
+    <nav
+      className={cn('overflow-auto pb-2 flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1', className)}
+      {...props}
+    >
       {items.map((item) => (
         <NavLink
           to={item.path}
@@ -20,7 +23,7 @@ export default function SideBarNav({ className, items, ...props }: SidebarNavPro
             cn(
               buttonVariants({ variant: 'ghost' }),
               isActive ? 'bg-muted hover:bg-muted' : 'hover:bg-transparent hover:underline',
-              'justify-start'
+              'justify-start uppercase'
             )
           }
           end

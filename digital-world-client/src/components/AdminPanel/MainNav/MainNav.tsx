@@ -50,7 +50,8 @@ const navMenus = [
   {
     path: path.userDashBoard,
     label: 'Tài khoản',
-    icon: <UserRound className='w-5 h-5' />
+    icon: <UserRound className='w-5 h-5' />,
+    children: [path.userProfileDashboard]
   },
   {
     path: path.orderDashBoard,
@@ -59,10 +60,16 @@ const navMenus = [
     children: [path.updateUserOrder, path.sendMailOrder]
   },
   {
-    path: path.settingsDashboard,
+    path: path.settingsStore,
     label: 'Cài đặt',
     icon: <Settings />,
-    children: [path.settingsSendMail]
+    children: [
+      path.settingsDashboard,
+      path.settingsPayment,
+      path.settingsProfile,
+      path.settingsAppearance,
+      path.settingsSendMail
+    ]
   }
 ]
 

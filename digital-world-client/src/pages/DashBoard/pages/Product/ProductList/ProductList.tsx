@@ -51,10 +51,8 @@ export default function ProductList() {
   const navigate = useNavigate()
 
   const csvExportProductsData = useMemo(() => {
-    return (
-      productsData && [
-        exportDataHeaders,
-        ...productsData.data.products.map((product) => [
+    const rows = productsData
+      ? productsData.data.products.map((product) => [
           product._id,
           product.name,
           product.thumb,
@@ -65,8 +63,9 @@ export default function ProductList() {
           product.brand,
           convertHTMLToPlainText(product.overview)
         ])
-      ]
-    )
+      : []
+
+    return [exportDataHeaders, ...rows]
   }, [productsData])
 
   const handleDeleteProduct = async (id: string) => {

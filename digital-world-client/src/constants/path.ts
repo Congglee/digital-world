@@ -22,6 +22,7 @@ const path = {
   categoryDashboard: '/dashboard/categories',
   brandDashBoard: '/dashboard/brands',
   userDashBoard: '/dashboard/users',
+  userProfileDashboard: '/dashboard/users/:user_id',
 
   ratingDashboard: '/dashboard/ratings',
   detailRatingDashboard: '/dashboard/ratings/:product_id',
@@ -31,6 +32,9 @@ const path = {
   sendMailOrder: '/dashboard/orders/send-mail/:order_id',
 
   settingsDashboard: '/dashboard/settings',
+  settingsStore: '/dashboard/settings/store',
+  settingsPayment: '/dashboard/settings/payment',
+  settingsProfile: '/dashboard/settings/profile',
   settingsSendMail: '/dashboard/settings/mail',
   settingsAppearance: '/dashboard/settings/appearance'
 } as const

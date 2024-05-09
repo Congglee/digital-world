@@ -10,6 +10,8 @@ export const ADMIN_ORDER_URL = `admin/${ORDER_URL}`
 
 export const URL_GET_ORDERS = `${ADMIN_ORDER_URL}/get-orders`
 export const URL_GET_ALL_ORDERS = `${ADMIN_ORDER_URL}/get-all-orders`
+export const URL_GET_USER_ORDERS = `${ADMIN_ORDER_URL}/get-user-orders`
+export const URL_GET_MY_ORDERS = `${ORDER_URL}/get-my-orders`
 export const URL_GET_ORDER = `${ORDER_URL}/get-order`
 export const URL_UPDATE_USER_ORDER = `${ADMIN_ORDER_URL}/update-user-order`
 
@@ -26,6 +28,16 @@ export const orderApi = createApi({
       transformResponse: (response: AxiosResponse<SuccessResponse<OrderList>>) => response.data,
       providesTags: tagTypes
     }),
+    getUserOrders: build.query<SuccessResponse<OrderList>, string>({
+      query: (user_id) => ({ url: `${URL_GET_USER_ORDERS}/${user_id}`, method: 'GET' }),
+      transformResponse: (response: AxiosResponse<SuccessResponse<OrderList>>) => response.data,
+      providesTags: [{ type: 'Order' as const, id: 'USER_ORDERS_LIST' }]
+    }),
+    getMyOrders: build.query<SuccessResponse<OrderList>, void>({
+      query: () => ({ url: URL_GET_MY_ORDERS, method: 'GET' }),
+      transformResponse: (response: AxiosResponse<SuccessResponse<OrderList>>) => response.data,
+      providesTags: [{ type: 'Order' as const, id: 'MY_ORDERS_LIST' }]
+    }),
     getOrder: build.query<AxiosResponse<SuccessResponse<Order>>, string>({
       query: (id) => ({ url: `${URL_GET_ORDER}/${id}`, method: 'GET' }),
       providesTags: (result, _error, _args) =>
@@ -41,4 +53,10 @@ export const orderApi = createApi({
   })
 })
 
-export const { useGetAllOrdersQuery, useGetOrderQuery, useUpdateUserOrderMutation } = orderApi
+export const {
+  useGetAllOrdersQuery,
+  useGetOrderQuery,
+  useUpdateUserOrderMutation,
+  useGetUserOrdersQuery,
+  useGetMyOrdersQuery
+} = orderApi

@@ -7,7 +7,6 @@ import { ProductModel } from "../database/models/product.model";
 import { UserModel } from "../database/models/user.model";
 import { ErrorHandler, responseSuccess } from "../utils/response";
 import { generateOrderCode } from "../utils/utils";
-import { sendMail } from "../utils/mail";
 
 const addOrder = async (req, res) => {
   const form = req.body;
@@ -192,6 +191,36 @@ const getOrders = async (req, res) => {
   return responseSuccess(res, response);
 };
 
+const getUserOrders = async (req, res) => {
+  const { user_id } = req.params;
+  const userDB = await UserModel.findById(user_id);
+  if (userDB) {
+    let orders = await OrderModel.find({ "order_by.user_id": user_id })
+      .sort({ createdAt: -1 })
+      .select({ __v: 0 })
+      .lean();
+    const response = {
+      message: "Lấy tất cả đơn hàng của người dùng thành công",
+      data: { orders },
+    };
+    return responseSuccess(res, response);
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
+  }
+};
+
+const getMyOrders = async (req, res) => {
+  let orders = await OrderModel.find({ "order_by.user_id": req.jwtDecoded.id })
+    .sort({ createdAt: -1 })
+    .select({ __v: 0 })
+    .lean();
+  const response = {
+    message: "Lấy tất cả đơn hàng của tài khoản thành công",
+    data: { orders },
+  };
+  return responseSuccess(res, response);
+};
+
 const getAllOrders = async (req, res) => {
   let orders = await OrderModel.find({})
     .sort({ createdAt: -1 })
@@ -211,6 +240,8 @@ const orderController = {
   getOrder,
   getOrders,
   getAllOrders,
+  getUserOrders,
+  getMyOrders,
 };
 
 export default orderController;

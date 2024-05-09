@@ -1,7 +1,7 @@
 import { Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import config from 'src/constants/config'
+import { config } from 'src/constants/config'
 import { User } from 'src/types/user.type'
 import { chunkSubstr } from 'src/utils/utils'
 
@@ -151,7 +151,7 @@ export default function PDFUsersTableDocument({ users }: { users: User[] }) {
               </View>
               <View style={[styles.tableCol]}>
                 <Text style={styles.tableCell}>
-                  {user.date_of_birth ? format(user.date_of_birth!, 'dd/MM/yyyy', { locale: vi }) : ''}
+                  {user.date_of_birth ? format(user.date_of_birth, 'dd/MM/yyyy', { locale: vi }) : ''}
                 </Text>
               </View>
               <View style={[styles.tableCol]}>

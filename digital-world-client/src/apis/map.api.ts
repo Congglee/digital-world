@@ -1,4 +1,4 @@
-import config from 'src/constants/config'
+import { config } from 'src/constants/config'
 import { AutoCompleteAddressList } from 'src/types/location.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'

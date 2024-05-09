@@ -4,7 +4,7 @@ export interface User {
   _id: string
   name: string
   email: string
-  roles?: Role[]
+  roles: Role[]
   date_of_birth?: string // ISO8601
   avatar?: string
   address?: string
@@ -12,7 +12,20 @@ export interface User {
   district?: string
   ward?: string
   phone?: string
-  is_blocked?: boolean
+  wishlist: {
+    _id: string
+    name: string
+  }[]
+  cart: {
+    product: {
+      _id: string
+      name: string
+    }
+    buy_count: number
+    price: number
+    price_before_discount: number
+  }[]
+  is_blocked: boolean
   createdAt: string
   updatedAt: string
 }

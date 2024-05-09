@@ -31,7 +31,9 @@ export default function BrandList() {
   const [deleteManyBrands, deleteManyBrandsResult] = useDeleteManyBrandsMutation()
 
   const csvExportBrandsData = useMemo(() => {
-    return brandsData && [exportDataHeaders, ...brandsData.data.brands.map((brand) => [brand._id, brand.name])]
+    const rows = brandsData ? brandsData.data.brands.map((brand) => [brand._id, brand.name]) : []
+
+    return [exportDataHeaders, ...rows]
   }, [brandsData])
 
   const handleDeleteBrand = async (id: string) => {

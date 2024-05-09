@@ -7,6 +7,8 @@ export const ORDER_STATUS = {
 
 export const DELIVERY_STATUS = {
   WAIT_FOR_CONFIRMATION: "Đợi xác nhận",
+  CONFIRMED: "Đã xác nhận",
+  PRODUCT_DISPATCHED: "Đã chuyển hàng",
   DELIVERING: "Đang giao",
   DELIVERED_SUCCESSFULLY: "Đã giao thành công",
 };

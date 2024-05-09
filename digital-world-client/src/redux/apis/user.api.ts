@@ -21,11 +21,16 @@ export const URL_UPDATE_PROFILE = `${USER_URL}/update-me`
 const reducerPath = 'user/api' as const
 const tagTypes = ['User'] as const
 
-type BodyUpdateProfile = Omit<User, '_id' | 'roles' | 'is_blocked' | 'email' | 'createdAt' | 'updatedAt'> & {
+type BodyUpdateProfile = Omit<
+  User,
+  '_id' | 'wishlist' | 'cart' | 'roles' | 'is_blocked' | 'email' | 'createdAt' | 'updatedAt'
+> & {
   password?: string
   newPassword?: string
 }
-type BodyUpdateUser = Omit<User, '_id' | 'createdAt' | 'updatedAt' | 'email'> | { password?: string }
+type BodyUpdateUser =
+  | Omit<User, '_id' | 'wishlist' | 'cart' | 'createdAt' | 'updatedAt' | 'email'>
+  | { password?: string }
 type BodyAddUser = Pick<
   User,
   'name' | 'email' | 'address' | 'province' | 'district' | 'ward' | 'is_blocked' | 'roles' | 'phone' | 'date_of_birth'

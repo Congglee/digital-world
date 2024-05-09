@@ -135,8 +135,8 @@ export default function ProductReview({ product }: ProductReviewProps) {
                     {product.ratings.filter((rating) => rating.star === stars).length} đánh giá
                   </span>
                 </div>
-                <div className='hidden md:block text-[13px] font-medium text-gray-500'>
-                  {product.ratings.filter((rating) => rating.star === stars).length} đánh giá
+                <div className='w-full max-w-10 text-[13px] font-medium text-gray-500'>
+                  {ratingPercentages[stars - 1]}%
                 </div>
               </div>
             ))}

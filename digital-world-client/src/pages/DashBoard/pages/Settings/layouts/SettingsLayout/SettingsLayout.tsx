@@ -6,8 +6,16 @@ import path from 'src/constants/path'
 
 const sidebarNavItems = [
   {
+    label: 'Cài đặt cửa hàng',
+    path: path.settingsStore
+  },
+  {
+    label: 'Cài đặt thanh toán',
+    path: path.settingsPayment
+  },
+  {
     label: 'Tài khoản',
-    path: path.settingsDashboard
+    path: path.settingsProfile
   },
   {
     label: 'Gửi mail',
@@ -24,7 +32,7 @@ export default function SettingsLayout() {
     <>
       <PageHeading
         heading='Cài đặt'
-        description='Quản lý cài đặt tài khoản của bạn và đặt tùy chọn e-mail.'
+        description='Quản lý nội dung website và các thông tin khác.'
         hasDownload={false}
       />
       <Separator className='my-6' />

@@ -54,6 +54,14 @@ export const deliveryStatusOptions = [
     value: 'Đợi xác nhận'
   },
   {
+    label: 'Đã xác nhận',
+    value: 'Đã xác nhận'
+  },
+  {
+    label: 'Đã chuyển hàng',
+    value: 'Đã chuyển hàng'
+  },
+  {
     label: 'Đang giao',
     value: 'Đang giao'
   },
