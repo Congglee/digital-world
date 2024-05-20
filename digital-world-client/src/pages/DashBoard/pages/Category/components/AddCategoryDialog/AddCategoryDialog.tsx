@@ -8,6 +8,7 @@ import { Checkbox } from 'src/components/ui/checkbox'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from 'src/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
+import { Switch } from 'src/components/ui/switch'
 import { useAddCategoryMutation } from 'src/redux/apis/category.api'
 import { Brand } from 'src/types/brand.type'
 import { CategorySchema, categorySchema } from 'src/utils/rules'
@@ -18,19 +19,19 @@ interface AddCategoryDialogProps {
   brands: Brand[]
 }
 
-type FormData = Pick<CategorySchema, 'name' | 'brands'>
-const addCategorySchema = categorySchema.pick(['name', 'brands'])
+type FormData = Pick<CategorySchema, 'name' | 'brands' | 'is_actived'>
+const addCategorySchema = categorySchema.pick(['name', 'brands', 'is_actived'])
 
 export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCategoryDialogProps) {
   const unbranded = brands.find((brand) => brand.name === 'Unbranded')
   const form = useForm<FormData>({
     resolver: yupResolver(addCategorySchema),
-    defaultValues: { name: '', brands: [] }
+    defaultValues: { name: '', brands: [], is_actived: true }
   })
 
   useEffect(() => {
     if (unbranded) {
-      form.reset({ name: '', brands: [unbranded._id] })
+      form.reset({ name: '', brands: [unbranded._id], is_actived: true })
     }
   }, [unbranded])
 
@@ -71,7 +72,7 @@ export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCat
                 control={form.control}
                 name='name'
                 render={({ field }) => (
-                  <FormItem className='col-span-3'>
+                  <FormItem>
                     <FormLabel htmlFor='name'>Tên danh mục</FormLabel>
                     <FormControl>
                       <Input id='name' placeholder='Tên danh mục...' {...field} />
@@ -84,7 +85,7 @@ export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCat
                 control={form.control}
                 name='brands'
                 render={() => (
-                  <FormItem className='col-span-3'>
+                  <FormItem>
                     <FormLabel htmlFor='name'>Thương hiệu</FormLabel>
                     <div className='w-full text-[13px] font-medium border rounded-lg grid grid-cols-2 sm:grid-cols-3 gap-4 p-4'>
                       {brands.map((brand) => (
@@ -123,9 +124,21 @@ export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCat
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name='is_actived'
+                render={({ field }) => (
+                  <FormItem className='flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
+                    <FormLabel>Trạng thái?</FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
             <DialogFooter>
-              <Button type='submit' disabled={isLoading}>
+              <Button type='submit' disabled={isLoading} className='px-10'>
                 {isLoading && <Loader className='animate-spin w-4 h-4 mr-1' />}
                 Lưu lại
               </Button>

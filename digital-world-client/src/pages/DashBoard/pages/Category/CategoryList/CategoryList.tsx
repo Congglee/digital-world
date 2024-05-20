@@ -137,24 +137,31 @@ export default function CategoryList() {
       }
     },
     {
+      accessorKey: 'is_actived',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
+      footer: 'Trạng thái',
+      cell: ({ row }) => {
+        return <div className='font-medium'>{row.getValue('is_actived') ? 'Kích hoạt' : 'Lưu trữ'}</div>
+      }
+    },
+    {
       id: 'actions',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Thao tác' />,
-      cell: ({ row }) =>
-        row.getValue('name') !== 'Uncategorized' ? (
-          <DataTableRowActions
-            row={row}
-            enableEditing={true}
-            enableDeleting={true}
-            onDelete={() => {
-              setSelectedCategory(row.original)
-              setDeleteCategoryDialogOpen(true)
-            }}
-            onEdit={() => {
-              setSelectedCategory(row.original)
-              setUpdateCategoryDialogOpen(true)
-            }}
-          />
-        ) : null
+      cell: ({ row }) => (
+        <DataTableRowActions
+          row={row}
+          enableEditing={true}
+          enableDeleting={true}
+          onDelete={() => {
+            setSelectedCategory(row.original)
+            setDeleteCategoryDialogOpen(true)
+          }}
+          onEdit={() => {
+            setSelectedCategory(row.original)
+            setUpdateCategoryDialogOpen(true)
+          }}
+        />
+      )
     }
   ]
 

@@ -35,6 +35,7 @@ const ProductSchema = new Schema(
     view: { type: Number, default: 0 },
     brand: { type: String },
     is_featured: { type: Boolean, default: false },
+    // is_actived: { type: Boolean, default: true },
     is_published: { type: Boolean, default: true },
     // variants: [VariantSchema],
   },

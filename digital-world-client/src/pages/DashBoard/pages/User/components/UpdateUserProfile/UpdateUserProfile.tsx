@@ -73,7 +73,7 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
   const { data: wardsData } = useGetDistrictWardsQuery(districtId, {
     skip: districtId ? false : true
   })
-  const [updateUserMutation, { data, isLoading, isSuccess }] = useUpdateUserMutation()
+  const [updateUser, { data, isLoading, isSuccess }] = useUpdateUserMutation()
 
   useEffect(() => {
     if (userProfile) {
@@ -136,7 +136,7 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
         date_of_birth: data.date_of_birth?.toISOString(),
         roles: data.roles as Role[]
       }
-      await updateUserMutation({ id: userProfile._id, payload: payloadData })
+      await updateUser({ id: userProfile._id, payload: payloadData })
     } catch (error) {
       console.log(error)
     }

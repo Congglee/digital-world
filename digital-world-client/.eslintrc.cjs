@@ -54,6 +54,8 @@ module.exports = {
       }
     ],
     '@typescript-eslint/no-explicit-any': 'off',
-    'import/no-commonjs': 'allow'
+    'import/no-commonjs': 'allow',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn'
   }
 }

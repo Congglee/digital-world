@@ -24,7 +24,7 @@ export default function ProductDetail() {
 
   const relateProducts = useMemo(() => {
     if (!product || !products) return []
-    return products.filter((p) => p.category._id === product.category._id && p._id !== product._id)
+    return products.filter((p) => p.brand === product.brand && p._id !== product._id)
   }, [products, product])
 
   if (!product) return null

@@ -23,6 +23,7 @@ const UserSchema = new Schema(
       },
     ],
     is_blocked: { type: Boolean, default: false },
+    // is_actived: { type: Boolean, default: true },
     wishlist: [{ type: mongoose.SchemaTypes.ObjectId, ref: "products" }],
     password_reset_token: { type: String },
     password_reset_expires: { type: String },

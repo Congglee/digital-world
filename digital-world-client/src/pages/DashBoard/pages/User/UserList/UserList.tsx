@@ -43,7 +43,7 @@ export default function UserList() {
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState<boolean>(false)
   const [deleteUsersDialogOpen, setDeleteUsersDialogOpen] = useState<boolean>(false)
   const { profile } = useAppSelector((state) => state.auth)
-  const usersList = usersData?.data.users.filter((user) => user._id !== profile._id)
+  const usersList = usersData?.data.users.filter((user) => user._id !== profile?._id)
   const [deleteUser, deleteUserResult] = useDeleteUserMutation()
   const [deleteManyUsers, deleteManyUsersResult] = useDeleteManyUsersMutation()
   const navigate = useNavigate()

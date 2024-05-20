@@ -6,7 +6,7 @@ const addCategoryRules = () => {
       .exists({ checkFalsy: true })
       .withMessage("Tên danh mục không được để trống")
       .isLength({ max: 160 })
-      .withMessage("Tên phải ít hơn 160 kí tự"),
+      .withMessage("Tên danh mục phải ít hơn 160 kí tự"),
     body("brands")
       .exists({ checkFalsy: true })
       .withMessage("Thương hiệu không được để trống")
@@ -20,6 +20,11 @@ const addCategoryRules = () => {
         return true;
       })
       .withMessage("Thương hiệu không đúng định dạng"),
+    body("is_actived")
+      .exists()
+      .withMessage("is_actived không được để trống")
+      .isBoolean()
+      .withMessage("is_actived không đúng định dạng"),
   ];
 };
 

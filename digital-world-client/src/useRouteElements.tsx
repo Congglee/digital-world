@@ -30,6 +30,7 @@ import ProductDetail from './pages/ProductDetail'
 import SettingsStore from 'src/pages/DashBoard/pages/Settings/pages/SettingsStore'
 import SettingsPayment from 'src/pages/DashBoard/pages/Settings/pages/SettingsPayment'
 import UserProfile from 'src/pages/DashBoard/pages/User/UserProfile'
+import Cart from 'src/pages/Cart'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -38,7 +39,7 @@ function ProtectedRoute() {
 
 function ProtectedDashboardRoute() {
   const { profile } = useAppSelector((state) => state.auth)
-  const isAllowedRole = profile.roles.some((role: string) => allowedRoles.includes(role))
+  const isAllowedRole = profile?.roles.some((role: string) => allowedRoles.includes(role))
 
   return isAllowedRole ? <Outlet /> : <Navigate to={path.home} />
 }
@@ -176,6 +177,18 @@ export default function useRouteElements() {
               ]
             }
           ]
+        }
+      ]
+    },
+
+    {
+      path: '',
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: '',
+          element: <MainLayout />,
+          children: [{ path: path.cart, element: <Cart /> }]
         }
       ]
     },

@@ -21,7 +21,7 @@ export default function CategorySideFilter({ categories, queryConfig }: Category
       </div>
       <ul>
         {categories
-          .filter((category) => category.name !== 'Uncategorized')
+          .filter((category) => category.is_actived)
           .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
           .map((categoryItem) => {
             const isActive = category === categoryItem._id

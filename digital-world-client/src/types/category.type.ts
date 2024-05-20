@@ -5,6 +5,7 @@ export interface Category {
     _id: string
     name: string
   }[]
+  is_actived: boolean
   createdAt: string
   updatedAt: string
 }

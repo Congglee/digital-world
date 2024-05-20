@@ -27,7 +27,7 @@ export const categoryApi = createApi({
     getAllCategories: build.query<SuccessResponse<CategoryList>, void>({
       query: () => ({ url: `${CATEGORY_URL}/${URL_GET_ALL_CATEGORIES}`, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<CategoryList>>) => response.data,
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled
           dispatch(
@@ -44,20 +44,23 @@ export const categoryApi = createApi({
       },
       providesTags: tagTypes
     }),
-    addCategory: build.mutation<AxiosResponse<SuccessResponse<Category>>, Pick<CategorySchema, 'name' | 'brands'>>({
+    addCategory: build.mutation<
+      AxiosResponse<SuccessResponse<Category>>,
+      Pick<CategorySchema, 'name' | 'brands' | 'is_actived'>
+    >({
       query: (payload) => ({ url: URL_ADD_CATEGORY, method: 'POST', data: payload }),
       invalidatesTags: tagTypes
     }),
     updateCategory: build.mutation<
       AxiosResponse<SuccessResponse<Category>>,
-      { id: string; payload: Pick<CategorySchema, 'name' | 'brands'> }
+      { id: string; payload: Pick<CategorySchema, 'name' | 'brands' | 'is_actived'> }
     >({
       query: ({ id, payload }) => ({ url: `${URL_UPDATE_CATEGORY}/${id}`, method: 'PUT', data: payload }),
       invalidatesTags: tagTypes
     }),
     deleteCategory: build.mutation<AxiosResponse<SuccessResponse<string>>, string>({
       query: (id) => ({ url: `${URL_DELETE_CATEGORY}/${id}`, method: 'DELETE' }),
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
         // `onStart` side-effect
         // anything you want to run when the query starts
         try {
@@ -79,7 +82,7 @@ export const categoryApi = createApi({
       { list_id: string[] }
     >({
       query: (payload) => ({ url: URL_DELETE_CATEGORIES, method: 'DELETE', data: payload }),
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
         try {
           await queryFulfilled
           // dispatch(productApi.endpoints.getProducts.initiate({}, { forceRefetch: true }))

@@ -117,6 +117,11 @@ const getAllUsers = async (req, res) => {
 
 const getDetailMySelf = async (req, res) => {
   const userDB = await UserModel.findById(req.jwtDecoded.id)
+    .populate({
+      path: "cart.product",
+      select: "name price price_before_discount thumb quantity",
+      populate: { path: "category", select: "name" },
+    })
     .select({ password: 0, __v: 0 })
     .lean();
   if (userDB) {

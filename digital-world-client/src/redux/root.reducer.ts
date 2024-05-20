@@ -13,6 +13,7 @@ import { locationApi } from './apis/location.api'
 import { orderApi } from './apis/order.api'
 import { appSlice } from './slices/app.slice'
 import { mailApi } from './apis/mail.api'
+import { cartSlice } from 'src/redux/slices/cart.slice'
 
 const rootReducer = combineReducers({
   [appSlice.name]: appSlice.reducer,
@@ -36,7 +37,9 @@ const rootReducer = combineReducers({
 
   [locationApi.reducerPath]: locationApi.reducer,
 
-  [mailApi.reducerPath]: mailApi.reducer
+  [mailApi.reducerPath]: mailApi.reducer,
+
+  [cartSlice.name]: cartSlice.reducer
 })
 
 export default rootReducer

@@ -4,7 +4,14 @@ const addBrandRules = () => {
   return [
     body("name")
       .exists({ checkFalsy: true })
-      .withMessage("Tên thương hiệu không được để trống"),
+      .withMessage("Tên thương hiệu không được để trống")
+      .isLength({ max: 160 })
+      .withMessage("Tên thương hiệu phải ít hơn 160 kí tự"),
+    body("is_actived")
+      .exists()
+      .withMessage("is_actived không được để trống")
+      .isBoolean()
+      .withMessage("is_actived không đúng định dạng"),
   ];
 };
 

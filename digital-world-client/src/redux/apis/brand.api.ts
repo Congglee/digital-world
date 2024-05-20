@@ -28,7 +28,7 @@ export const brandApi = createApi({
     getAllBrands: build.query<SuccessResponse<BrandList>, void>({
       query: () => ({ url: `${BRAND_URL}/${URL_GET_ALL_BRANDS}`, method: 'GET' }),
       transformResponse: (response: AxiosResponse<SuccessResponse<BrandList>>) => response.data,
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled
           dispatch(
@@ -45,20 +45,22 @@ export const brandApi = createApi({
       },
       providesTags: tagTypes
     }),
-    addBrand: build.mutation<AxiosResponse<SuccessResponse<Brand>>, Pick<BrandSchema, 'name'>>({
-      query: (payload) => ({ url: URL_ADD_BRAND, method: 'POST', data: payload }),
-      invalidatesTags: tagTypes
-    }),
+    addBrand: build.mutation<AxiosResponse<SuccessResponse<Brand>>, Pick<BrandSchema, 'name' | 'image' | 'is_actived'>>(
+      {
+        query: (payload) => ({ url: URL_ADD_BRAND, method: 'POST', data: payload }),
+        invalidatesTags: tagTypes
+      }
+    ),
     updateBrand: build.mutation<
       AxiosResponse<SuccessResponse<Brand>>,
-      { id: string; payload: Pick<BrandSchema, 'name'> }
+      { id: string; payload: Pick<BrandSchema, 'name' | 'image' | 'is_actived'> }
     >({
       query: ({ id, payload }) => ({ url: `${URL_UPDATE_BRAND}/${id}`, method: 'PUT', data: payload }),
       invalidatesTags: tagTypes
     }),
     deleteBrand: build.mutation<AxiosResponse<SuccessResponse<string>>, string>({
       query: (id) => ({ url: `${URL_DELETE_BRAND}/${id}`, method: 'DELETE' }),
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
         try {
           await queryFulfilled
           dispatch(categoryApi.endpoints.getAllCategories.initiate(undefined, { forceRefetch: true }))
@@ -72,7 +74,7 @@ export const brandApi = createApi({
     }),
     deleteManyBrands: build.mutation<AxiosResponse<SuccessResponse<{ deleted_count: number }>>, { list_id: string[] }>({
       query: (payload) => ({ url: URL_DELETE_BRANDS, method: 'DELETE', data: payload }),
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
         try {
           await queryFulfilled
           dispatch(categoryApi.endpoints.getAllCategories.initiate(undefined, { forceRefetch: true }))

@@ -16,7 +16,8 @@ export default function Breadcrumbs({ currentPageName }: BreadcrumbsProps) {
     { path: path.register, breadcrumb: 'Đăng ký' },
     { path: path.forgotPassword, breadcrumb: 'Quên mật khẩu' },
     { path: path.resetPassword, breadcrumb: 'Đổi mật khẩu' },
-    { path: '/reset-password', breadcrumb: 'Đổi mật khẩu' }
+    { path: '/reset-password', breadcrumb: 'Đổi mật khẩu' },
+    { path: path.cart, breadcrumb: 'Giỏ hàng' }
   ]
   const breadcrumbs = useBreadcrumbs(routes)
 

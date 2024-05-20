@@ -1,6 +1,8 @@
 export interface Brand {
   _id: string
   name: string
+  image: string
+  is_actived: boolean
   createdAt: string
   updatedAt: string
 }

@@ -27,9 +27,8 @@ const addToCart = async (req, res) => {
       )
         .populate({
           path: "cart.product",
-          populate: {
-            path: "category",
-          },
+          select: "name price price_before_discount thumb quantity",
+          populate: { path: "category", select: "name" },
         })
         .lean();
     } else {
@@ -48,9 +47,8 @@ const addToCart = async (req, res) => {
         { new: true }
       ).populate({
         path: "cart.product",
-        populate: {
-          path: "category",
-        },
+        select: "name price price_before_discount thumb quantity",
+        populate: { path: "category", select: "name" },
       });
     }
     const response = { message: "Thêm sản phẩm vào giỏ hàng thành công", data };
@@ -77,9 +75,8 @@ const updateCart = async (req, res) => {
     )
       .populate({
         path: "cart.product",
-        populate: {
-          path: "category",
-        },
+        select: "name price price_before_discount thumb quantity",
+        populate: { path: "category", select: "name" },
       })
       .lean();
     const response = { message: "Cập nhập giỏ hàng thành công", data };

@@ -4,6 +4,7 @@ import { AuthResponse } from 'src/types/auth.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import { Schema } from 'src/utils/rules'
 import axiosBaseQuery from '../helper'
+import { userApi } from 'src/redux/apis/user.api'
 
 export const URL_LOGIN = 'login'
 export const URL_REGISTER = 'register'
@@ -23,7 +24,15 @@ export const authApi = createApi({
   endpoints: (build) => {
     return {
       login: build.mutation<AxiosResponse<AuthResponse>, Pick<Schema, 'email' | 'password'>>({
-        query: (payload) => ({ url: URL_LOGIN, method: 'POST', data: payload })
+        query: (payload) => ({ url: URL_LOGIN, method: 'POST', data: payload }),
+        onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
+          try {
+            await queryFulfilled
+            dispatch(userApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
+          } catch (error) {
+            console.log(error)
+          }
+        }
       }),
       register: build.mutation<AxiosResponse<SuccessResponse<string>>, Pick<Schema, 'name' | 'email' | 'password'>>({
         query: (payload) => ({ url: URL_REGISTER, method: 'POST', data: payload })

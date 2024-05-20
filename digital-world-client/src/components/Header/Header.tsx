@@ -1,6 +1,6 @@
 import { AlignJustify, Banknote, ChevronDown, PhoneCall, Search, ShoppingCart, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams } from 'react-router-dom'
 import logo from 'src/assets/images/logo.png'
 import path from 'src/constants/path'
 import { TriangleDown } from 'src/utils/icons'
@@ -12,9 +12,21 @@ import { useLogoutMutation } from 'src/redux/apis/auth.api'
 import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
 import { allowedRoles } from 'src/constants/data'
 import useSearchProducts from 'src/hooks/useSearchProducts'
+import { User as UserType } from 'src/types/user.type'
+import { useGetMeQuery } from 'src/redux/apis/user.api'
+import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
+import { Category } from 'src/types/category.type'
+import useQueryConfig from 'src/hooks/useQueryConfig'
 
-function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> }) {
-  const { isAuthenticated, profile } = useAppSelector((state) => state.auth)
+function DesktopTopHeader({
+  handleLogout,
+  authenticated,
+  profile
+}: {
+  handleLogout: () => Promise<void>
+  authenticated: boolean
+  profile: UserType | null
+}) {
   const isAllowedRole = profile && profile.roles.some((role: string) => allowedRoles.includes(role))
 
   return (
@@ -32,7 +44,7 @@ function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> 
             </div>
           </div>
           <div>
-            {isAuthenticated && (
+            {authenticated && (
               <Popover
                 className='flex items-center py-1 hover:text-gray-300 cursor-pointer ml-6'
                 renderPopover={
@@ -77,7 +89,7 @@ function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> 
               </Popover>
             )}
 
-            {!isAuthenticated && (
+            {!authenticated && (
               <>
                 <Link to={path.login} className='px-[10px]'>
                   Tài khoản
@@ -94,7 +106,15 @@ function DesktopTopHeader({ handleLogout }: { handleLogout: () => Promise<void> 
   )
 }
 
-function MegaMenu({ wrapperClass, innerClass }: { wrapperClass?: string; innerClass?: string }) {
+function MegaMenu({
+  wrapperClass,
+  innerClass,
+  categories
+}: {
+  wrapperClass?: string
+  innerClass?: string
+  categories: Category[]
+}) {
   const [activeDropdownMenu, setActiveDropdownMenu] = useState(false)
   useEffect(() => {
     window.setTimeout(function () {
@@ -103,6 +123,7 @@ function MegaMenu({ wrapperClass, innerClass }: { wrapperClass?: string; innerCl
       }
     }, 1000)
   })
+  const queryConfig = useQueryConfig()
 
   return (
     <div className={wrapperClass}>
@@ -128,21 +149,26 @@ function MegaMenu({ wrapperClass, innerClass }: { wrapperClass?: string; innerCl
               <div className='flex flex-col'>
                 <ul className='text-[#505050] font-Poppins'>
                   <li className='mb-5 uppercase font-semibold text-lg'>Laptop</li>
-                  <li className='mb-[10px]'>
-                    <Link to='/' className='hover:text-purple text-sm'>
-                      Laptop gaming
-                    </Link>
-                  </li>
-                  <li className='mb-[10px]'>
-                    <Link to='/' className='hover:text-purple text-sm'>
-                      Laptop đồ họa
-                    </Link>
-                  </li>
-                  <li className='mb-[10px]'>
-                    <Link to='/' className='hover:text-purple text-sm'>
-                      Laptop văn phòng
-                    </Link>
-                  </li>
+                  {categories
+                    .filter((category) => category.is_actived)
+                    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                    .slice(0, 6)
+                    .map((category) => (
+                      <li className='mb-[10px]'>
+                        <Link
+                          to={{
+                            pathname: path.products,
+                            search: createSearchParams({
+                              ...queryConfig,
+                              category: category._id
+                            }).toString()
+                          }}
+                          className='hover:text-purple text-sm'
+                        >
+                          {category.name}
+                        </Link>
+                      </li>
+                    ))}
                 </ul>
               </div>
             </DropdownMenu>
@@ -268,7 +294,7 @@ function PromoSection() {
   )
 }
 
-function DesktopHeader() {
+function DesktopHeader({ productsInCart }: { productsInCart: number }) {
   const { onSubmitSearch, register } = useSearchProducts()
 
   return (
@@ -308,7 +334,7 @@ function DesktopHeader() {
             </div>
             <div className='flex flex-col'>
               <span className='uppercase font-bold'>Giỏ hàng</span>
-              <span className='opacity-50 text-xs'>1 item</span>
+              <span className='opacity-50 text-xs'>{productsInCart} sản phẩm</span>
             </div>
           </Link>
         </div>
@@ -317,7 +343,13 @@ function DesktopHeader() {
   )
 }
 
-function MobileHeader({ setActive }: { setActive: React.Dispatch<React.SetStateAction<boolean>> }) {
+function MobileHeader({
+  setActive,
+  productsInCart
+}: {
+  setActive: React.Dispatch<React.SetStateAction<boolean>>
+  productsInCart: number
+}) {
   return (
     <div className='flex items-center sticky z-30 top-0 justify-between leading-none md:hidden gap-4 w-full h-16'>
       <div>
@@ -331,8 +363,8 @@ function MobileHeader({ setActive }: { setActive: React.Dispatch<React.SetStateA
       <div>
         <Link to={path.cart} className='relative'>
           <ShoppingCart strokeWidth={3} fill='black' />
-          <div className='bg-red-500 absolute -top-1 -right-[6px] text-white text-[10px] font-medium flex items-center justify-center rounded-full w-4 h-4'>
-            <span>0</span>
+          <div className='bg-red-500 absolute -top-1 -right-[6px] text-white text-[10px] font-medium flex items-center justify-center rounded-full w-4 h-4 overflow-hidden'>
+            <span>{productsInCart}</span>
           </div>
         </Link>
       </div>
@@ -344,6 +376,10 @@ export default function Header() {
   const [active, setActive] = useState(false)
   const dispatch = useAppDispatch()
   const [logoutMutation, { isSuccess }] = useLogoutMutation()
+  const { isAuthenticated, profile } = useAppSelector((state) => state.auth)
+  const { data: profileData } = useGetMeQuery(undefined, { skip: !isAuthenticated })
+  const { data: categoriesData } = useGetAllCategoriesQuery()
+  const userProfile = profileData?.data.data
 
   const handleLogout = async () => {
     await logoutMutation()
@@ -358,17 +394,23 @@ export default function Header() {
 
   return (
     <header>
-      <DesktopTopHeader handleLogout={handleLogout} />
+      <DesktopTopHeader handleLogout={handleLogout} authenticated={isAuthenticated} profile={profile} />
       <div className='md:py-10 text-[#505050]'>
         <div className='container'>
-          <MenuDrawer active={active} setActive={setActive} handleLogout={handleLogout} />
-          <DesktopHeader />
-          <MobileHeader setActive={setActive} />
+          <MenuDrawer
+            authenticated={isAuthenticated}
+            active={active}
+            setActive={setActive}
+            handleLogout={handleLogout}
+          />
+          <DesktopHeader productsInCart={userProfile?.cart.length || 0} />
+          <MobileHeader setActive={setActive} productsInCart={userProfile?.cart.length || 0} />
         </div>
       </div>
       <MegaMenu
         wrapperClass='hidden md:block container relative'
         innerClass='flex items-center border-t-2 border-t-purple shadow-[0_0_5px_#0003] px-5'
+        categories={categoriesData?.data.categories || []}
       />
     </header>
   )

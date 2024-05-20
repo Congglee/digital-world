@@ -4,19 +4,18 @@ import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
 import { useOnClickOutside } from 'src/hooks/useOutsideClick'
 import useSearchProducts from 'src/hooks/useSearchProducts'
-import { useAppSelector } from 'src/redux/hook'
 import { cn } from 'src/utils/utils'
 
 interface MenuDrawerProps {
   active: boolean
   setActive: React.Dispatch<React.SetStateAction<boolean>>
   handleLogout: () => Promise<void>
+  authenticated: boolean
 }
 
 export default function MenuDrawer(props: MenuDrawerProps) {
   const { active, setActive, handleLogout } = props
   const menuDrawerRef = useRef<HTMLDivElement | null>(null)
-  const { isAuthenticated } = useAppSelector((state) => state.auth)
   const { onSubmitSearch, register } = useSearchProducts()
 
   useOnClickOutside(menuDrawerRef, () => {
@@ -48,7 +47,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
         <li className='text-white uppercase py-3 border-b border-[#343535]'>Liên hệ</li>
       </ul>
       <div className='mb-5'>
-        {!isAuthenticated && (
+        {!props.authenticated && (
           <>
             <Link to={path.login} className='flex items-center text-white py-3'>
               <LogIn size={20} />
@@ -61,7 +60,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
           </>
         )}
 
-        {isAuthenticated && (
+        {props.authenticated && (
           <>
             <Link to={path.profile} className='flex items-center text-white py-3'>
               <span className='uppercase'>Tài khoản</span>

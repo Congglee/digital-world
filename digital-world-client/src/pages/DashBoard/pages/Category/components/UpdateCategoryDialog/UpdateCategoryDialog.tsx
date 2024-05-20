@@ -7,11 +7,12 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Category } from 'src/types/category.type'
 import { CategorySchema, categorySchema } from 'src/utils/rules'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Input } from 'src/components/ui/input'
 import { useUpdateCategoryMutation } from 'src/redux/apis/category.api'
 import { toast } from 'react-toastify'
 import { Brand } from 'src/types/brand.type'
+import { Switch } from 'src/components/ui/switch'
 
 interface UpdateCategoryDialogProps {
   open: boolean
@@ -21,8 +22,8 @@ interface UpdateCategoryDialogProps {
   brands: Brand[]
 }
 
-type FormData = Pick<CategorySchema, 'name' | 'brands'>
-const updateCategorySchema = categorySchema.pick(['name', 'brands'])
+type FormData = Pick<CategorySchema, 'name' | 'brands' | 'is_actived'>
+const updateCategorySchema = categorySchema.pick(['name', 'brands', 'is_actived'])
 
 export default function UpdateCategoryDialog({
   open,
@@ -33,9 +34,18 @@ export default function UpdateCategoryDialog({
 }: UpdateCategoryDialogProps) {
   const form = useForm<FormData>({
     resolver: yupResolver(updateCategorySchema),
-    defaultValues: { name: '', brands: [] }
+    defaultValues: { name: '', brands: [], is_actived: true }
   })
   const [updateCategoryMutation, { isLoading, isSuccess, data }] = useUpdateCategoryMutation()
+  const [isUncategorized, setIsUncategorized] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const { name, brands, is_actived } = selectedCategory
+      form.reset({ name, brands: brands.map((brand) => brand._id), is_actived })
+      setIsUncategorized(selectedCategory.name === 'Uncategorized' ? true : false)
+    }
+  }, [selectedCategory])
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
@@ -54,13 +64,6 @@ export default function UpdateCategoryDialog({
     }
   }, [isSuccess])
 
-  useEffect(() => {
-    if (selectedCategory) {
-      const { name, brands } = selectedCategory
-      form.reset({ name, brands: brands.map((brand) => brand._id) })
-    }
-  }, [selectedCategory])
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='sm:max-w-[425px] text-foreground'>
@@ -74,7 +77,7 @@ export default function UpdateCategoryDialog({
                 control={form.control}
                 name='name'
                 render={({ field }) => (
-                  <FormItem className='col-span-3'>
+                  <FormItem>
                     <FormLabel htmlFor='name'>Tên danh mục</FormLabel>
                     <FormControl>
                       <Input id='name' placeholder='Tên danh mục...' {...field} />
@@ -87,7 +90,7 @@ export default function UpdateCategoryDialog({
                 control={form.control}
                 name='brands'
                 render={() => (
-                  <FormItem className='col-span-3'>
+                  <FormItem>
                     <FormLabel htmlFor='brands'>Thương hiệu</FormLabel>
                     <div className='w-full text-[13px] font-medium border rounded-lg grid grid-cols-2 sm:grid-cols-3 gap-4 p-4'>
                       {brands.map((brand) => (
@@ -126,9 +129,21 @@ export default function UpdateCategoryDialog({
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name='is_actived'
+                render={({ field }) => (
+                  <FormItem className='flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
+                    <FormLabel>Trạng thái?</FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
             <DialogFooter>
-              <Button type='submit' disabled={isLoading}>
+              <Button type='submit' disabled={isUncategorized || isLoading} className='px-10'>
                 {isLoading && <Loader className='animate-spin w-4 h-4 mr-1' />}
                 Lưu lại
               </Button>

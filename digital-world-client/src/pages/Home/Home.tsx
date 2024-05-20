@@ -6,10 +6,12 @@ import FeaturedProductsSection from './components/FeaturedProductsSection'
 import HeroSection from './components/HeroSection'
 import HotCollectionsSection from './components/HotCollectionsSection'
 import NewArrivalsSection from './components/NewArrivalsSection'
+import { useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 
 export default function Home() {
   const { data: categoriesData } = useGetAllCategoriesQuery()
   const { data: productsData } = useGetAllProductsQuery()
+  const { data: brandsData } = useGetAllBrandsQuery()
 
   return (
     <div className='container py-5'>
@@ -18,7 +20,7 @@ export default function Home() {
       <NewArrivalsSection products={productsData?.data.products || []} />
       <HotCollectionsSection />
       <BlogPostSection />
-      <BrandsSection />
+      <BrandsSection brands={brandsData?.data.brands || []} />
     </div>
   )
 }

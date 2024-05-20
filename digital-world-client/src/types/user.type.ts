@@ -20,6 +20,14 @@ export interface User {
     product: {
       _id: string
       name: string
+      thumb: string
+      category: {
+        _id: string
+        name: string
+      }
+      price: number
+      price_before_discount: number
+      quantity: number
     }
     buy_count: number
     price: number

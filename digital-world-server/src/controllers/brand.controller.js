@@ -1,3 +1,4 @@
+import { omitBy } from "lodash";
 import mongoose from "mongoose";
 import { BRANDS_SORT_BY, ORDER } from "../constants/sort";
 import { STATUS } from "../constants/status";
@@ -7,8 +8,10 @@ import { ProductModel } from "../database/models/product.model";
 import { ErrorHandler, responseSuccess } from "../utils/response";
 
 const addBrand = async (req, res) => {
-  const { name } = req.body;
-  const brandAdd = await new BrandModel({ name }).save();
+  const form = req.body;
+  const { name, image, is_actived } = form;
+  const brand = { name, image, is_actived };
+  const brandAdd = await new BrandModel(brand).save();
   const response = {
     message: "Tạo mới thương hiệu thành công",
     data: brandAdd.toObject({
@@ -94,10 +97,15 @@ const getBrand = async (req, res) => {
 };
 
 const updateBrand = async (req, res) => {
-  const { name } = req.body;
+  const form = req.body;
+  const { name, image, is_actived } = form;
+  const brand = omitBy(
+    { name, image, is_actived },
+    (value) => value === undefined || value === ""
+  );
   const brandDB = await BrandModel.findByIdAndUpdate(
     req.params.brand_id,
-    { name },
+    brand,
     { new: true }
   )
     .select({ __v: 0 })

@@ -1,7 +1,7 @@
 import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
-import { PlusCircle, Trash2 } from 'lucide-react'
+import { Image, PlusCircle, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
@@ -108,24 +108,48 @@ export default function BrandList() {
       }
     },
     {
+      accessorKey: 'image',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Ảnh' />,
+      footer: 'Ảnh',
+      cell: ({ row }) => {
+        return (
+          <div className='w-24 rounded-md overflow-hidden'>
+            {row.getValue('image') ? (
+              <img src={row.getValue('image')} alt='brand-image' className='w-full h-full object-cover' />
+            ) : (
+              <Image className='size-full opacity-60' strokeWidth={0.8} />
+            )}
+          </div>
+        )
+      },
+      enableSorting: false
+    },
+    {
+      accessorKey: 'is_actived',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
+      footer: 'Trạng thái',
+      cell: ({ row }) => {
+        return <div className='font-medium'>{row.getValue('is_actived') ? 'Kích hoạt' : 'Lưu trữ'}</div>
+      }
+    },
+    {
       id: 'actions',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Thao tác' />,
-      cell: ({ row }) =>
-        row.getValue('name') !== 'Unbranded' ? (
-          <DataTableRowActions
-            row={row}
-            enableEditing={true}
-            enableDeleting={true}
-            onDelete={() => {
-              setSelectedBrand(row.original)
-              setDeleteBrandDialogOpen(true)
-            }}
-            onEdit={() => {
-              setSelectedBrand(row.original)
-              setUpdateBrandDialogOpen(true)
-            }}
-          />
-        ) : null
+      cell: ({ row }) => (
+        <DataTableRowActions
+          row={row}
+          enableEditing={true}
+          enableDeleting={true}
+          onDelete={() => {
+            setSelectedBrand(row.original)
+            setDeleteBrandDialogOpen(true)
+          }}
+          onEdit={() => {
+            setSelectedBrand(row.original)
+            setUpdateBrandDialogOpen(true)
+          }}
+        />
+      )
     }
   ]
 

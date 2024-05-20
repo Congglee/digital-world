@@ -23,7 +23,7 @@ export default function ChangeUserPassword({ userProfile }: ChangeUserPasswordPr
     resolver: yupResolver(passwordSchema),
     defaultValues: { confirm_password: '', new_password: '' }
   })
-  const [updateUserMutation, { data, isLoading, isSuccess }] = useUpdateUserMutation()
+  const [updateUser, { data, isLoading, isSuccess }] = useUpdateUserMutation()
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
@@ -31,7 +31,7 @@ export default function ChangeUserPassword({ userProfile }: ChangeUserPasswordPr
         password: data.new_password,
         ...omit(data, ['new_password', 'confirm_password'])
       }
-      await updateUserMutation({ id: userProfile._id, payload: payloadData })
+      await updateUser({ id: userProfile._id, payload: payloadData })
     } catch (error) {
       console.log(error)
     }

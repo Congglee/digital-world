@@ -69,7 +69,7 @@ export const productApi = createApi({
       Pick<RatingSchema, 'star' | 'comment'> & { product_id: string }
     >({
       query: (payload) => ({ url: `${PRODUCT_URL}/${URL_RATING_PRODUCT}`, method: 'PUT', data: payload }),
-      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Product', id: args.product_id }])
+      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Product', id: args.product_id }, ...tagTypes])
     }),
     deleteRating: build.mutation<AxiosResponse<SuccessResponse<string>>, { product_id: string; rating_id: string }>({
       query: ({ product_id, rating_id }) => ({
@@ -98,7 +98,7 @@ export const productApi = createApi({
         method: 'PUT',
         data: payload
       }),
-      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Product', id: args.product_id }])
+      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Product', id: args.product_id }, ...tagTypes])
     })
   })
 })

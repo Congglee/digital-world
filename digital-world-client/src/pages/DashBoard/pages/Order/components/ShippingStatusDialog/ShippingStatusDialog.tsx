@@ -200,10 +200,13 @@ export default function ShippingStatusDialog({ open, onOpenChange, order }: Ship
                 <div className='space-y-2'>
                   <Label htmlFor='delivery_at'>Địa chỉ đang giao hàng tới</Label>
                   <div className='relative'>
+                    {address.place && (
+                      <span className='inline-block text-xs mb-2'>{`Đang giao đến ${address.place}`}</span>
+                    )}
                     <Input
                       id='address'
                       type='text'
-                      placeholder='Địa chỉ đang giao hàng tới'
+                      placeholder='Vui lòng nhập vào địa chỉ đơn hàng đang được giao tới...'
                       value={address.place}
                       onChange={handleChange}
                     />

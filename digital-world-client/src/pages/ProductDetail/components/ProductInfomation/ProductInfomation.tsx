@@ -1,10 +1,12 @@
 import DOMPurify from 'dompurify'
 import { Eye } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import Button from 'src/components/Button'
 import ProductRating from 'src/components/ProductRating'
 import QuantityController from 'src/components/QuantityController'
+import { useAddToCartMutation } from 'src/redux/apis/user.api'
 import { Product } from 'src/types/product.type'
 import { Facebook, Pinterest, Twitter } from 'src/utils/icons'
 import { formatCurrency } from 'src/utils/utils'
@@ -15,10 +17,21 @@ interface ProductInfomationProps {
 
 export default function ProductInfomation({ product }: ProductInfomationProps) {
   const [buyCount, setBuyCount] = useState(1)
+  const [addToCart, { data, isSuccess, isLoading }] = useAddToCartMutation()
 
   const handleBuyCount = (value: number) => {
     setBuyCount(value)
   }
+
+  const handleAddToCart = async () => {
+    await addToCart({ product_id: product._id, buy_count: buyCount })
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message, { autoClose: 1000 })
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -59,7 +72,12 @@ export default function ProductInfomation({ product }: ProductInfomationProps) {
           classNameWrapper='ml-8'
         />
       </div>
-      <Button className='max-w-[480px] w-full bg-purple py-[11px] px-[15px] font-bold text-sm uppercase text-white hover:bg-[#333] transition-colors duration-150 ease-out mb-5'>
+      <Button
+        className='max-w-[480px] w-full bg-purple py-[11px] px-[15px] font-bold text-sm uppercase text-white hover:bg-[#333] transition-colors duration-150 ease-out mb-5 flex items-center justify-center gap-2'
+        onClick={handleAddToCart}
+        disabled={isLoading}
+        isLoading={isLoading}
+      >
         Thêm vào giỏ hàng
       </Button>
       <div className='flex items-center gap-[10px]'>

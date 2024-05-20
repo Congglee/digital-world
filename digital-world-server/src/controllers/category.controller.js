@@ -1,3 +1,4 @@
+import { omitBy } from "lodash";
 import { CATEGORY_SORT_BY, ORDER } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { CategoryModel } from "../database/models/category.model";
@@ -6,8 +7,10 @@ import { ErrorHandler, responseSuccess } from "../utils/response";
 import mongoose from "mongoose";
 
 const addCategory = async (req, res) => {
-  const { name, brands } = req.body;
-  const categoryAdd = await new CategoryModel({ name, brands }).save();
+  const form = req.body;
+  const { name, brands, is_actived } = form;
+  const category = { name, brands, is_actived };
+  const categoryAdd = await new CategoryModel(category).save();
   const response = {
     message: "Tạo mới danh mục thành công",
     data: categoryAdd.toObject({
@@ -96,10 +99,15 @@ const getCategory = async (req, res) => {
 };
 
 const updateCategory = async (req, res) => {
-  const { name, brands } = req.body;
+  const form = req.body;
+  const { name, brands, is_actived } = form;
+  const category = omitBy(
+    { name, brands, is_actived },
+    (value) => value === undefined || value === ""
+  );
   const categoryDB = await CategoryModel.findByIdAndUpdate(
     req.params.category_id,
-    { name, brands },
+    category,
     { new: true }
   )
     .select({ __v: 0 })

@@ -69,11 +69,14 @@ export const categorySchema = yup.object({
     .required('Tên danh mục là bắt buộc')
     .min(5, 'Độ dài từ 5 - 160 ký tự')
     .max(160, 'Độ dài từ 5 - 160 ký tự'),
-  brands: yup.array().of(yup.string()).min(1, 'Vui lòng chọn ít nhất một thương hiệu').required()
+  brands: yup.array().of(yup.string()).min(1, 'Vui lòng chọn ít nhất một thương hiệu').required(),
+  is_actived: yup.boolean().required('Vui lòng chọn trạng thái cho danh mục')
 })
 
 export const brandSchema = yup.object({
-  name: yup.string().trim().required('Tên thương hiệu là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự')
+  name: yup.string().trim().required('Tên thương hiệu là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  image: yup.string().max(1000, 'Độ dài tối đa là 1000 ký tự'),
+  is_actived: yup.boolean().required('Vui lòng chọn trạng thái cho thương hiệu')
 })
 
 export const productSchema = yup.object({
@@ -83,7 +86,7 @@ export const productSchema = yup.object({
     .required('Tên sản phẩm là bắt buộc')
     .min(5, 'Độ dài từ 5 - 160 ký tự')
     .max(160, 'Độ dài từ 5 - 160 ký tự'),
-  thumb: yup.string().trim().required('Ảnh đại diện sản phẩm là bắt buộc'),
+  thumb: yup.string().trim().required('Ảnh đại diện sản phẩm là bắt buộc').max(1000, 'Độ dài tối đa là 1000 ký tự'),
   images: yup.array().of(yup.string()),
   category: yup.string().trim().required('Danh mục sản phẩm là bắt buộc'),
   price: yup
