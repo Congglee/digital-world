@@ -8,8 +8,21 @@ import { ChevronUp, ShoppingCart } from 'lucide-react'
 import { cn } from 'src/utils/utils'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useEffect } from 'react'
 
 export default function CheckoutLayout() {
+  useEffect(() => {
+    const htmlElement = document.documentElement
+
+    if (htmlElement.classList.contains('dark')) {
+      htmlElement.classList.remove('dark')
+    }
+
+    return () => {
+      htmlElement.classList.add('dark')
+    }
+  }, [])
+
   return (
     <>
       <div className='overflow-x-hidden'>
@@ -65,7 +78,7 @@ export default function CheckoutLayout() {
             <div className='mb-5'>
               <Outlet />
             </div>
-            <div className='hidden md:block pl-5 pt-[30px] pb-5 relative after:content-[""] after:absolute after:top-0 after:left-0 after:block after:w-[400%] after:bottom-0 after:bg-[#fafafa] after:-z-[1]'>
+            <div className='hidden md:block pl-5 pt-[30px] pb-5 relative after:content-[""] after:absolute after:top-0 after:left-0 after:block after:w-[400%] after:bottom-0 after:bg-[#fafafa] after:-z-10'>
               <CheckoutSummary />
             </div>
           </div>
