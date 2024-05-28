@@ -3,7 +3,6 @@ import keyBy from 'lodash/keyBy'
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumbs from 'src/components/Breadcrumbs'
-import Button from 'src/components/Button'
 import QuantityController from 'src/components/QuantityController'
 import path from 'src/constants/path'
 import { useDeleteProductsCartMutation, useGetMeQuery, useUpdateUserCartMutation } from 'src/redux/apis/user.api'
@@ -32,14 +31,14 @@ export default function Cart() {
   const checkedPurchasesCount = checkedPurchases.length
   const totalCheckedPurchasePrice = useMemo(
     () =>
-      checkedPurchases.reduce((result, current) => {
+      extendedPurchasesCart.reduce((result, current) => {
         return result + current.product.price * current.buy_count
       }, 0),
-    [checkedPurchases]
+    [extendedPurchasesCart]
   )
   const totalCheckedPurchaseSavingPrice = useMemo(
     () =>
-      checkedPurchases.reduce((result, current) => {
+      extendedPurchasesCart.reduce((result, current) => {
         const { price_before_discount, price } = current.product
         const discount = price_before_discount - price
         if (discount > 0) {
@@ -47,7 +46,7 @@ export default function Cart() {
         }
         return result
       }, 0),
-    [checkedPurchases]
+    [extendedPurchasesCart]
   )
 
   useEffect(() => {
@@ -252,6 +251,7 @@ export default function Cart() {
                 <button className='mx-3 border-none bg-none' onClick={handleCheckAll}>
                   Chọn tất cả ({extendedPurchasesCart.length})
                 </button>
+                <button className='mx-3 border-none bg-none'>Đang chọn ({checkedPurchasesCount})</button>
                 <button className='mx-3 border-none bg-none' onClick={handleDeleteManyProductsCart}>
                   Xóa
                 </button>
@@ -259,7 +259,7 @@ export default function Cart() {
               <div className='sm:ml-auto flex flex-col sm:flex-row sm:items-center mt-5 sm:mt-0'>
                 <div>
                   <div className='flex items-center sm:justify-end'>
-                    <div>Tổng thanh toán ({checkedPurchasesCount} sản phẩm):</div>
+                    <div>Tổng thanh toán ({extendedPurchasesCart.length} sản phẩm):</div>
                     <div className='ml-2 text-2xl text-purple'>₫{formatCurrency(totalCheckedPurchasePrice)}</div>
                   </div>
                   <div className='flex items-center sm:justify-end text-sm'>
@@ -267,13 +267,12 @@ export default function Cart() {
                     <div className='ml-6 text-purple'>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</div>
                   </div>
                 </div>
-                <Button
+                <Link
+                  to={path.checkoutProfile}
                   className='sm:ml-4 mt-5 sm:mt-0 h-10 w-52 text-center uppercase bg-purple text-white text-sm hover:bg-purple/80 flex justify-center items-center'
-                  // onClick={handleBuyPurchases}
-                  // disabled={buyProductsMutation.isLoading}
                 >
                   Mua hàng
-                </Button>
+                </Link>
               </div>
             </div>
           </>

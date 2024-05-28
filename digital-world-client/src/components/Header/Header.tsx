@@ -154,7 +154,7 @@ function MegaMenu({
                     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
                     .slice(0, 6)
                     .map((category) => (
-                      <li className='mb-[10px]'>
+                      <li className='mb-[10px]' key={category._id}>
                         <Link
                           to={{
                             pathname: path.products,

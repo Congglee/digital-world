@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { CircleUserRound } from 'lucide-react'
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DataTable from 'src/components/AdminPanel/DataTable'
@@ -12,8 +11,8 @@ import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
 import { useGetAllOrdersQuery } from 'src/redux/apis/order.api'
-import { Order } from 'src/types/order.type'
-import { formatCurrency, getAvatarUrl } from 'src/utils/utils'
+import { Order, OrderProductItem, ShippingAddress } from 'src/types/order.type'
+import { formatCurrency } from 'src/utils/utils'
 
 const exportDataHeaders = [
   'Mã đơn hàng',
@@ -42,15 +41,15 @@ export default function OrderList() {
       ? ordersData.data.orders.flatMap((order) =>
           order.products.map((product) => [
             order.order_code,
-            order.order_by.user_name,
+            order.shipping_address.order_fullname,
             order.order_by.user_email,
-            order.order_by.user_phone,
+            order.shipping_address.order_phone,
             product.product_name,
             product.buy_count,
             `${formatCurrency(product.product_price)}đ`,
             `${formatCurrency(product.buy_count * product.product_price)}đ`,
             format(order.date_of_order, 'dd/MM/yy'),
-            order.delivery_at,
+            order.shipping_address.delivery_at,
             order.payment_method,
             order.order_status,
             order.delivery_status,
@@ -98,26 +97,11 @@ export default function OrderList() {
       )
     },
     {
-      accessorKey: 'order_by',
+      accessorKey: 'shipping_address',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Khách hàng' />,
       footer: 'Khách hàng',
       cell: ({ row }) => {
-        return (
-          <div className='flex items-center gap-4'>
-            <div className='size-14 rounded-lg overflow-hidden'>
-              {(row.getValue('order_by') as any).user_avatar ? (
-                <img
-                  src={getAvatarUrl((row.getValue('order_by') as any).user_avatar)}
-                  alt='user avatar'
-                  className='w-full h-full object-cover'
-                />
-              ) : (
-                <CircleUserRound strokeWidth={1.5} className='size-full text-foreground' />
-              )}
-            </div>
-            <div className='font-medium'>{(row.getValue('order_by') as any).user_name}</div>
-          </div>
-        )
+        return <div className='font-medium'>{(row.getValue('shipping_address') as ShippingAddress).order_fullname}</div>
       }
     },
     {
@@ -125,7 +109,7 @@ export default function OrderList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số lượng' />,
       footer: 'Số lượng',
       cell: ({ row }) => {
-        return <div className='font-medium'>{(row.getValue('products') as any).length} sản phẩm</div>
+        return <div className='font-medium'>{(row.getValue('products') as OrderProductItem[]).length} sản phẩm</div>
       }
     },
     {

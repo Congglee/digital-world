@@ -200,9 +200,7 @@ export default function ShippingStatusDialog({ open, onOpenChange, order }: Ship
                 <div className='space-y-2'>
                   <Label htmlFor='delivery_at'>Địa chỉ đang giao hàng tới</Label>
                   <div className='relative'>
-                    {address.place && (
-                      <span className='inline-block text-xs mb-2'>{`Đang giao đến ${address.place}`}</span>
-                    )}
+                    <span className='inline-block text-xs mb-2'>{`Đang giao đến ${address.place ? address.place : '...'}`}</span>
                     <Input
                       id='address'
                       type='text'
@@ -210,7 +208,7 @@ export default function ShippingStatusDialog({ open, onOpenChange, order }: Ship
                       value={address.place}
                       onChange={handleChange}
                     />
-                    <ul className='absolute top-12 bg-accent overflow-hidden rounded-md text-foreground z-50 p-0 w-full divide-y-2'>
+                    <ul className='absolute top-20 bg-accent overflow-hidden rounded-md text-foreground z-50 p-0 w-full divide-y-2'>
                       {autoCompleteAddress.map((address, index) => (
                         <li
                           key={index}

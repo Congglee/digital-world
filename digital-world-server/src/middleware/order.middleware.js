@@ -20,6 +20,11 @@ const getOrdersRules = () => {
 
 const addOrderRules = () => {
   return [
+    body("order_fullname")
+      .exists({ checkFalsy: true })
+      .withMessage("Họ và tên không được để trống")
+      .isLength({ max: 160 })
+      .withMessage("Họ và tên phải ít hơn 160 kí tự"),
     body("order_phone")
       .exists({ checkFalsy: true })
       .withMessage("SDT không được để trống")

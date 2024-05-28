@@ -11,8 +11,14 @@ import { generateOrderCode } from "../utils/utils";
 const addOrder = async (req, res) => {
   const form = req.body;
   const user_id = req.jwtDecoded.id;
-  const { order_phone, order_note, payment_method, delivery_at, products } =
-    form;
+  const {
+    order_fullname,
+    order_phone,
+    order_note,
+    payment_method,
+    delivery_at,
+    products,
+  } = form;
   const userInDB = await UserModel.findById(user_id).exec();
   if (userInDB) {
     let totalAmount = 0;
@@ -30,17 +36,14 @@ const addOrder = async (req, res) => {
     const order = {
       order_code: orderCode,
       order_by: {
-        user_name: userInDB.name,
-        user_email: userInDB.email,
-        user_phone: userInDB.phone,
         user_avatar: userInDB.avatar,
+        user_email: userInDB.email,
         user_id,
       },
       products: productsData,
       total_amount: totalAmount,
-      delivery_at,
       date_of_order: new Date().toISOString(),
-      order_phone,
+      shipping_address: { order_fullname, order_phone, delivery_at },
       order_note,
       payment_method,
     };

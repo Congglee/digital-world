@@ -12,6 +12,9 @@ const path = {
   user: '/user',
   profile: '/user/profile',
   historyOrder: '/user/order',
+  checkout: '/checkout',
+  checkoutProfile: '/checkout/profile',
+  checkoutPayment: '/checkout/payment',
 
   dashboard: '/dashboard',
 

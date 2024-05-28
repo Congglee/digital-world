@@ -11,10 +11,10 @@ interface DistrictPickerProps {
   value?: string
   districts: VietNamDistrict[]
   provinceId: string
-  handleSelectDistrict?: (districtId: string, districValue: string, wardValue: string) => void
+  onSelect?: (districtId: string, districtValue: string) => void
 }
 
-export default function DistrictPicker({ value, provinceId, districts, handleSelectDistrict }: DistrictPickerProps) {
+export default function DistrictPicker({ value, provinceId, districts, onSelect }: DistrictPickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -41,8 +41,7 @@ export default function DistrictPicker({ value, provinceId, districts, handleSel
                     value={district.district_name}
                     key={district.district_id}
                     onSelect={() => {
-                      handleSelectDistrict &&
-                        handleSelectDistrict(district.district_id.toString(), district.district_name, '')
+                      onSelect && onSelect(district.district_id.toString(), district.district_name)
                     }}
                   >
                     {district.district_name}

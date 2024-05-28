@@ -10,7 +10,7 @@ import ModeToggle from 'src/components/ModeToggle'
 
 export default function DashboardLayout() {
   return (
-    <>
+    <div className='dashboard-wrapper'>
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
         <div className='flex-col md:flex text-foreground'>
           <div className='border-b'>
@@ -41,6 +41,6 @@ export default function DashboardLayout() {
           className='text-[15px]'
         />
       </ThemeProvider>
-    </>
+    </div>
   )
 }

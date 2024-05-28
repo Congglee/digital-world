@@ -15,7 +15,7 @@ import { mailApi } from './apis/mail.api'
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['']
+  whitelist: []
 }
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

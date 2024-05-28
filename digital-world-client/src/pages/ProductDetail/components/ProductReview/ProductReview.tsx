@@ -46,7 +46,7 @@ export default function ProductReview({ product }: ProductReviewProps) {
   const [deleteRating, deleteRatingResult] = useDeleteRatingMutation()
   const { data: productRatings, nextPage, page, totalPages } = usePagination(product.ratings, 3)
 
-  const userRating: Rating = profile && product.ratings.find((rating) => rating.posted_by === profile._id) // No more memo 😃
+  const userRating = profile && (product.ratings.find((rating) => rating.posted_by === profile._id) as Rating) // No more memo 😃
 
   const ratingPercentages = useMemo(() => {
     const totalRatings = product.ratings.length
@@ -188,9 +188,10 @@ export default function ProductReview({ product }: ProductReviewProps) {
                 <div className='text-red-600 text-[13px]'>{errors.star?.message}</div>
               </div>
               <div className='space-y-0.5'>
-                <label htmlFor=''>Nhận xét</label>
+                <label htmlFor='comment'>Nhận xét</label>
                 <textarea
                   {...register('comment')}
+                  id='comment'
                   className='w-full bg-[#f6f6f6] text-[#1c1d1d] transition-all duration-400 ease-out px-[10px] py-2 border-transparent'
                   rows={10}
                   placeholder='Nhận xét của bạn...'
@@ -281,7 +282,7 @@ export default function ProductReview({ product }: ProductReviewProps) {
         loading={deleteRatingResult.isLoading}
         handleConfirm={() => {
           if (!deleteRatingResult.isLoading) {
-            handleDeleteRating(product._id, userRating._id)
+            userRating && handleDeleteRating(product._id, userRating._id)
           }
         }}
       />

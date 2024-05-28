@@ -74,7 +74,7 @@ export const categorySchema = yup.object({
 })
 
 export const brandSchema = yup.object({
-  name: yup.string().trim().required('Tên thương hiệu là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  name: yup.string().trim().required('Tên thương hiệu là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
   image: yup.string().max(1000, 'Độ dài tối đa là 1000 ký tự'),
   is_actived: yup.boolean().required('Vui lòng chọn trạng thái cho thương hiệu')
 })
@@ -118,7 +118,7 @@ export const productSchema = yup.object({
 })
 
 export const userSchema = yup.object({
-  name: yup.string().trim().required('Họ và tên là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  name: yup.string().trim().required('Họ và tên là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
   email: yup
     .string()
     .required('Email là bắt buộc')
@@ -143,9 +143,16 @@ export const userSchema = yup.object({
 })
 
 export const orderSchema = yup.object({
-  order_status: yup.string().trim().required('Trạng thái đơn hàng là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  order_fullname: yup.string().trim().required('Họ và tên là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
+  order_phone: yup.string().trim().required('Số điện thoại là bắt buộc').max(20, 'Độ dài tối đa là 20 ký tự'),
+  delivery_at: yup.string().trim().required('Địa chỉ giao hàng là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
+  order_note: yup.string().trim(),
+  province: yup.string().required('Vui lòng chọn tỉnh').max(160, 'Độ dài tối đa là 160 ký tự'),
+  district: yup.string().required('Vui lòng chọn quận huyện').max(160, 'Độ dài tối đa là 160 ký tự'),
+  ward: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
+  order_status: yup.string().trim().required('Trạng thái đơn hàng là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
   delivery_status: yup.string().trim().required('Trạng thái vận chuyển là bắt buộc'),
-  payment_status: yup.string().trim().required('Trạng thái thanh toán là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự')
+  payment_status: yup.string().trim().required('Trạng thái thanh toán là bắt buộc').max(160, 'Độ dài tối đa ký tự')
 })
 
 export const mailSchema = yup.object({
@@ -170,7 +177,7 @@ export const ratingSchema = yup.object({
 })
 
 export const storeSchema = yup.object({
-  name: yup.string().trim().required('Tên cửa hàng là bắt buộc').max(160, 'Độ dài từ 5 - 160 ký tự'),
+  name: yup.string().trim().required('Tên cửa hàng là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
   phoneNumber: yup
     .string()
     .matches(/^(0[1-9])+([0-9]{8,9})$/, {

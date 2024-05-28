@@ -57,7 +57,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background font-Inter;
+    @apply font-Inter;
+  }
+  .dashboard-wrapper {
+    @apply bg-background;
   }
 }
 

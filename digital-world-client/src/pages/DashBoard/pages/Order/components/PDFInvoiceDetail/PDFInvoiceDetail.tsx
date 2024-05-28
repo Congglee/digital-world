@@ -124,9 +124,9 @@ export default function PDFInvoiceDetailDocument({ order }: { order: Order }) {
             <Text style={styles.invoiceNumber}>Mã hóa đơn: {order.order_code}</Text>
           </View>
           <View>
-            <Text style={styles.addressTitle}>{order.order_by.user_name}</Text>
+            <Text style={styles.addressTitle}>{order.shipping_address.order_fullname}</Text>
             <WrapText text={order.order_by.user_email} />
-            <Text style={styles.addressTitle}>{order.order_by.user_phone}</Text>
+            <Text style={styles.addressTitle}>{order.shipping_address.order_phone}</Text>
           </View>
         </View>
       </View>
@@ -139,7 +139,7 @@ export default function PDFInvoiceDetailDocument({ order }: { order: Order }) {
         <View style={styles.spaceBetween}>
           <View style={{ maxWidth: 200 }}>
             <Text style={styles.addressTitle}>Địa chỉ giao tới</Text>
-            <Text style={styles.address}>{order.delivery_at}</Text>
+            <Text style={styles.address}>{order.shipping_address.delivery_at}</Text>
           </View>
           <Text style={styles.addressTitle}>{format(order.date_of_order, 'dd/MM/yyyy', { locale: vi })}</Text>
         </View>

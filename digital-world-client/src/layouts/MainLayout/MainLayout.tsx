@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 export default function MainLayout() {
   return (
     <>
-      <div className='bg-white'>
+      <div className='main-wrapper'>
         <Header />
         <Outlet />
         <Footer />

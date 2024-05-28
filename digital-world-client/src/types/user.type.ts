@@ -1,5 +1,25 @@
 export type Role = 'User' | 'Admin' | 'Guest' | 'Writer'
 
+interface CartProductItem {
+  _id: string
+  name: string
+  thumb: string
+  category: {
+    _id: string
+    name: string
+  }
+  price: number
+  price_before_discount: number
+  quantity: number
+}
+interface CartItem {
+  _id: string
+  product: CartProductItem
+  buy_count: number
+  price: number
+  price_before_discount: number
+}
+
 export interface User {
   _id: string
   name: string
@@ -16,23 +36,7 @@ export interface User {
     _id: string
     name: string
   }[]
-  cart: {
-    product: {
-      _id: string
-      name: string
-      thumb: string
-      category: {
-        _id: string
-        name: string
-      }
-      price: number
-      price_before_discount: number
-      quantity: number
-    }
-    buy_count: number
-    price: number
-    price_before_discount: number
-  }[]
+  cart: CartItem[]
   is_blocked: boolean
   createdAt: string
   updatedAt: string

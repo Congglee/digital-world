@@ -12,6 +12,7 @@ import { DongCoin } from 'src/utils/icons'
 import { Schema, schema } from 'src/utils/rules'
 import Button from '../Button'
 import InputNumber from '../InputNumber'
+import { ChevronsUpDown } from 'lucide-react'
 
 interface AsideFilterProps {
   queryConfig: QueryConfig
@@ -102,23 +103,30 @@ export default function AsideFilter({ queryConfig, brands }: AsideFilterProps) {
           <label htmlFor='sort_by' className='text-[17px] font-semibold text-[rgb(80_80_80)]'>
             Sắp xếp theo
           </label>
-          <select
-            id='sort_by'
-            className='text-xs border border-[#1a1b18bf] pl-3 pr-5 w-full inline-block h-9 text-[#1c1d1d] bg-[#f6f6f6] outline-none'
-            value={order ? `${sort_by}_${order}` : ''}
-            onChange={(event) => handleSort(event.target.value as Exclude<ListConfig['sort_by' | 'order'], undefined>)}
-          >
-            <option value='' disabled>
-              Chọn
-            </option>
-            <option value={`${productSortBy.sold}_${orderConstant.desc}`}>Bán chạy</option>
-            <option value={`${productSortBy.view}_${orderConstant.desc}`}>Nổi bật</option>
-            <option value={`${productSortBy.createdAt}_${orderConstant.desc}`}>Mới nhất</option>
-            <option value={`${productSortBy.name}_${orderConstant.asc}`}>Tên, từ A - Z</option>
-            <option value={`${productSortBy.name}_${orderConstant.desc}`}>Tên, từ Z - A</option>
-            <option value={`${productSortBy.price}_${orderConstant.asc}`}>Giá, tăng dần</option>
-            <option value={`${productSortBy.price}_${orderConstant.desc}`}>Giá, giảm dần</option>
-          </select>
+          <div className='relative'>
+            <select
+              id='sort_by'
+              className='text-xs border border-[#1a1b18bf] pl-3 pr-5 w-full inline-block h-9 text-[#1c1d1d] bg-[#f6f6f6] outline-none appearance-none'
+              value={order ? `${sort_by}_${order}` : ''}
+              onChange={(event) =>
+                handleSort(event.target.value as Exclude<ListConfig['sort_by' | 'order'], undefined>)
+              }
+            >
+              <option value='' disabled>
+                Chọn
+              </option>
+              <option value={`${productSortBy.sold}_${orderConstant.desc}`}>Bán chạy</option>
+              <option value={`${productSortBy.view}_${orderConstant.desc}`}>Nổi bật</option>
+              <option value={`${productSortBy.createdAt}_${orderConstant.desc}`}>Mới nhất</option>
+              <option value={`${productSortBy.name}_${orderConstant.asc}`}>Tên, từ A - Z</option>
+              <option value={`${productSortBy.name}_${orderConstant.desc}`}>Tên, từ Z - A</option>
+              <option value={`${productSortBy.price}_${orderConstant.asc}`}>Giá, tăng dần</option>
+              <option value={`${productSortBy.price}_${orderConstant.desc}`}>Giá, giảm dần</option>
+            </select>
+            <div className='absolute top-0 bottom-0 right-0 -ml-5 px-3 flex items-center justify-center'>
+              <ChevronsUpDown className='w-2.5 h-2.5' />
+            </div>
+          </div>
         </div>
         <div className='flex flex-col gap-[10px]'>
           <label className='text-[17px] font-semibold text-[#505050]'>Giá</label>

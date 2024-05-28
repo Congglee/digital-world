@@ -1,6 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 import { ROLE } from "../../constants/role.enum";
 
+const CartSchema = new Schema({
+  product: { type: mongoose.SchemaTypes.ObjectId, ref: "products" },
+  buy_count: { type: Number },
+  price: { type: Number, default: 0 },
+  price_before_discount: { type: Number, default: 0 },
+});
+
 const UserSchema = new Schema(
   {
     name: { type: String, maxlength: 160 },
@@ -14,16 +21,9 @@ const UserSchema = new Schema(
     phone: { type: String, maxlength: 20 },
     roles: { type: [String], required: true, default: [ROLE.USER] },
     avatar: { type: String, maxlength: 1000 },
-    cart: [
-      {
-        product: { type: mongoose.SchemaTypes.ObjectId, ref: "products" },
-        buy_count: { type: Number },
-        price: { type: Number, default: 0 },
-        price_before_discount: { type: Number, default: 0 },
-      },
-    ],
+    cart: [CartSchema],
     is_blocked: { type: Boolean, default: false },
-    // is_actived: { type: Boolean, default: true },
+    // is_email_verified: { type: Boolean, default: true },
     wishlist: [{ type: mongoose.SchemaTypes.ObjectId, ref: "products" }],
     password_reset_token: { type: String },
     password_reset_expires: { type: String },

@@ -1,6 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import Button from '../Button'
+import { cn } from 'src/utils/utils'
 
 interface ConfirmModalProps {
   open: boolean
@@ -8,7 +9,9 @@ interface ConfirmModalProps {
   description?: string
   closeModal: () => void
   confirmText?: string
+  confirmButtonClassName?: string
   cancelText?: string
+  cancelButtonClassName?: string
   handleConfirm: () => void
   loading?: boolean
 }
@@ -19,7 +22,9 @@ export default function ConfirmModal({
   title,
   description,
   confirmText,
+  confirmButtonClassName,
   cancelText,
+  cancelButtonClassName,
   handleConfirm,
   loading
 }: ConfirmModalProps) {
@@ -60,7 +65,10 @@ export default function ConfirmModal({
                 <div className='flex flex-col space-y-2 sm:flex-row sm:justify-end sm:space-x-2 sm:space-y-0'>
                   <Button
                     type='button'
-                    className='flex items-center justify-center space-x-2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-[#333] hover:opacity-90 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+                    className={cn(
+                      'flex items-center justify-center space-x-2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-[#333] hover:opacity-90 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+                      confirmButtonClassName
+                    )}
                     disabled={loading}
                     isLoading={loading}
                     onClick={() => {
@@ -71,7 +79,10 @@ export default function ConfirmModal({
                   </Button>
                   <Button
                     type='button'
-                    className='inline-flex justify-center rounded-md border border-transparent bg-gray-400 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:opacity-90 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+                    className={cn(
+                      'inline-flex justify-center rounded-md border border-transparent bg-gray-400 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:opacity-90 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+                      cancelButtonClassName
+                    )}
                     onClick={closeModal}
                   >
                     {cancelText || 'Hủy'}

@@ -1,12 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
-// const VariantSchema = new Schema({
-//   name: { type: String, required: true },
-//   price: { type: Number, default: 0 },
-//   quantity: { type: Number, default: 0 },
-//   thumb: { type: String, required: true, maxlength: 1000 },
-//   images: [{ type: String, maxlength: 1000 }],
-// });
+const RatingSchema = new Schema({
+  star: { type: Number },
+  posted_by: { type: mongoose.SchemaTypes.ObjectId, ref: "users" },
+  user_name: { type: String },
+  user_avatar: { type: String },
+  comment: { type: String },
+  publish: { type: Boolean, default: true },
+  date: { type: Date, maxlength: 160 },
+});
 
 const ProductSchema = new Schema(
   {
@@ -18,26 +20,15 @@ const ProductSchema = new Schema(
     category: { type: mongoose.SchemaTypes.ObjectId, ref: "categories" },
     price: { type: Number, default: 0 },
     price_before_discount: { type: Number, default: 0 },
-    ratings: [
-      {
-        star: { type: Number },
-        posted_by: { type: mongoose.SchemaTypes.ObjectId, ref: "users" },
-        user_name: { type: String },
-        user_avatar: { type: String },
-        comment: { type: String },
-        publish: { type: Boolean, default: true },
-        date: { type: Date, maxlength: 160 },
-      },
-    ],
+    ratings: [RatingSchema],
     total_ratings: { type: Number, default: 0 },
     quantity: { type: Number, default: 0 },
     sold: { type: Number, default: 0 },
     view: { type: Number, default: 0 },
     brand: { type: String },
-    is_featured: { type: Boolean, default: false },
     // is_actived: { type: Boolean, default: true },
     is_published: { type: Boolean, default: true },
-    // variants: [VariantSchema],
+    is_featured: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -10,10 +10,10 @@ import { cn } from 'src/utils/utils'
 interface ProvincePickerProps {
   value?: string
   provinces: VietNamProvince[]
-  handleSelectProvince?: (provinceId: string, provinceValue: string, districValue: string, wardValue: string) => void
+  onSelect?: (provinceId: string, provinceValue: string) => void
 }
 
-export default function ProvincePicker({ value, provinces, handleSelectProvince }: ProvincePickerProps) {
+export default function ProvincePicker({ value, provinces, onSelect }: ProvincePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -39,8 +39,7 @@ export default function ProvincePicker({ value, provinces, handleSelectProvince 
                   value={province.province_name}
                   key={province.province_id}
                   onSelect={() => {
-                    handleSelectProvince &&
-                      handleSelectProvince(province.province_id.toString(), province.province_name, '', '')
+                    onSelect && onSelect(province.province_id.toString(), province.province_name)
                   }}
                 >
                   {province.province_name}

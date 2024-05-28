@@ -111,18 +111,18 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
     }
   }, [provinceData, districtsData, form.watch('province'), form.watch('district')])
 
-  const handleSelectProvince = (provinceId: string, provinceValue: string, districValue: string, wardValue: string) => {
+  const handleSelectProvince = (provinceId: string, provinceValue: string) => {
     setProvinceId(provinceId)
     setDistrictId('')
     form.setValue('province', provinceValue)
-    form.setValue('district', districValue)
-    form.setValue('ward', wardValue)
+    form.setValue('district', '')
+    form.setValue('ward', '')
   }
 
-  const handleSelectDistrict = (districtId: string, districValue: string, wardValue: string) => {
+  const handleSelectDistrict = (districtId: string, districtValue: string) => {
     setDistrictId(districtId)
-    form.setValue('district', districValue)
-    form.setValue('ward', wardValue)
+    form.setValue('district', districtValue)
+    form.setValue('ward', '')
   }
 
   const handleSelectWard = (wardValue: string) => {
@@ -206,7 +206,7 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
                   <ProvincePicker
                     value={field.value}
                     provinces={provinceData?.data.results || []}
-                    handleSelectProvince={handleSelectProvince}
+                    onSelect={handleSelectProvince}
                   />
                   <FormMessage />
                 </FormItem>
@@ -222,7 +222,7 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
                     value={field.value}
                     districts={districtsData?.data.results || []}
                     provinceId={provinceId}
-                    handleSelectDistrict={handleSelectDistrict}
+                    onSelect={handleSelectDistrict}
                   />
                   <FormMessage />
                 </FormItem>
@@ -238,7 +238,7 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
                     value={field.value}
                     wards={wardsData?.data.results || []}
                     districtId={districtId}
-                    handleSelectWard={handleSelectWard}
+                    onSelect={handleSelectWard}
                   />
                   <FormMessage />
                 </FormItem>

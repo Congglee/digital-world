@@ -29,7 +29,7 @@ function generateOrderNotifyMail(order: Order) {
     </div>
     <div style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
       <h2 style="margin-top: 0; color: #333;">Cảm ơn!</h2>
-      <p>Kính gửi ${order.order_by.user_name},</p>
+      <p>Kính gửi ${order.shipping_address.order_fullname},</p>
       <p>Chúng tôi xin chân thành cảm ơn bạn đã đặt hàng ở shop chúng tôi.</p>
       <p>Nếu như có bất cứ thông tin mới nhất nào cập nhật về đơn hàng của bạn chúng tôi sẽ thông báo lại cho bạn qua mail sau.</p>
       <p>Dưới đây là những thông tin chi tiết về đơn hàng của bạn:</p>
@@ -97,17 +97,17 @@ function generateOrderNotifyMail(order: Order) {
           <td style="width: 50%; padding: 10px; border: 1px dotted #ddd;">
             <h3 style="font-weight: bold; color: #333;">Thông tin thanh toán</h3>
             <div style="color: #666;">
-              ${order.order_by.user_name}<br>
-              ${order.delivery_at}<br>
+              ${order.shipping_address.order_fullname}<br>
+              ${order.shipping_address.delivery_at}<br>
               ${order.order_by.user_email}<br>
-              ${order.order_by.user_phone}
+              ${order.shipping_address.order_phone}
             </div>
           </td>
           <td style="width: 50%; padding: 10px; border: 1px dotted #ddd;">
             <h3 style="font-weight: bold; color: #333;">Thông tin vận chuyển</h3>
             <div style="color: #666;">
-              ${order.order_by.user_name}<br>
-              ${order.delivery_at}<br>
+              ${order.shipping_address.order_fullname}<br>
+              ${order.shipping_address.delivery_at}<br>
               <br>
               <br>
             </div>
@@ -116,7 +116,7 @@ function generateOrderNotifyMail(order: Order) {
       </table>
       <div style="text-align: center; margin-top: 20px;">
         <p>Đây là email tự động. Xin vui lòng không trả lời.</p>
-        <p>Truy cập trang web của chúng tôi: <a href="http://localhost:3000/">www.digital-world-2.com</a></p>
+        <p>Truy cập trang web của chúng tôi: <a href="http://localhost:3000/">www.digital-world.com</a></p>
       </div>
   </body>`
 }

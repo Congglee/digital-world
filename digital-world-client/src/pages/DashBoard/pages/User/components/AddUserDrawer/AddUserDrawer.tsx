@@ -86,18 +86,18 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
   const { data: wardsData } = useGetDistrictWardsQuery(districtId, { skip: districtId ? false : true })
   const [addUserMutaton, { data, isLoading, isSuccess, isError, error }] = useAddUserMutation()
 
-  const handleSelectProvince = (provinceId: string, provinceValue: string, districValue: string, wardValue: string) => {
+  const handleSelectProvince = (provinceId: string, provinceValue: string) => {
     setProvinceId(provinceId)
     setDistrictId('')
     form.setValue('province', provinceValue)
-    form.setValue('district', districValue)
-    form.setValue('ward', wardValue)
+    form.setValue('district', '')
+    form.setValue('ward', '')
   }
 
-  const handleSelectDistrict = (districtId: string, districValue: string, wardValue: string) => {
+  const handleSelectDistrict = (districtId: string, districtValue: string) => {
     setDistrictId(districtId)
-    form.setValue('district', districValue)
-    form.setValue('ward', wardValue)
+    form.setValue('district', districtValue)
+    form.setValue('ward', '')
   }
 
   const handleSelectWard = (wardValue: string) => {
@@ -242,7 +242,7 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
                           <ProvincePicker
                             value={field.value}
                             provinces={provinceData?.data.results || []}
-                            handleSelectProvince={handleSelectProvince}
+                            onSelect={handleSelectProvince}
                           />
                           <FormMessage />
                         </FormItem>
@@ -258,7 +258,7 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
                             value={field.value}
                             districts={districtsData?.data.results || []}
                             provinceId={provinceId}
-                            handleSelectDistrict={handleSelectDistrict}
+                            onSelect={handleSelectDistrict}
                           />
                           <FormMessage />
                         </FormItem>
@@ -274,7 +274,7 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
                             value={field.value}
                             wards={wardsData?.data.results || []}
                             districtId={districtId}
-                            handleSelectWard={handleSelectWard}
+                            onSelect={handleSelectWard}
                           />
                           <FormMessage />
                         </FormItem>

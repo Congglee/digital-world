@@ -244,7 +244,7 @@ export default function UpdateUserOrder() {
                       className='aspect-square size-full'
                     />
                   </div>
-                  <p className='text-sm font-medium'>{order.order_by.user_name}</p>
+                  <p className='text-sm font-medium'>{order.shipping_address.order_fullname}</p>
                 </div>
               </div>
               <div className='flex items-center justify-between space-x-4 py-3'>
@@ -253,7 +253,7 @@ export default function UpdateUserOrder() {
               </div>
               <div className='flex items-center justify-between space-x-4 py-3'>
                 <h3 className='font-semibold'>Điện thoại</h3>
-                <p className='text-sm font-medium'>{order.order_by.user_phone}</p>
+                <p className='text-sm font-medium'>{order.shipping_address.order_phone}</p>
               </div>
             </div>
           </CardContent>
@@ -291,7 +291,7 @@ export default function UpdateUserOrder() {
             <div className='grid divide-y-2 divide-foreground'>
               <div className='flex items-center justify-between space-x-4 py-3'>
                 <h3 className='font-semibold'>Địa chỉ</h3>
-                <p className='text-sm font-medium'>{order.delivery_at}</p>
+                <p className='text-sm font-medium'>{order.shipping_address.delivery_at}</p>
               </div>
               <div className='flex items-center justify-between space-x-4 py-3'>
                 <h3 className='font-semibold'>Tình trạng vận chuyển</h3>

@@ -11,10 +11,10 @@ interface WardPickerProps {
   value?: string
   wards: VietNamWard[]
   districtId: string
-  handleSelectWard: (wardValue: string) => void
+  onSelect: (wardValue: string) => void
 }
 
-export default function WardPicker({ value, wards, districtId, handleSelectWard }: WardPickerProps) {
+export default function WardPicker({ value, wards, districtId, onSelect }: WardPickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -41,7 +41,7 @@ export default function WardPicker({ value, wards, districtId, handleSelectWard 
                     value={ward.ward_name}
                     key={ward.ward_id}
                     onSelect={() => {
-                      handleSelectWard && handleSelectWard(ward.ward_name)
+                      onSelect && onSelect(ward.ward_name)
                     }}
                   >
                     {ward.ward_name}

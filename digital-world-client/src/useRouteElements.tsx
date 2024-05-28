@@ -31,6 +31,9 @@ import SettingsStore from 'src/pages/DashBoard/pages/Settings/pages/SettingsStor
 import SettingsPayment from 'src/pages/DashBoard/pages/Settings/pages/SettingsPayment'
 import UserProfile from 'src/pages/DashBoard/pages/User/UserProfile'
 import Cart from 'src/pages/Cart'
+import CheckoutLayout from 'src/pages/Checkout/layout/CheckoutLayout'
+import CheckoutProfile from 'src/pages/Checkout/pages/CheckoutProfile'
+import CheckoutPayment from 'src/pages/Checkout/pages/CheckoutPayment'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -189,6 +192,14 @@ export default function useRouteElements() {
           path: '',
           element: <MainLayout />,
           children: [{ path: path.cart, element: <Cart /> }]
+        },
+        {
+          path: path.checkout,
+          element: <CheckoutLayout />,
+          children: [
+            { path: path.checkoutProfile, element: <CheckoutProfile /> },
+            { path: path.checkoutPayment, element: <CheckoutPayment /> }
+          ]
         }
       ]
     },
