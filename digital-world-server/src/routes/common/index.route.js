@@ -4,7 +4,6 @@ import commonCategoryRouter from "./common-category.route";
 import commonLocationRouter from "./common-location.route";
 import commonMediaRouter from "./common-media.route";
 import commonProductRouter from "./common-product.route";
-import commonUserRouter from "./common-user.route";
 
 const commonRoutes = {
   prefix: "/",
@@ -12,10 +11,6 @@ const commonRoutes = {
     {
       path: "",
       route: commonAuthRouter,
-    },
-    {
-      path: "",
-      route: commonUserRouter,
     },
     {
       path: "products",

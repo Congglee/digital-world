@@ -20,51 +20,58 @@ const addOrder = async (req, res) => {
     products,
   } = form;
   const userInDB = await UserModel.findById(user_id).exec();
-  if (userInDB) {
-    let totalAmount = 0;
-    const productsData = products.map((product) => {
-      totalAmount += product.price * product.buy_count;
-      return {
-        product_id: product._id,
-        product_name: product.name,
-        product_price: product.price,
-        product_thumb: product.thumb,
-        buy_count: product.buy_count,
-      };
-    });
-    const orderCode = generateOrderCode();
-    const order = {
-      order_code: orderCode,
-      order_by: {
-        user_avatar: userInDB.avatar,
-        user_email: userInDB.email,
-        user_id,
-      },
-      products: productsData,
-      total_amount: totalAmount,
-      date_of_order: new Date().toISOString(),
-      shipping_address: { order_fullname, order_phone, delivery_at },
-      order_note,
-      payment_method,
-    };
-    const orderAdd = await new OrderModel(order).save();
-    for (const product of products) {
-      await ProductModel.findByIdAndUpdate(product._id, {
-        $inc: { sold: product.buy_count, quantity: -product.buy_count },
+  if (products.length > 0) {
+    if (userInDB) {
+      let totalAmount = 0;
+      const productsData = products.map((product) => {
+        totalAmount += product.price * product.buy_count;
+        return {
+          product_id: product._id,
+          product_name: product.name,
+          product_price: product.price,
+          product_thumb: product.thumb,
+          buy_count: product.buy_count,
+        };
       });
-    }
-    const response = {
-      message: "Tạo mới đơn hàng thành công",
-      data: orderAdd.toObject({
-        transform: (doc, ret, option) => {
-          delete ret.__v;
-          return ret;
+      const orderCode = generateOrderCode();
+      const order = {
+        order_code: orderCode,
+        order_by: {
+          user_avatar: userInDB.avatar,
+          user_email: userInDB.email,
+          user_id,
         },
-      }),
-    };
-    return responseSuccess(res, response);
+        products: productsData,
+        total_amount: totalAmount,
+        date_of_order: new Date().toISOString(),
+        shipping_address: { order_fullname, order_phone, delivery_at },
+        order_note,
+        payment_method,
+      };
+      const orderAdd = await new OrderModel(order).save();
+      for (const product of products) {
+        await ProductModel.findByIdAndUpdate(product._id, {
+          $inc: { sold: product.buy_count, quantity: -product.buy_count },
+        });
+      }
+      const response = {
+        message: "Tạo mới đơn hàng thành công",
+        data: orderAdd.toObject({
+          transform: (doc, ret, option) => {
+            delete ret.__v;
+            return ret;
+          },
+        }),
+      };
+      return responseSuccess(res, response);
+    } else {
+      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
+    }
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
+    throw new ErrorHandler(
+      STATUS.BAD_REQUEST,
+      "Giỏ hàng đang không có sản phẩm nào, không thể tạo đơn hàng"
+    );
   }
 };
 

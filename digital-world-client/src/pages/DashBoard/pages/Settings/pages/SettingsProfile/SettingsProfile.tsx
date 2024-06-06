@@ -326,11 +326,11 @@ export default function SettingsProfile() {
                     <span>Chọn ảnh</span>
                   </Button>
                   <FormMessage />
-                  <div className='size-24'>
+                  <div className='size-24 rounded-full overflow-hidden'>
                     <img
                       src={previewAvatarImage || getAvatarUrl(avatar)}
                       alt='user-avatar'
-                      className='w-full h-full rounded-full object-cover'
+                      className='aspect-square w-full h-full'
                     />
                   </div>
                 </div>

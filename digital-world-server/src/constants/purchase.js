@@ -20,6 +20,6 @@ export const PAYMENT_STATUS = {
 
 export const PAYMENT = {
   DIRECTLY: "Thanh toán trực tiếp khi nhận hàng",
-  BANKING: "Thanh toán qua STK ngân hàng",
+  BANKING: "Thanh toán qua tài khoản ngân hàng",
   STRIPE_GATE: "Thanh toán qua cổng Stripe",
 };

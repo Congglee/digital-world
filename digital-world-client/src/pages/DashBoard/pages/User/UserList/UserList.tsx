@@ -155,7 +155,7 @@ export default function UserList() {
         return (
           <div className='size-16 rounded-full overflow-hidden'>
             {row.getValue('avatar') ? (
-              <img src={getAvatarUrl(row.getValue('avatar'))} alt='avatar' className='w-full h-full object-cover' />
+              <img src={getAvatarUrl(row.getValue('avatar'))} alt='avatar' className='aspect-square w-full h-full' />
             ) : (
               <CircleUserRound strokeWidth={1.5} className='size-full text-foreground' />
             )}

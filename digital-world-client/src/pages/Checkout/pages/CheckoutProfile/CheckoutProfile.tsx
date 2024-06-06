@@ -17,10 +17,11 @@ import {
 import { useGetMeQuery, useUpdateProfileMutation } from 'src/redux/apis/user.api'
 import { useAppDispatch } from 'src/redux/hook'
 import { setProfile } from 'src/redux/slices/auth.slice'
+import { ExtendedPurchaseCart } from 'src/types/cart.type'
 import { setProfileToLS } from 'src/utils/auth'
 import { OrderSchema, orderSchema } from 'src/utils/rules'
 
-type FormData = Pick<
+export type FormData = Pick<
   OrderSchema,
   'order_fullname' | 'order_phone' | 'delivery_at' | 'order_note' | 'province' | 'district' | 'ward'
 >
@@ -62,6 +63,9 @@ export default function CheckoutProfile() {
   const [open, setOpen] = useState<boolean>(false)
   const naivgate = useNavigate()
   const dispatch = useAppDispatch()
+  const checkoutPurchasesCart = JSON.parse(
+    localStorage.getItem('checkout-purchases-cart') || '[]'
+  ) as ExtendedPurchaseCart[]
 
   const { data: provinceData } = useGetAllVNProvincesQuery()
   const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, {
@@ -192,10 +196,15 @@ export default function CheckoutProfile() {
 
   if (!profile) return null
 
+  if (!checkoutPurchasesCart.length) {
+    naivgate(path.cart)
+    return null
+  }
+
   return (
     <>
       <div className='mt-1'>
-        <CheckoutBreadcrumbs />
+        <CheckoutBreadcrumbs active='contact-information' />
         <div className='mt-1'>
           <div className='px-5 rounded border border-[#e1e3e5] divide-y'>
             <div className='grid xs:grid-cols-4 gap-1 py-[10px] border-[#e1e3e5]'>
@@ -284,7 +293,7 @@ export default function CheckoutProfile() {
                         <option value='' disabled>
                           Chọn một tỉnh thành
                         </option>
-                        {provinceData?.data.results.map((province) => (
+                        {(provinceData?.data.results || []).map((province) => (
                           <option
                             key={province.province_id}
                             value={province.province_name}
@@ -326,7 +335,7 @@ export default function CheckoutProfile() {
                         <option value='' disabled>
                           Chọn một quận/huyện
                         </option>
-                        {districtsData?.data.results.map((district) => (
+                        {(districtsData?.data.results || []).map((district) => (
                           <option
                             key={district.district_id}
                             value={district.district_name}
@@ -367,7 +376,7 @@ export default function CheckoutProfile() {
                         <option value='' disabled>
                           Chọn một phường
                         </option>
-                        {wardsData?.data.results.map((ward) => (
+                        {(wardsData?.data.results || []).map((ward) => (
                           <option key={ward.ward_id} value={ward.ward_name}>
                             {ward.ward_name}
                           </option>

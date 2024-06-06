@@ -310,7 +310,9 @@ export default function UpdateUserOrder() {
               <TableCaption>Danh sách sản phẩm trong đơn hàng.</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className='w-[100px]'>Sản phẩm</TableHead>
+                  <TableHead className='w-[100px]' colSpan={2}>
+                    Sản phẩm
+                  </TableHead>
                   <TableHead>Đơn giá</TableHead>
                   <TableHead>Số lượng</TableHead>
                   <TableHead className='text-right'>Tổng</TableHead>
@@ -319,7 +321,7 @@ export default function UpdateUserOrder() {
               <TableBody>
                 {order.products.map((product) => (
                   <TableRow key={product._id}>
-                    <TableCell className='font-medium'>
+                    <TableCell className='font-medium' colSpan={2}>
                       <div className='flex space-x-4'>
                         <div className='size-20 shrink-0 overflow-hidden rounded-md flex'>
                           <img src={product.product_thumb} alt='product thumb' className='aspect-square size-full' />

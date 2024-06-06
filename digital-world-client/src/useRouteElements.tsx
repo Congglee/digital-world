@@ -34,6 +34,7 @@ import Cart from 'src/pages/Cart'
 import CheckoutLayout from 'src/pages/Checkout/layout/CheckoutLayout'
 import CheckoutProfile from 'src/pages/Checkout/pages/CheckoutProfile'
 import CheckoutPayment from 'src/pages/Checkout/pages/CheckoutPayment'
+import CheckoutSuccess from 'src/pages/Checkout/pages/CheckoutSuccess'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -197,8 +198,10 @@ export default function useRouteElements() {
           path: path.checkout,
           element: <CheckoutLayout />,
           children: [
+            { index: true, element: <CheckoutProfile /> },
             { path: path.checkoutProfile, element: <CheckoutProfile /> },
-            { path: path.checkoutPayment, element: <CheckoutPayment /> }
+            { path: path.checkoutPayment, element: <CheckoutPayment /> },
+            { path: path.checkoutSuccess, element: <CheckoutSuccess /> }
           ]
         }
       ]

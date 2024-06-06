@@ -134,7 +134,7 @@ export default function UpdateCategoryDialog({
                 name='is_actived'
                 render={({ field }) => (
                   <FormItem className='flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
-                    <FormLabel>Trạng thái?</FormLabel>
+                    <FormLabel>Kích hoạt?</FormLabel>
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>

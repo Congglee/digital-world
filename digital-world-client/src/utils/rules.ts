@@ -195,6 +195,13 @@ export const storeSchema = yup.object({
   description: yup.string().trim()
 })
 
+export const paymentMethodSchema = yup.object({
+  name: yup.string().trim().required('Tên phương thức thanh toán là bắt buộc').max(160, 'Độ dài tối đa là 160 ký tự'),
+  image: yup.string().max(1000, 'Độ dài tối đa là 1000 ký tự'),
+  is_actived: yup.boolean().required('Vui lòng chọn trạng thái cho phương thức thanh toán'),
+  description: yup.string().trim()
+})
+
 export type CategorySchema = yup.InferType<typeof categorySchema>
 export type ProductSchema = yup.InferType<typeof productSchema>
 export type BrandSchema = yup.InferType<typeof brandSchema>
@@ -203,5 +210,6 @@ export type OrderSchema = yup.InferType<typeof orderSchema>
 export type MailSchema = yup.InferType<typeof mailSchema>
 export type RatingSchema = yup.InferType<typeof ratingSchema>
 export type StoreSchema = yup.InferType<typeof storeSchema>
+export type PaymentMethodSchema = yup.InferType<typeof paymentMethodSchema>
 
 export type Schema = yup.InferType<typeof schema>

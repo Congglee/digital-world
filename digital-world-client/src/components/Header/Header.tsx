@@ -78,9 +78,9 @@ function DesktopTopHeader({
                   </div>
                 }
               >
-                <div className='text-white size-6 rounded-full bg-purple mr-2 flex-shrink-0 flex items-center justify-center'>
+                <div className='text-white size-6 rounded-full bg-purple mr-2 flex-shrink-0 flex items-center justify-center overflow-hidden'>
                   {profile?.avatar ? (
-                    <img src={profile?.avatar} alt='avatar' className='w-full h-full object-cover rounded-full' />
+                    <img src={profile?.avatar} alt='avatar' className='aspect-square w-full h-full' />
                   ) : (
                     <User size={16} />
                   )}

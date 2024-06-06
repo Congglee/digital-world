@@ -12,11 +12,16 @@ export const URL_GET_ORDERS = `${ADMIN_ORDER_URL}/get-orders`
 export const URL_GET_ALL_ORDERS = `${ADMIN_ORDER_URL}/get-all-orders`
 export const URL_GET_USER_ORDERS = `${ADMIN_ORDER_URL}/get-user-orders`
 export const URL_GET_MY_ORDERS = `${ORDER_URL}/get-my-orders`
+export const URL_ADD_ORDER = `${ORDER_URL}/add-order`
 export const URL_GET_ORDER = `${ORDER_URL}/get-order`
 export const URL_UPDATE_USER_ORDER = `${ADMIN_ORDER_URL}/update-user-order`
 
 const reducerPath = 'order/api' as const
 const tagTypes = ['Order'] as const
+
+type BodyAddOrder = Pick<OrderSchema, 'order_fullname' | 'order_phone' | 'delivery_at' | 'order_note'> & {
+  products: { _id: string; name: string; price: number; thumb: string; buy_count: number }[]
+}
 
 export const orderApi = createApi({
   reducerPath,
@@ -38,6 +43,10 @@ export const orderApi = createApi({
       transformResponse: (response: AxiosResponse<SuccessResponse<OrderList>>) => response.data,
       providesTags: [{ type: 'Order' as const, id: 'MY_ORDERS_LIST' }]
     }),
+    addOrder: build.mutation<AxiosResponse<SuccessResponse<Order>>, BodyAddOrder>({
+      query: (payload) => ({ url: URL_ADD_ORDER, method: 'POST', data: payload }),
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+    }),
     getOrder: build.query<AxiosResponse<SuccessResponse<Order>>, string>({
       query: (id) => ({ url: `${URL_GET_ORDER}/${id}`, method: 'GET' }),
       providesTags: (result, _error, _args) =>
@@ -58,5 +67,6 @@ export const {
   useGetOrderQuery,
   useUpdateUserOrderMutation,
   useGetUserOrdersQuery,
-  useGetMyOrdersQuery
+  useGetMyOrdersQuery,
+  useAddOrderMutation
 } = orderApi

@@ -17,7 +17,7 @@ export default function UserProfileInformation({ userProfile, userOrdersLength }
           <img
             src={userProfile.avatar ? userProfile.avatar : config.defaultUserImageUrl}
             alt='user avatar'
-            className='w-full h-full object-cover'
+            className='aspect-square w-full h-full'
           />
         </div>
         <div className='space-y-1'>

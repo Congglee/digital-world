@@ -40,19 +40,6 @@ const addOrderRules = () => {
       .withMessage("Địa chỉ giao hàng không được để trống")
       .isLength({ max: 160 })
       .withMessage("Địa chỉ giao hàng phải ít hơn 160 kí tự"),
-    body("products")
-      .exists({ checkFalsy: true })
-      .withMessage("Sản phẩm không được để trống")
-      .custom((value) => {
-        if (!Array.isArray(value)) {
-          return false;
-        }
-        if (value.length === 0) {
-          return false;
-        }
-        return true;
-      })
-      .withMessage("Sản phẩm không đúng định dạng"),
   ];
 };
 

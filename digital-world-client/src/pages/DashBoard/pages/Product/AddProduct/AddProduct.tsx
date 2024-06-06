@@ -212,7 +212,7 @@ export default function AddProduct() {
                       <span>Chọn ảnh</span>
                     </Button>
                     <FormMessage />
-                    {previewThumbImage !== '' && (
+                    {previewThumbImage && (
                       <img src={previewThumbImage} alt='product-thumb' className='w-full object-cover' />
                     )}
                   </div>

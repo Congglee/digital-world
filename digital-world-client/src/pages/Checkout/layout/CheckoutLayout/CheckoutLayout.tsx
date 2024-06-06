@@ -1,16 +1,17 @@
-import { Link, Outlet } from 'react-router-dom'
-import path from 'src/constants/path'
-import logo from 'src/assets/images/logo.png'
-import { CreditCard, MasterCard, Paypal, ShoppingBag, Visa } from 'src/utils/icons'
-import CheckoutSummary from 'src/pages/Checkout/components/CheckoutSummary'
 import { Disclosure, Transition } from '@headlessui/react'
 import { ChevronUp, ShoppingCart } from 'lucide-react'
-import { cn } from 'src/utils/utils'
+import { useEffect } from 'react'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useEffect } from 'react'
+import logo from 'src/assets/images/logo.png'
+import path from 'src/constants/path'
+import CheckoutSummary from 'src/pages/Checkout/components/CheckoutSummary'
+import { CreditCard, MasterCard, Paypal, ShoppingBag, Visa } from 'src/utils/icons'
+import { cn } from 'src/utils/utils'
 
 export default function CheckoutLayout() {
+  const location = useLocation()
   useEffect(() => {
     const htmlElement = document.documentElement
 
@@ -44,7 +45,7 @@ export default function CheckoutLayout() {
               </Link>
               <span> / </span>
             </span>
-            <span>Thanh toán</span>
+            <span>Thanh toán {location.pathname === path.checkoutSuccess && 'thành công'}</span>
           </div>
           <Disclosure>
             {({ open }) => (
@@ -67,7 +68,10 @@ export default function CheckoutLayout() {
                   leaveFrom='opacity-100 scale-100'
                   leaveTo='opacity-0 scale-95'
                 >
-                  <Disclosure.Panel as='div' className='px-4 pb-2 pt-4 text-sm text-gray-500 bg-[#fafafa]'>
+                  <Disclosure.Panel
+                    as='div'
+                    className='px-4 pb-2 pt-4 text-sm text-gray-500 bg-[#fafafa] overflow-auto w-full'
+                  >
                     <CheckoutSummary />
                   </Disclosure.Panel>
                 </Transition>

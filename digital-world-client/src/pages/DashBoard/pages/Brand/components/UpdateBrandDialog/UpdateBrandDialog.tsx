@@ -140,12 +140,12 @@ export default function UpdateBrandDialog({
                         <span>Chọn ảnh</span>
                       </Button>
                       <FormMessage />
-                      <div className='w-full h-64 border border-border rounded-md'>
+                      <div className='w-full h-52 border border-border rounded-md'>
                         {previewBrandImage || (selectedBrand && selectedBrand.image) ? (
                           <img
                             src={previewBrandImage || selectedBrand?.image}
                             alt='brand-image'
-                            className='w-full h-full object-contain'
+                            className='aspect-square w-full h-full'
                           />
                         ) : (
                           <Image className='size-full opacity-60' strokeWidth={0.8} />
@@ -160,7 +160,7 @@ export default function UpdateBrandDialog({
                 name='is_actived'
                 render={({ field }) => (
                   <FormItem className='flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
-                    <FormLabel>Trạng thái?</FormLabel>
+                    <FormLabel>Kích hoạt?</FormLabel>
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>

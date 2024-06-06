@@ -1,27 +1,28 @@
 import { useMemo } from 'react'
-import { useGetMeQuery } from 'src/redux/apis/user.api'
+import { ExtendedPurchaseCart } from 'src/types/cart.type'
 import { formatCurrency } from 'src/utils/utils'
 
 export default function CheckoutSummary() {
-  const { data: profileData } = useGetMeQuery()
-  const checkoutCart = profileData?.data.data.cart || []
+  const checkoutPurchasesCart = JSON.parse(
+    localStorage.getItem('checkout-purchases-cart') || '[]'
+  ) as ExtendedPurchaseCart[]
 
   const totalPurchaseAmount = useMemo(() => {
-    return checkoutCart.reduce((result, purchase) => result + purchase.price * purchase.buy_count, 0)
-  }, [checkoutCart])
+    return checkoutPurchasesCart.reduce((result, purchase) => result + purchase.price * purchase.buy_count, 0)
+  }, [checkoutPurchasesCart])
 
   return (
     <>
       <table className='w-full'>
         <tbody className='divide-y divide-[#e1e3e5] align-top'>
-          {checkoutCart.map((purchase) => (
+          {checkoutPurchasesCart.map((purchase) => (
             <tr key={purchase._id}>
-              <td className='py-4 pr-4 w-[60px]'>
+              <td className='py-4 pr-4'>
                 <div className='w-[58px] h-[58px] relative'>
                   <div className='border border-[#e1e3e5] rounded overflow-hidden'>
                     <img
                       src={purchase.product.thumb}
-                      alt={`${purchase.product.name}-thumb`}
+                      alt={purchase.product.name}
                       className='w-full h-full object-cover'
                     />
                   </div>
@@ -30,7 +31,7 @@ export default function CheckoutSummary() {
                   </span>
                 </div>
               </td>
-              <td className='py-4 w-3/5'>
+              <td className='py-4'>
                 <span className='font-semibold text-sm'>{purchase.product.name}</span>
               </td>
               <td className='py-4 pl-4 text-right'>
@@ -44,14 +45,14 @@ export default function CheckoutSummary() {
         <div className='grid grid-cols-3 gap-[10px]'>
           <div className='col-span-1'>Tổng phụ</div>
           <div className='col-span-2 flex justify-between'>
-            <span>{checkoutCart.length} sản phẩm</span>
+            <span>{checkoutPurchasesCart.length} sản phẩm</span>
             <span className='pl-4'>{formatCurrency(totalPurchaseAmount)}₫</span>
           </div>
         </div>
         <div className='grid grid-cols-3 gap-[10px]'>
           <div className='col-span-1'>Vận chuyển</div>
           <div className='col-span-2 flex justify-between'>
-            <span>Vận chuyển tiêu chuẩn</span>
+            <span>Giao hàng tiêu chuẩn</span>
             <span className='pl-4'>0.00₫</span>
           </div>
         </div>

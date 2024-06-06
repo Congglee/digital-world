@@ -11,6 +11,7 @@ import { userApi } from './apis/user.api'
 import { locationApi } from './apis/location.api'
 import { orderApi } from './apis/order.api'
 import { mailApi } from './apis/mail.api'
+import { paymentApi } from 'src/redux/apis/payment-method.api'
 
 const persistConfig = {
   key: 'root',
@@ -31,7 +32,8 @@ const store = configureStore({
       productApi.middleware,
       orderApi.middleware,
       locationApi.middleware,
-      mailApi.middleware
+      mailApi.middleware,
+      paymentApi.middleware
     ])
 } as ConfigureStoreOptions)
 

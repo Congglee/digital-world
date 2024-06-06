@@ -8,47 +8,66 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
 import { Switch } from 'src/components/ui/switch'
-import { useAddBrandMutation } from 'src/redux/apis/brand.api'
+import { Textarea } from 'src/components/ui/textarea'
+import { useUpdatePaymentMethodMutation } from 'src/redux/apis/payment-method.api'
 import { useUploadImagesMutation } from 'src/redux/apis/upload.api'
-import { BrandSchema, brandSchema } from 'src/utils/rules'
+import { PaymentMethod } from 'src/types/payment.type'
+import { PaymentMethodSchema, paymentMethodSchema } from 'src/utils/rules'
 import { handleValidateFile } from 'src/utils/utils'
 
-interface AddBrandDialogProps {
+interface UpdatePaymentMethodDialogProps {
   open: boolean
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+  selectedPaymentMethod: PaymentMethod | null
+  onAfterUpdate: React.Dispatch<React.SetStateAction<PaymentMethod | null>>
 }
 
-type FormData = Pick<BrandSchema, 'name' | 'image' | 'is_actived'>
-const addBrandSchema = brandSchema.pick(['name', 'image', 'is_actived'])
+type FormData = Pick<PaymentMethodSchema, 'name' | 'image' | 'is_actived' | 'description'>
+const updatePaymentMethodSchema = paymentMethodSchema.pick(['name', 'image', 'is_actived', 'description'])
 
-export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogProps) {
+export default function UpdatePaymentMethodDialog({
+  open,
+  onOpenChange,
+  selectedPaymentMethod,
+  onAfterUpdate
+}: UpdatePaymentMethodDialogProps) {
   const form = useForm<FormData>({
-    resolver: yupResolver(addBrandSchema),
-    defaultValues: { name: '', image: '', is_actived: true }
+    resolver: yupResolver(updatePaymentMethodSchema),
+    defaultValues: { name: '', image: '', is_actived: true, description: '' }
   })
-  const brandImageFileRef = useRef<HTMLInputElement>(null)
-  const [brandImageFile, setBrandImageFile] = useState<File | null>(null)
-  const previewBrandImage = useMemo(() => {
-    return brandImageFile ? URL.createObjectURL(brandImageFile) : ''
-  }, [brandImageFile])
+  const paymentMethodImageFileRef = useRef<HTMLInputElement>(null)
+  const [paymentMethodImageFile, setPaymentMethodImageFile] = useState<File | null>(null)
+  const previewPaymentMethodImage = useMemo(() => {
+    return paymentMethodImageFile ? URL.createObjectURL(paymentMethodImageFile) : ''
+  }, [paymentMethodImageFile])
+
+  useEffect(() => {
+    if (selectedPaymentMethod) {
+      const { name, image, is_actived, description } = selectedPaymentMethod
+      form.reset({ name, image, is_actived, description })
+    }
+  }, [selectedPaymentMethod])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
-  const [addBrandMutation, { isLoading, isSuccess, data }] = useAddBrandMutation()
+  const [updatePaymentMethodMutation, { isLoading, isSuccess, data }] = useUpdatePaymentMethodMutation()
 
-  const brandImage = form.watch('image')
+  const paymentMethodImage = form.watch('image')
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      let brandImageUrl = brandImage
-      if (brandImageFile) {
+      let paymentMethodImageUrl = paymentMethodImage
+      if (paymentMethodImageFile) {
         const formData = new FormData()
-        formData.append('images', brandImageFile)
+        formData.append('images', paymentMethodImageFile)
         const uploadRes = await uploadImages(formData)
         if ('data' in uploadRes && uploadRes.data) {
-          brandImageUrl = uploadRes.data.data.data[0]?.url || ''
+          paymentMethodImageUrl = uploadRes.data.data.data[0]?.url || ''
         }
       }
-      await addBrandMutation({ ...data, image: brandImageUrl })
+      await updatePaymentMethodMutation({
+        id: selectedPaymentMethod?._id as string,
+        payload: { ...data, image: paymentMethodImageUrl }
+      })
     } catch (error) {
       console.log(error)
     }
@@ -57,7 +76,7 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
   useEffect(() => {
     if (!open) {
       form.reset()
-      setBrandImageFile(null)
+      setPaymentMethodImageFile(null)
     }
   }, [open])
 
@@ -66,16 +85,17 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
       toast.success(data?.data.message)
       form.reset()
       onOpenChange(!open)
+      onAfterUpdate(null)
     }
   }, [isSuccess])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[425px] text-foreground'>
+      <DialogContent className='sm:max-w-[425px] text-foreground overflow-y-auto scroll max-h-[600px]'>
         <Form {...form}>
           <form onSubmit={onSubmit}>
             <DialogHeader>
-              <DialogTitle>Thêm mới thương hiệu</DialogTitle>
+              <DialogTitle>Cập nhật phương thức thanh toán</DialogTitle>
             </DialogHeader>
             <div className='grid gap-4 py-5'>
               <FormField
@@ -83,9 +103,9 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
                 name='name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor='name'>Tên thương hiệu</FormLabel>
+                    <FormLabel htmlFor='name'>Tên phương thức thanh toán</FormLabel>
                     <FormControl>
-                      <Input id='name' placeholder='Tên thương hiệu...' {...field} />
+                      <Input id='name' placeholder='Tên phương thức thanh toán...' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -96,7 +116,7 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
                 name='image'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ảnh thương hiệu</FormLabel>
+                    <FormLabel>Ảnh</FormLabel>
                     <div className='flex flex-col gap-4 w-full'>
                       <FormControl>
                         <Input
@@ -105,15 +125,15 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
                           className='hidden'
                           placeholder='Avatar...'
                           type='file'
-                          ref={brandImageFileRef}
-                          onChange={(event) => handleValidateFile(event, field.onChange, setBrandImageFile)}
+                          ref={paymentMethodImageFileRef}
+                          onChange={(event) => handleValidateFile(event, field.onChange, setPaymentMethodImageFile)}
                         />
                       </FormControl>
                       <Button
                         type='button'
                         variant='outline'
                         onClick={() => {
-                          brandImageFileRef.current?.click()
+                          paymentMethodImageFileRef.current?.click()
                         }}
                         className='max-w-full text-sm text-gray-600 shadow-sm space-x-2'
                       >
@@ -121,9 +141,13 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
                         <span>Chọn ảnh</span>
                       </Button>
                       <FormMessage />
-                      <div className='w-full h-64 border border-border rounded-md'>
-                        {previewBrandImage ? (
-                          <img src={previewBrandImage} alt='brand-image' className='aspect-square w-full h-full' />
+                      <div className='w-full h-40 border border-border rounded-md'>
+                        {previewPaymentMethodImage || (selectedPaymentMethod && selectedPaymentMethod.image) ? (
+                          <img
+                            src={previewPaymentMethodImage || selectedPaymentMethod?.image}
+                            alt='brand-image'
+                            className='aspect-square w-full h-full'
+                          />
                         ) : (
                           <Image className='size-full opacity-60' strokeWidth={0.8} />
                         )}
@@ -141,6 +165,19 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='description'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ghi chú thêm</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder='Ghi chú thêm...' className='h-40' {...field} />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

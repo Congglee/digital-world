@@ -4,8 +4,8 @@ export interface VietNamProvince {
   province_type: string
 }
 
-export interface VietNamProvinceList {
-  results: VietNamProvince[]
+export interface VietNamLocationList<Data> {
+  results: Data
 }
 
 export interface VietNamDistrict {
@@ -13,19 +13,11 @@ export interface VietNamDistrict {
   district_name: string
 }
 
-export interface VietNamDistricList {
-  results: VietNamDistrict[]
-}
-
 export interface VietNamWard {
   district_id: number
   ward_id: string
   ward_name: string
   ward_type: string
-}
-
-export interface VietNamWardList {
-  results: VietNamWard[]
 }
 
 export interface AutoCompleteAddress {

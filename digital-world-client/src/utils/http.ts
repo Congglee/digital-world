@@ -14,7 +14,6 @@ import {
   setRefreshTokenToLS
 } from './auth'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './helper'
-import { useAppDispatch } from 'src/redux/hook'
 
 export class Http {
   instance: AxiosInstance

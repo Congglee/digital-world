@@ -3,37 +3,38 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const VN_LOCATION_API_URL = "https://vapi.vnappmob.com/api/province";
 const GEOAPIFY_GEOCODING_API_URL = "https://api.geoapify.com/v1/geocode";
 
-const getAllVNProvinces = async (req, res) => {
-  const response = await fetch(VN_LOCATION_API_URL);
-  const provincesData = await response.json();
+const getAllProvinces = async (req, res) => {
+  const response = await fetch(`${process.env.VN_LOCATION_API_URL}/provinces`);
+  const provinces = await response.json();
   return responseSuccess(res, {
-    message: "Lấy tất cả tỉnh thành công",
-    data: provincesData,
+    message: "Lấy tất cả tỉnh thành thành công",
+    data: { results: provinces },
   });
 };
 
-const getProvinceDistrict = async (req, res) => {
+const getProvinceDistricts = async (req, res) => {
   const { province_id } = req.params;
   const response = await fetch(
-    `${VN_LOCATION_API_URL}/district/${province_id}`
+    `${process.env.VN_LOCATION_API_URL}/districts/?province_id=${province_id}`
   );
-  const districtData = await response.json();
+  const districts = await response.json();
   return responseSuccess(res, {
     message: "Lấy tất cả quận huyện thành công",
-    data: districtData,
+    data: { results: districts },
   });
 };
 
 const getDistrictWards = async (req, res) => {
   const { district_id } = req.params;
-  const response = await fetch(`${VN_LOCATION_API_URL}/ward/${district_id}`);
-  const wardsData = await response.json();
+  const response = await fetch(
+    `${process.env.VN_LOCATION_API_URL}/wards/?district_id=${district_id}`
+  );
+  const wards = await response.json();
   return responseSuccess(res, {
-    message: "Lấy tất cả phường thành công",
-    data: wardsData,
+    message: "Lấy tất cả phường xã thành công",
+    data: { results: wards },
   });
 };
 
@@ -50,8 +51,8 @@ const getAddressAutocomplete = async (req, res) => {
 };
 
 const locationController = {
-  getAllVNProvinces,
-  getProvinceDistrict,
+  getAllProvinces,
+  getProvinceDistricts,
   getDistrictWards,
   getAddressAutocomplete,
 };

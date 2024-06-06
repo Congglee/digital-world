@@ -62,6 +62,7 @@ export default function Cart() {
 
     if (!isEqual(newPurchasesCart, extendedPurchasesCart)) {
       dispatch(setExtendedPurchasesCart(newPurchasesCart))
+      localStorage.setItem('checkout-purchases-cart', JSON.stringify(newPurchasesCart))
     }
   }, [userCart])
 
@@ -283,7 +284,10 @@ export default function Cart() {
               <hr className='my-5 mx-auto w-[50px] border-t border-[#1c1d1d]' />
               <p className='text-sm mb-[10px]'>Giỏ hàng của bạn hiện đang trống.</p>
               <p className='text-sm'>
-                Tiếp tục mua hàng <Link to={path.products}>tại đây</Link>
+                Tiếp tục mua hàng{' '}
+                <Link to={path.products} className='hover:text-purple'>
+                  tại đây
+                </Link>
               </p>
             </div>
           </>

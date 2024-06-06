@@ -7,12 +7,12 @@ const commonLocationRouter = Router();
 
 commonLocationRouter.get(
   "/get-provinces",
-  wrapAsync(locationController.getAllVNProvinces)
+  wrapAsync(locationController.getAllProvinces)
 );
 
 commonLocationRouter.get(
   "/get-province-districts/:province_id",
-  wrapAsync(locationController.getProvinceDistrict)
+  wrapAsync(locationController.getProvinceDistricts)
 );
 
 commonLocationRouter.get(

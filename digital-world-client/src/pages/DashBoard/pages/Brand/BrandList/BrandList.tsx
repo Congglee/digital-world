@@ -1,7 +1,7 @@
 import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
-import { Image, PlusCircle, Trash2 } from 'lucide-react'
+import { PlusCircle, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
@@ -106,23 +106,6 @@ export default function BrandList() {
       cell: ({ row }) => {
         return <div className='font-medium'>{row.getValue('name')}</div>
       }
-    },
-    {
-      accessorKey: 'image',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Ảnh' />,
-      footer: 'Ảnh',
-      cell: ({ row }) => {
-        return (
-          <div className='w-24 rounded-md overflow-hidden'>
-            {row.getValue('image') ? (
-              <img src={row.getValue('image')} alt='brand-image' className='w-full h-full object-cover' />
-            ) : (
-              <Image className='size-full opacity-60' strokeWidth={0.8} />
-            )}
-          </div>
-        )
-      },
-      enableSorting: false
     },
     {
       accessorKey: 'is_actived',
