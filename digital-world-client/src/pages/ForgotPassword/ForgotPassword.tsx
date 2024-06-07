@@ -32,7 +32,7 @@ export default function ForgotPassword() {
   })
 
   useEffect(() => {
-    const handleSendResetPassswordMail = async (token: string) => {
+    const handleSendResetPasswordMail = async (token: string) => {
       const htmlContent = generateResetPasswordEmail(token)
       await sendMailMutation({
         email: getValues('email'),
@@ -41,7 +41,7 @@ export default function ForgotPassword() {
       })
     }
     if (isSuccess) {
-      handleSendResetPassswordMail(data?.data.data.reset_password_token)
+      handleSendResetPasswordMail(data?.data.data.reset_password_token)
     }
   }, [isSuccess])
 
