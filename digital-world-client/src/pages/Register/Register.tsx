@@ -30,7 +30,7 @@ export default function Register() {
     resolver: yupResolver(registerSchema)
   })
 
-  const [registerMutation, { isLoading, isSuccess, isError, data, error }] = useRegisterMutation()
+  const [registerMutation, { isSuccess, isError, data, error }] = useRegisterMutation()
   const [sendMailMutation, sendMailMutationResult] = useSendCommonMailMutation()
   const [open, setOpen] = useState(false)
 
@@ -48,7 +48,7 @@ export default function Register() {
   })
 
   useEffect(() => {
-    const handleSendMail = async (otpCode: string) => {
+    const handleSendRegistrationMail = async (otpCode: string) => {
       const htmlContent = generateRegistrationEmail(otpCode)
       await sendMailMutation({
         email: getValues('email'),
@@ -57,7 +57,7 @@ export default function Register() {
       })
     }
     if (isSuccess) {
-      handleSendMail(data?.data.data.otp_code)
+      handleSendRegistrationMail(data?.data.data.otp_code)
     }
   }, [isSuccess])
 
@@ -124,8 +124,8 @@ export default function Register() {
               <Button
                 type='submit'
                 className='w-full text-center uppercase bg-purple py-[11px] px-[15px] text-sm text-white hover:bg-[#333] hover:opacity-90 transition-colors flex items-center justify-center gap-2'
-                disabled={sendMailMutationResult.isLoading || isLoading}
-                isLoading={sendMailMutationResult.isLoading || isLoading}
+                disabled={sendMailMutationResult.isLoading}
+                isLoading={sendMailMutationResult.isLoading}
               >
                 Đăng ký
               </Button>

@@ -28,7 +28,7 @@ const tagTypes = ['User'] as const
 
 type BodyUpdateProfile = Omit<
   User,
-  '_id' | 'wishlist' | 'cart' | 'roles' | 'is_blocked' | 'email' | 'createdAt' | 'updatedAt'
+  '_id' | 'wishlist' | 'cart' | 'roles' | 'is_blocked' | 'email' | 'createdAt' | 'updatedAt' | 'is_email_verified'
 > & {
   password?: string
   newPassword?: string

@@ -11,6 +11,9 @@ import { useGetAllPaymentMethodsQuery } from 'src/redux/apis/payment-method.api'
 import { useGetMeQuery } from 'src/redux/apis/user.api'
 import { CircleCheckBig } from 'src/components/Icons/Icons'
 import { cn } from 'src/utils/utils'
+import { useSendCommonMailMutation } from 'src/redux/apis/mail.api'
+import { Order } from 'src/types/order.type'
+import { generateOrderNotifyEmail } from 'src/utils/mail'
 
 export default function CheckoutPayment() {
   const { data: profileData } = useGetMeQuery()
@@ -29,9 +32,12 @@ export default function CheckoutPayment() {
     }
   }, [paymentMethodData])
 
-  const [addOrder, { data, isSuccess, isLoading }] = useAddOrderMutation()
+  const [addOrder, { data, isSuccess }] = useAddOrderMutation()
+  const [sendMail, sendMailResult] = useSendCommonMailMutation()
 
-  const orderDeliveryAt = `${checkoutProfile.delivery_at}, ${checkoutProfile.province}, ${checkoutProfile.district} ${checkoutProfile.ward && `, ${checkoutProfile.ward}`}`
+  const orderDeliveryAt = checkoutProfile
+    ? `${checkoutProfile.delivery_at}, ${checkoutProfile.province}, ${checkoutProfile.district} ${checkoutProfile.ward && `, ${checkoutProfile.ward}`}`
+    : ''
 
   const handleBuyPurchases = async () => {
     if (profile && profile.cart.length > 0) {
@@ -54,11 +60,27 @@ export default function CheckoutPayment() {
   }
 
   useEffect(() => {
+    const handleSendOrderNotifyMail = async (order: Order) => {
+      const htmlContent = generateOrderNotifyEmail(order)
+      await sendMail({
+        email: order.order_by.user_email,
+        subject: 'Thông báo: Đơn hàng của bạn đã được đặt thành công!',
+        content: htmlContent
+      })
+    }
+
     if (isSuccess) {
-      toast.success(data?.data.message)
-      navigate(path.checkoutSuccess.replace(':order_id', data?.data.data._id))
+      handleSendOrderNotifyMail(data?.data.data)
     }
   }, [isSuccess])
+
+  useEffect(() => {
+    if (sendMailResult.isSuccess) {
+      toast.success(data?.data.message)
+      navigate(path.checkoutSuccess.replace(':order_id', data?.data.data._id as string))
+      localStorage.removeItem('checkout-profile')
+    }
+  }, [sendMailResult.isSuccess])
 
   if (!profile) return null
 
@@ -143,8 +165,8 @@ export default function CheckoutPayment() {
             type='button'
             className='flex items-center justify-center gap-2 p-5 text-white bg-[#3a3a3a] shadow-[0_1px_0_rgba(0,_0,_0,_.05),_inset_0_-1px_0_rgba(0,_0,_0,_0.2)] hover:bg-purple transition-colors'
             onClick={handleBuyPurchases}
-            disabled={isLoading}
-            isLoading={isLoading}
+            disabled={sendMailResult.isLoading}
+            isLoading={sendMailResult.isLoading}
           >
             Đặt Đơn
           </Button>

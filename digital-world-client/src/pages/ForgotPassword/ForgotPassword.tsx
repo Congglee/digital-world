@@ -24,7 +24,7 @@ export default function ForgotPassword() {
     resolver: yupResolver(forgotPasswordSchema)
   })
 
-  const [forgotPasswordMutation, { isLoading, isSuccess, data }] = useForgotPasswordMutation()
+  const [forgotPasswordMutation, { isSuccess, data }] = useForgotPasswordMutation()
   const [sendMailMutation, sendMailMutationResult] = useSendCommonMailMutation()
 
   const onSubmit = handleSubmit(async (data) => {
@@ -32,7 +32,7 @@ export default function ForgotPassword() {
   })
 
   useEffect(() => {
-    const handleSendMail = async (token: string) => {
+    const handleSendResetPassswordMail = async (token: string) => {
       const htmlContent = generateResetPasswordEmail(token)
       await sendMailMutation({
         email: getValues('email'),
@@ -41,7 +41,7 @@ export default function ForgotPassword() {
       })
     }
     if (isSuccess) {
-      handleSendMail(data?.data.data.reset_password_token)
+      handleSendResetPassswordMail(data?.data.data.reset_password_token)
     }
   }, [isSuccess])
 
@@ -72,8 +72,8 @@ export default function ForgotPassword() {
               <Button
                 type='submit'
                 className='w-full text-center uppercase bg-purple py-[11px] px-[15px] text-sm text-white hover:bg-[#333] hover:opacity-90 transition-colors flex items-center justify-center gap-2'
-                disabled={sendMailMutationResult.isLoading || isLoading}
-                isLoading={sendMailMutationResult.isLoading || isLoading}
+                disabled={sendMailMutationResult.isLoading}
+                isLoading={sendMailMutationResult.isLoading}
               >
                 Xác nhận
               </Button>
