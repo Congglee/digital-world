@@ -16,6 +16,10 @@ const sendNotifyMailRules = () => {
   ];
 };
 
-const mailMiddleware = { sendNotifyMailRules };
+const sendCommonMailRules = () => {
+  return sendNotifyMailRules();
+};
+
+const mailMiddleware = { sendNotifyMailRules, sendCommonMailRules };
 
 export default mailMiddleware;

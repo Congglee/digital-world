@@ -33,6 +33,7 @@ export default function SettingsSendMail() {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.data.message)
+      form.reset()
     }
   }, [isSuccess])
 

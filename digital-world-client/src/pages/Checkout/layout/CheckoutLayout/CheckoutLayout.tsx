@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import logo from 'src/assets/images/logo.png'
 import path from 'src/constants/path'
 import CheckoutSummary from 'src/pages/Checkout/components/CheckoutSummary'
-import { CreditCard, MasterCard, Paypal, ShoppingBag, Visa } from 'src/utils/icons'
+import { CreditCard, MasterCard, Paypal, ShoppingBag, Visa } from 'src/components/Icons/Icons'
 import { cn } from 'src/utils/utils'
 
 export default function CheckoutLayout() {

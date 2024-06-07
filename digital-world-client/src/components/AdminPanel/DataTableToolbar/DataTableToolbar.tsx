@@ -12,7 +12,7 @@ import {
   paymentStatusOptions,
   ratingsOptions,
   rolesOptions
-} from 'src/constants/options'
+} from 'src/static/options'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>

@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
-import { allowedRoles } from './constants/data'
+import { allowedRoles } from './static/data'
 import path from './constants/path'
 import DashboardLayout from './layouts/DashboardLayout'
 import MainLayout from './layouts/MainLayout'

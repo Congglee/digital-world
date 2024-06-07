@@ -6,6 +6,8 @@ import Breadcrumbs from 'src/components/Breadcrumbs'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import { useForgotPasswordMutation } from 'src/redux/apis/auth.api'
+import { useSendCommonMailMutation } from 'src/redux/apis/mail.api'
+import { generateResetPasswordEmail } from 'src/utils/mail'
 import { Schema, schema } from 'src/utils/rules'
 
 type FormData = Pick<Schema, 'email'>
@@ -16,22 +18,38 @@ export default function ForgotPassword() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    getValues
   } = useForm<FormData>({
     resolver: yupResolver(forgotPasswordSchema)
   })
 
   const [forgotPasswordMutation, { isLoading, isSuccess, data }] = useForgotPasswordMutation()
+  const [sendMailMutation, sendMailMutationResult] = useSendCommonMailMutation()
 
   const onSubmit = handleSubmit(async (data) => {
     await forgotPasswordMutation(data)
   })
 
   useEffect(() => {
+    const handleSendMail = async (token: string) => {
+      const htmlContent = generateResetPasswordEmail(token)
+      await sendMailMutation({
+        email: getValues('email'),
+        subject: 'Quên mật khẩu - Digital World 2',
+        content: htmlContent
+      })
+    }
     if (isSuccess) {
-      toast.success(data?.data.message)
+      handleSendMail(data?.data.data.reset_password_token)
     }
   }, [isSuccess])
+
+  useEffect(() => {
+    if (sendMailMutationResult.isSuccess) {
+      toast.success(data?.data.message)
+    }
+  }, [sendMailMutationResult.isSuccess])
 
   return (
     <>
@@ -54,8 +72,8 @@ export default function ForgotPassword() {
               <Button
                 type='submit'
                 className='w-full text-center uppercase bg-purple py-[11px] px-[15px] text-sm text-white hover:bg-[#333] hover:opacity-90 transition-colors flex items-center justify-center gap-2'
-                disabled={isLoading}
-                isLoading={isLoading}
+                disabled={sendMailMutationResult.isLoading || isLoading}
+                isLoading={sendMailMutationResult.isLoading || isLoading}
               >
                 Xác nhận
               </Button>

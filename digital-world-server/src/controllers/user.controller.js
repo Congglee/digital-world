@@ -21,6 +21,7 @@ const addUser = async (req, res) => {
     roles,
     avatar,
     is_blocked,
+    is_email_verified,
   } = form;
   const userInDB = await UserModel.findOne({ email: email }).exec();
   if (!userInDB) {
@@ -38,6 +39,7 @@ const addUser = async (req, res) => {
       phone,
       avatar,
       is_blocked,
+      is_email_verified,
     };
     Object.keys(user).forEach(
       (key) => user[key] === undefined && delete user[key]
@@ -158,6 +160,7 @@ const updateUser = async (req, res) => {
     roles,
     is_blocked,
     avatar,
+    is_email_verified,
   } = form;
   const user = omitBy(
     {
@@ -172,6 +175,7 @@ const updateUser = async (req, res) => {
       roles,
       is_blocked,
       avatar,
+      is_email_verified,
     },
     (value) => value === undefined
   );

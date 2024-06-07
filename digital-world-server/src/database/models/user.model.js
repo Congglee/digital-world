@@ -23,10 +23,12 @@ const UserSchema = new Schema(
     avatar: { type: String, maxlength: 1000 },
     cart: [CartSchema],
     is_blocked: { type: Boolean, default: false },
-    // is_email_verified: { type: Boolean, default: true },
     wishlist: [{ type: mongoose.SchemaTypes.ObjectId, ref: "products" }],
     password_reset_token: { type: String },
     password_reset_expires: { type: String },
+
+    unverified_delete_at: { type: Date }, // The field used for cronjob to delete users from the database when the registration email authentication has not been completed after 5 minutes
+    is_email_verified: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

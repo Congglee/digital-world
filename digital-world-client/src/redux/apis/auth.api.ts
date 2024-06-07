@@ -34,13 +34,19 @@ export const authApi = createApi({
           }
         }
       }),
-      register: build.mutation<AxiosResponse<SuccessResponse<string>>, Pick<Schema, 'name' | 'email' | 'password'>>({
+      register: build.mutation<
+        AxiosResponse<SuccessResponse<{ otp_code: string }>>,
+        Pick<Schema, 'name' | 'email' | 'password'>
+      >({
         query: (payload) => ({ url: URL_REGISTER, method: 'POST', data: payload })
       }),
       finalRegister: build.mutation<AxiosResponse<AuthResponse>, { token: string }>({
         query: (payload) => ({ url: `${URL_FINAL_REGISTER}/${payload.token}`, method: 'PUT', data: payload })
       }),
-      forgotPassword: build.mutation<AxiosResponse<SuccessResponse<string>>, Pick<Schema, 'email'>>({
+      forgotPassword: build.mutation<
+        AxiosResponse<SuccessResponse<{ reset_password_token: string }>>,
+        Pick<Schema, 'email'>
+      >({
         query: (payload) => ({ url: URL_FORGOT_PASSWORD, method: 'POST', data: payload })
       }),
       resetPassword: build.mutation<AxiosResponse<SuccessResponse<string>>, { token: string; password: string }>({

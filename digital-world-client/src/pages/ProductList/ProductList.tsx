@@ -9,7 +9,7 @@ import { useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import { useGetProductsQuery } from 'src/redux/apis/product.api'
 import { ListConfig } from 'src/types/utils.type'
-import { FilterIcon } from 'src/utils/icons'
+import { FilterIcon } from 'src/components/Icons/Icons'
 import FilterDrawer from './components/FilterDrawer'
 
 export default function ProductList() {

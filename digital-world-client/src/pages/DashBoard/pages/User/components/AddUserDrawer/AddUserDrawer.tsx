@@ -12,7 +12,6 @@ import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popov
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'src/components/ui/sheet'
 import { Switch } from 'src/components/ui/switch'
-import { rolesOptions } from 'src/constants/options'
 import {
   useGetAllVNProvincesQuery,
   useGetDistrictWardsQuery,
@@ -26,6 +25,7 @@ import { cn } from 'src/utils/utils'
 import DistrictPicker from 'src/components/AdminPanel/DistrictPicker'
 import ProvincePicker from 'src/components/AdminPanel/ProvincePicker'
 import WardPicker from 'src/components/AdminPanel/WardPicker'
+import { rolesOptions } from 'src/static/options'
 
 interface AddUserDrawerProps {
   open: boolean
@@ -45,6 +45,7 @@ export type FormData = Pick<
   | 'roles'
   | 'is_blocked'
   | 'password'
+  | 'is_email_verified'
 >
 const addUserSchema = userSchema.pick([
   'name',
@@ -57,7 +58,8 @@ const addUserSchema = userSchema.pick([
   'ward',
   'date_of_birth',
   'roles',
-  'is_blocked'
+  'is_blocked',
+  'is_email_verified'
 ])
 
 const initialFormState = {
@@ -71,7 +73,8 @@ const initialFormState = {
   phone: '',
   roles: [],
   date_of_birth: new Date(1990, 0, 1),
-  is_blocked: false
+  is_blocked: false,
+  is_email_verified: false
 }
 
 export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps) {
@@ -375,6 +378,23 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
                         <FormLabel>Khóa tài khoản?</FormLabel>
                         <FormControl>
                           <Switch checked={field.value} onCheckedChange={field.onChange} style={{ marginTop: 0 }} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='is_email_verified'
+                    render={({ field }) => (
+                      <FormItem className='flex items-center gap-4'>
+                        <FormLabel>Xác thực email?</FormLabel>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            style={{ marginTop: 0 }}
+                            disabled
+                          />
                         </FormControl>
                       </FormItem>
                     )}

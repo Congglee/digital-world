@@ -13,6 +13,7 @@ import commonRoutes from "./routes/common/index.route";
 import adminRoutes from "./routes/admin/index.route";
 import userRoutes from "./routes/user/index.route";
 import { responseError } from "./utils/response";
+import "./cron-jobs/user-cleanup";
 
 const app = express();
 connectMongoDB();

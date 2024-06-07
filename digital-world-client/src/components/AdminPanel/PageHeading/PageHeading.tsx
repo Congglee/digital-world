@@ -15,7 +15,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from 'src/components/ui/dropdown-menu'
-import { CSV, PDF, Preview } from 'src/utils/icons'
+import { CSV, PDF, Preview } from 'src/components/Icons/Icons'
 import CalendarDateRangePicker from '../CalendarDateRangePicker'
 
 interface PageHeadingProps {

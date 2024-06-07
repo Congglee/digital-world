@@ -2,11 +2,11 @@ import DOMPurify from 'dompurify'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { tabOptions } from 'src/constants/options'
 import { Product } from 'src/types/product.type'
 import { cn } from 'src/utils/utils'
 import ProductReview from '../ProductReview'
 import { useAppSelector } from 'src/redux/hook'
+import { tabOptions } from 'src/static/options'
 
 interface ProductDetailTabsProps {
   product: Product

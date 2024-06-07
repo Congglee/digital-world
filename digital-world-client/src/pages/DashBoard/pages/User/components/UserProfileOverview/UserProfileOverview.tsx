@@ -15,7 +15,7 @@ import {
 } from 'src/components/ui/table'
 import path from 'src/constants/path'
 import { Order } from 'src/types/order.type'
-import { Bill, Coupon } from 'src/utils/icons'
+import { Bill, Coupon } from 'src/components/Icons/Icons'
 import { cn, formatCurrency } from 'src/utils/utils'
 
 interface UserProfileOverviewProps {

@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { hotCollections } from 'src/constants/data'
+import { hotCollections } from 'src/static/data'
 
 export default function HotCollectionsSection() {
   return (

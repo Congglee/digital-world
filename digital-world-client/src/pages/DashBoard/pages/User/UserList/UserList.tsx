@@ -201,6 +201,31 @@ export default function UserList() {
       }
     },
     {
+      accessorKey: 'is_email_verified',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Xác thực email?' />,
+      footer: 'Xác thực email?',
+      cell: ({ row }) => {
+        return (
+          <div className='font-medium flex items-center gap-2'>
+            {row.getValue('is_email_verified') ? (
+              <>
+                <Circle color='#11d30d' fill='#11d30d' className='size-4' />
+                <span>Đã xác thực</span>
+              </>
+            ) : (
+              <>
+                <Circle color='#d41111' fill='#d41111' className='size-4' />
+                <span>Chưa xác thực</span>
+              </>
+            )}
+          </div>
+        )
+      },
+      filterFn: (row, id, value) => {
+        return value.includes(row.getValue(id)!.toString())
+      }
+    },
+    {
       id: 'actions',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Thao tác' />,
       cell: ({ row }) => (

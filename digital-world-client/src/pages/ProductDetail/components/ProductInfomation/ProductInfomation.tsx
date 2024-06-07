@@ -8,7 +8,7 @@ import ProductRating from 'src/components/ProductRating'
 import QuantityController from 'src/components/QuantityController'
 import { useAddToCartMutation } from 'src/redux/apis/user.api'
 import { Product } from 'src/types/product.type'
-import { Facebook, Pinterest, Twitter } from 'src/utils/icons'
+import { Facebook, Pinterest, Twitter } from 'src/components/Icons/Icons'
 import { formatCurrency } from 'src/utils/utils'
 
 interface ProductInfomationProps {

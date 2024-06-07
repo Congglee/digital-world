@@ -8,6 +8,7 @@ export const MAIL_URL = 'mail'
 export const ADMIN_MAIL_URL = `admin/${MAIL_URL}`
 
 export const URL_SEND_NOTIFY_MAIL = `${ADMIN_MAIL_URL}/send-notify-mail`
+export const URL_SEND_COMMON_MAIL = `${MAIL_URL}/send-mail`
 
 const reducerPath = 'mail/api' as const
 const tagTypes = ['Mail'] as const
@@ -22,8 +23,14 @@ export const mailApi = createApi({
       Pick<MailSchema, 'email' | 'subject' | 'content'>
     >({
       query: (payload) => ({ url: URL_SEND_NOTIFY_MAIL, method: 'POST', data: payload })
+    }),
+    sendCommonMail: build.mutation<
+      AxiosResponse<SuccessResponse<string>>,
+      Pick<MailSchema, 'email' | 'subject' | 'content'>
+    >({
+      query: (payload) => ({ url: URL_SEND_COMMON_MAIL, method: 'POST', data: payload })
     })
   })
 })
 
-export const { useSendNotifyMailMutation } = mailApi
+export const { useSendNotifyMailMutation, useSendCommonMailMutation } = mailApi

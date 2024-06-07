@@ -11,7 +11,7 @@ import {
   Pinterest,
   Twitter,
   Visa
-} from 'src/utils/icons'
+} from 'src/components/Icons/Icons'
 
 function Newsletter() {
   return (

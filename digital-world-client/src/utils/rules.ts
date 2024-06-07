@@ -136,6 +136,7 @@ export const userSchema = yup.object({
   avatar: yup.string().max(1000, 'Độ dài tối đa là 1000 ký tự'),
   date_of_birth: yup.date().max(new Date(), 'Hãy chọn một ngày trong quá khứ'),
   is_blocked: yup.boolean().required('Vui lòng chọn trạng thái tài khoản'),
+  is_email_verified: yup.boolean().required('Vui lòng chọn trạng thái xác thực email'),
   roles: yup.array().of(yup.string()).min(1, 'Vui lòng chọn vai trò cho tài khoản').required(),
   password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
   new_password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,

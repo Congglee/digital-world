@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from 'src/components/ui/sheet'
 import path from 'src/constants/path'
 import { cn } from 'src/utils/utils'
 import Search from '../Search'
-import { Brand, Category, Website } from 'src/utils/icons'
+import { Brand, Category, Website } from 'src/components/Icons/Icons'
 import { useHorizontalScroll } from 'src/hooks/useSideScroll'
 
 interface MenuNavProps extends React.HTMLAttributes<HTMLElement> {

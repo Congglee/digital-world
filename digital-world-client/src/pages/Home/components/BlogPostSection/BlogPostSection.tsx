@@ -1,7 +1,7 @@
 import { CalendarDays, MessageCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
-import { blogPosts } from 'src/constants/data'
+import { blogPosts } from 'src/static/data'
 
 export default function BlogPostSection() {
   return (

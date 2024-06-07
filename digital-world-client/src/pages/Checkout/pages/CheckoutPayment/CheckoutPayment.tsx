@@ -9,7 +9,7 @@ import { type FormData as CheckoutProfileType } from 'src/pages/Checkout/pages/C
 import { useAddOrderMutation } from 'src/redux/apis/order.api'
 import { useGetAllPaymentMethodsQuery } from 'src/redux/apis/payment-method.api'
 import { useGetMeQuery } from 'src/redux/apis/user.api'
-import { CircleCheckBig } from 'src/utils/icons'
+import { CircleCheckBig } from 'src/components/Icons/Icons'
 import { cn } from 'src/utils/utils'
 
 export default function CheckoutPayment() {

@@ -33,13 +33,24 @@ type BodyUpdateProfile = Omit<
   password?: string
   newPassword?: string
 }
-type BodyUpdateUser =
-  | Omit<User, '_id' | 'wishlist' | 'cart' | 'createdAt' | 'updatedAt' | 'email'>
-  | { password?: string }
-type BodyAddUser = Pick<
+
+type BaseUserMutationFields = Pick<
   User,
-  'name' | 'email' | 'address' | 'province' | 'district' | 'ward' | 'is_blocked' | 'roles' | 'phone' | 'date_of_birth'
-> & { password: string }
+  | 'name'
+  | 'email'
+  | 'address'
+  | 'province'
+  | 'district'
+  | 'ward'
+  | 'is_blocked'
+  | 'roles'
+  | 'phone'
+  | 'date_of_birth'
+  | 'is_email_verified'
+>
+
+type BodyAddUser = BaseUserMutationFields & { password: string }
+type BodyUpdateUser = BaseUserMutationFields & { password?: string }
 
 export const userApi = createApi({
   reducerPath,

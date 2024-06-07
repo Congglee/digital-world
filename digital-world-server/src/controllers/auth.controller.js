@@ -12,12 +12,8 @@ import {
   hashValue,
 } from "../utils/crypt";
 import { signToken } from "../utils/jwt";
-import {
-  registrationEmailTemplate,
-  resetPasswordEmailTemplate,
-  sendMail,
-} from "../utils/mail.js";
 import { ErrorHandler, responseSuccess } from "../utils/response";
+import { generateOTP } from "../utils/utils.js";
 
 const getExpire = (req) => {
   let expireAccessTokenConfig = Number(req.headers["expire-access-token"]);
@@ -40,31 +36,25 @@ const registerController = async (req, res) => {
   const userInDB = await UserModel.findOne({ email: email }).exec();
 
   if (!userInDB) {
-    const token = uuidv4();
-    const emailEdited = btoa(email) + "@" + token;
+    const otpCode = generateOTP();
     const hashedPassword = hashValue(password);
-    const userAdd = new UserModel({
+    const emailEdited = `${btoa(email)}@${otpCode}`;
+    const unVerifiedDeleteAt = new Date(Date.now() + 300000);
+
+    const userAdd = await new UserModel({
       name,
-      password: hashedPassword,
       email: emailEdited,
+      password: hashedPassword,
+      unverified_delete_at: unVerifiedDeleteAt,
     }).save();
 
     if (userAdd) {
-      const html = registrationEmailTemplate(token);
-      await sendMail({
-        email,
-        html,
-        subject: "Xác nhận đăng ký tài khoản Digital World 2",
-      });
+      const response = {
+        message: "Vui lòng kiểm tra email của bạn để kích hoạt tài khoản",
+        data: { otp_code: otpCode },
+      };
+      return responseSuccess(res, response);
     }
-    setTimeout(async () => {
-      await UserModel.deleteOne({ email: emailEdited });
-    }, [300000]);
-
-    const response = {
-      message: "Vui lòng kiểm tra email của bạn để kích hoạt tài khoản",
-    };
-    return responseSuccess(res, response);
   }
   throw new ErrorHandler(STATUS.BAD_REQUEST, "Email đã tồn tại");
 };
@@ -77,7 +67,10 @@ const finalRegisterController = async (req, res) => {
   });
   if (notActiveEmail) {
     notActiveEmail.email = atob(notActiveEmail?.email?.split("@")[0]);
+    notActiveEmail.is_email_verified = true;
+    notActiveEmail.unverified_delete_at = null;
     notActiveEmail.save();
+
     const payloadJWT = {
       email: notActiveEmail.email,
       id: notActiveEmail._id,
@@ -112,7 +105,7 @@ const finalRegisterController = async (req, res) => {
         expires: config.EXPIRE_ACCESS_TOKEN,
         refresh_token,
         expires_refresh_token: expireRefreshTokenConfig,
-        user: omit(notActiveEmail, ["password"]),
+        user: omit(notActiveEmail.toObject(), ["password"]),
       },
     };
     return responseSuccess(res, response);
@@ -225,15 +218,9 @@ const forgotPasswordController = async (req, res) => {
     userInDB.password_reset_expires = passwordResetExpires;
     await userInDB.save();
 
-    const html = resetPasswordEmailTemplate(resetToken);
-    await sendMail({
-      email,
-      html,
-      subject: "Quên mật khẩu",
-    });
-
     const response = {
       message: "Vui lòng xác thực lấy lại mật khẩu trong email",
+      data: { reset_password_token: resetToken },
     };
     return responseSuccess(res, response);
   }
@@ -257,7 +244,10 @@ const resetPasswordController = async (req, res) => {
     const response = { message: "Thay đổi mật khẩu thành công" };
     return responseSuccess(res, response);
   }
-  throw new ErrorHandler(STATUS.BAD_REQUEST, "Reset token không hợp lệ");
+  throw new ErrorHandler(
+    STATUS.BAD_REQUEST,
+    "Reset password token không hợp lệ"
+  );
 };
 
 const authController = {

@@ -12,6 +12,8 @@ import { useRegisterMutation } from 'src/redux/apis/auth.api'
 import { Schema, schema } from 'src/utils/rules'
 import { isEntityError } from 'src/utils/helper'
 import FinalRegisterModal from './components/FinalRegisterModal'
+import { useSendCommonMailMutation } from 'src/redux/apis/mail.api'
+import { generateRegistrationEmail } from 'src/utils/mail'
 
 type FormData = Pick<Schema, 'name' | 'email' | 'password' | 'confirm_password'>
 
@@ -22,12 +24,14 @@ export default function Register() {
     register,
     setError,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    getValues
   } = useForm<FormData>({
     resolver: yupResolver(registerSchema)
   })
 
   const [registerMutation, { isLoading, isSuccess, isError, data, error }] = useRegisterMutation()
+  const [sendMailMutation, sendMailMutationResult] = useSendCommonMailMutation()
   const [open, setOpen] = useState(false)
 
   const closeModal = () => {
@@ -44,11 +48,25 @@ export default function Register() {
   })
 
   useEffect(() => {
+    const handleSendMail = async (otpCode: string) => {
+      const htmlContent = generateRegistrationEmail(otpCode)
+      await sendMailMutation({
+        email: getValues('email'),
+        subject: 'Xác nhận đăng ký tài khoản Digital World 2',
+        content: htmlContent
+      })
+    }
     if (isSuccess) {
+      handleSendMail(data?.data.data.otp_code)
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+    if (sendMailMutationResult.isSuccess) {
       toast.success(data?.data.message)
       openModal()
     }
-  }, [isSuccess])
+  }, [sendMailMutationResult.isSuccess])
 
   useEffect(() => {
     if (isError && isEntityError(error)) {
@@ -106,8 +124,8 @@ export default function Register() {
               <Button
                 type='submit'
                 className='w-full text-center uppercase bg-purple py-[11px] px-[15px] text-sm text-white hover:bg-[#333] hover:opacity-90 transition-colors flex items-center justify-center gap-2'
-                disabled={isLoading}
-                isLoading={isLoading}
+                disabled={sendMailMutationResult.isLoading || isLoading}
+                isLoading={sendMailMutationResult.isLoading || isLoading}
               >
                 Đăng ký
               </Button>

@@ -81,6 +81,11 @@ const addUserRules = () => {
       .withMessage("Trạng thái tài khoản không được để trống")
       .isBoolean()
       .withMessage("Trạng thái tài khoản không đúng định dạng"),
+    body("is_email_verified")
+      .exists()
+      .withMessage("Trạng thái xác thực tài khoản không được để trống")
+      .isBoolean()
+      .withMessage("Trạng thái xác thực tài khoản không đúng định dạng"),
   ];
 };
 
@@ -126,6 +131,10 @@ const updateUserRules = () => {
       .if((value) => value !== undefined)
       .isBoolean()
       .withMessage("Trạng thái tài khoản không đúng định dạng"),
+    body("is_email_verified")
+      .if((value) => value !== undefined)
+      .isBoolean()
+      .withMessage("Trạng thái xác thực tài khoản không đúng định dạng"),
     body("password")
       .if((value) => value !== undefined)
       .isLength({ min: 6, max: 160 })

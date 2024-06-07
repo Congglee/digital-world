@@ -21,8 +21,17 @@ const sendNotifyMail = async (req, res) => {
   throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
 };
 
+const sendCommonMail = async (req, res) => {
+  const form = req.body;
+  const { email, content, subject } = form;
+  await sendMail({ email, html: content, subject });
+  const response = { message: "Đã gửi mail đến người dùng thành công" };
+  return responseSuccess(res, response);
+};
+
 const mailController = {
   sendNotifyMail,
+  sendCommonMail,
 };
 
 export default mailController;
