@@ -1,5 +1,11 @@
-import { Lock, ShieldCheck } from 'lucide-react'
+import { Check, ShieldBan, X } from 'lucide-react'
 import ProductRating from 'src/components/ProductRating'
+
+export type Option = {
+  label: string
+  value: string
+  icon?: any
+}
 
 export const rolesOptions = [
   {
@@ -16,16 +22,21 @@ export const rolesOptions = [
   }
 ]
 
-export const isBlockedOptions = [
+export const verifyOptions = [
   {
-    label: 'Hoạt động',
-    value: 'false',
-    icon: ShieldCheck
+    label: 'Chưa xác thực',
+    value: '0',
+    icon: X
+  },
+  {
+    label: 'Đã xác thực',
+    value: '1',
+    icon: Check
   },
   {
     label: 'Bị khóa',
-    value: 'true',
-    icon: Lock
+    value: '2',
+    icon: ShieldBan
   }
 ]
 

@@ -11,7 +11,6 @@ import { Input } from 'src/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'src/components/ui/sheet'
-import { Switch } from 'src/components/ui/switch'
 import {
   useGetAllVNProvincesQuery,
   useGetDistrictWardsQuery,
@@ -25,7 +24,8 @@ import { cn } from 'src/utils/utils'
 import DistrictPicker from 'src/components/AdminPanel/DistrictPicker'
 import ProvincePicker from 'src/components/AdminPanel/ProvincePicker'
 import WardPicker from 'src/components/AdminPanel/WardPicker'
-import { rolesOptions } from 'src/static/options'
+import { rolesOptions, verifyOptions } from 'src/static/options'
+import Combobox from 'src/components/AdminPanel/Combobox'
 
 interface AddUserDrawerProps {
   open: boolean
@@ -43,9 +43,8 @@ export type FormData = Pick<
   | 'ward'
   | 'date_of_birth'
   | 'roles'
-  | 'is_blocked'
   | 'password'
-  | 'is_email_verified'
+  | 'verify'
 >
 const addUserSchema = userSchema.pick([
   'name',
@@ -58,8 +57,7 @@ const addUserSchema = userSchema.pick([
   'ward',
   'date_of_birth',
   'roles',
-  'is_blocked',
-  'is_email_verified'
+  'verify'
 ])
 
 const initialFormState = {
@@ -73,8 +71,7 @@ const initialFormState = {
   phone: '',
   roles: [],
   date_of_birth: new Date(1990, 0, 1),
-  is_blocked: false,
-  is_email_verified: false
+  verify: 0
 }
 
 export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps) {
@@ -105,6 +102,10 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
 
   const handleSelectWard = (wardValue: string) => {
     form.setValue('ward', wardValue)
+  }
+
+  const handleSelectVerify = (value: string) => {
+    form.setValue('verify', Number(value))
   }
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -372,35 +373,21 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
                   />
                   <FormField
                     control={form.control}
-                    name='is_blocked'
+                    name='verify'
                     render={({ field }) => (
-                      <FormItem className='flex items-center gap-4'>
-                        <FormLabel>Khóa tài khoản?</FormLabel>
-                        <FormControl>
-                          <Switch checked={field.value} onCheckedChange={field.onChange} style={{ marginTop: 0 }} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='is_email_verified'
-                    render={({ field }) => (
-                      <FormItem className='flex items-center gap-4'>
-                        <FormLabel>Xác thực email?</FormLabel>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            style={{ marginTop: 0 }}
-                            disabled
-                          />
-                        </FormControl>
+                      <FormItem>
+                        <FormLabel>Trạng thái</FormLabel>
+                        <Combobox
+                          value={field.value.toString()}
+                          options={verifyOptions}
+                          onSelect={handleSelectVerify}
+                        />
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
-                <Button type='submit' disabled={isLoading} className='w-full mt-5'>
+                <Button type='submit' disabled={isLoading} className='w-full mt-8'>
                   {isLoading && <Loader className='animate-spin w-4 h-4 mr-1' />}
                   Lưu lại
                 </Button>

@@ -8,7 +8,7 @@ import AddPaymentMethodForm from 'src/pages/DashBoard/pages/Settings/components/
 import PaymentMethodCard from 'src/pages/DashBoard/pages/Settings/components/PaymentMethodCard'
 import SettingsHeading from 'src/pages/DashBoard/pages/Settings/components/SettingsHeading'
 import UpdatePaymentMethodDialog from 'src/pages/DashBoard/pages/Settings/components/UpdatePaymentMethodDialog'
-import { useDeletePaymentMethodMutation, useGetAllPaymentMethodsQuery } from 'src/redux/apis/payment-method.api'
+import { useDeletePaymentMethodMutation, useGetAllPaymentMethodsQuery } from 'src/redux/apis/payment.api'
 import { PaymentMethod } from 'src/types/payment.type'
 
 export default function SettingsPayment() {

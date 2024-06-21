@@ -1,7 +1,7 @@
 import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
-import { Circle, CircleUserRound, PlusCircle, Trash2 } from 'lucide-react'
+import { CircleUserRound, PlusCircle, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -10,6 +10,7 @@ import DataTable from 'src/components/AdminPanel/DataTable'
 import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHeader'
 import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
+import { Badge } from 'src/components/ui/badge'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
@@ -18,7 +19,7 @@ import PDFUsersTableDocument from 'src/pages/DashBoard/pages/User/components/PDF
 import { useDeleteManyUsersMutation, useDeleteUserMutation, useGetAllUsersQuery } from 'src/redux/apis/user.api'
 import { useAppSelector } from 'src/redux/hook'
 import { Role, User } from 'src/types/user.type'
-import { getAvatarUrl } from 'src/utils/utils'
+import { getAvatarUrl, getVerifyStatusLabel } from 'src/utils/utils'
 
 const exportDataHeaders = [
   'ID',
@@ -62,7 +63,7 @@ export default function UserList() {
           user.ward,
           user.phone,
           user.roles?.[0],
-          user.is_blocked ? 'Bị khóa' : 'Hoạt động'
+          getVerifyStatusLabel(user.verify)
         ])
       : []
     return [exportDataHeaders, ...rows]
@@ -176,53 +177,15 @@ export default function UserList() {
       }
     },
     {
-      accessorKey: 'is_blocked',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
-      footer: 'Trạng thái',
+      accessorKey: 'verify',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái xác thực' />,
+      footer: 'Trạng thái xác thực',
       cell: ({ row }) => {
-        return (
-          <div className='font-medium flex items-center gap-2'>
-            {row.getValue('is_blocked') ? (
-              <>
-                <Circle color='#d41111' fill='#d41111' className='size-4' />
-                <span>Bị khóa</span>
-              </>
-            ) : (
-              <>
-                <Circle color='#11d30d' fill='#11d30d' className='size-4' />
-                <span>Hoạt động</span>
-              </>
-            )}
-          </div>
-        )
+        return <Badge>{getVerifyStatusLabel(row.getValue('verify'))}</Badge>
       },
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id)!.toString())
-      }
-    },
-    {
-      accessorKey: 'is_email_verified',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Xác thực email?' />,
-      footer: 'Xác thực email?',
-      cell: ({ row }) => {
-        return (
-          <div className='font-medium flex items-center gap-2'>
-            {row.getValue('is_email_verified') ? (
-              <>
-                <Circle color='#11d30d' fill='#11d30d' className='size-4' />
-                <span>Đã xác thực</span>
-              </>
-            ) : (
-              <>
-                <Circle color='#d41111' fill='#d41111' className='size-4' />
-                <span>Chưa xác thực</span>
-              </>
-            )}
-          </div>
-        )
-      },
-      filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id)!.toString())
+        const rowValue = (row.getValue(id) as number).toString()
+        return value.includes(rowValue)
       }
     },
     {

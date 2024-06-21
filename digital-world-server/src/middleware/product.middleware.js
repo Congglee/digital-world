@@ -90,7 +90,7 @@ const ratingProductRules = () => {
       .exists({ checkFalsy: true })
       .withMessage("Số sao không được để trống")
       .isNumeric()
-      .withMessage("Số lượng phải ở định dạng number"),
+      .withMessage("Số sao phải ở định dạng number"),
     body("product_id")
       .exists({ checkFalsy: true })
       .withMessage("product_id không được để trống")

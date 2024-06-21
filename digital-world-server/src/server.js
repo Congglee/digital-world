@@ -15,6 +15,8 @@ import userRoutes from "./routes/user/index.route";
 import { responseError } from "./utils/response";
 import "./cron-jobs/user-cleanup";
 
+import paymentController from "./controllers/payment.controller";
+
 const app = express();
 connectMongoDB();
 
@@ -25,6 +27,20 @@ app.use(helmet());
 app.use(cors());
 app.use(morgan("dev"));
 app.use(compression());
+
+// Stripe Webhook
+app.use(
+  "/api/stripe-webhook-checkout",
+  express.raw({ type: "application/json" }),
+  paymentController.handleStripeWebhookCheckout
+);
+
+app.use(
+  "/api/paypal-webhook-checkout",
+  express.raw({ type: "application/json" }),
+  paymentController.handlePayPalWebhookCheckout
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import { UploadResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 
-export const URL_UPLOAD_IMAGES = 'media/upload-images'
+const URL_UPLOAD_IMAGES = 'media/upload-images'
 
 const reducerPath = 'upload/api' as const
 const tagTypes = ['Upload'] as const

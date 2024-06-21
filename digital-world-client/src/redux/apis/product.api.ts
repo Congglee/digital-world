@@ -5,22 +5,22 @@ import axiosBaseQuery from '../helper'
 import { Product, ProductList } from 'src/types/product.type'
 import { ProductSchema, RatingSchema } from 'src/utils/rules'
 
-export const PRODUCT_URL = 'products'
-export const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
+const PRODUCT_URL = 'products'
+const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
 
-export const URL_GET_ALL_PRODUCTS = 'get-all-products'
-export const URL_GET_PRODUCTS = 'get-products'
-export const URL_GET_PRODUCT = 'get-product'
+const URL_GET_ALL_PRODUCTS = 'get-all-products'
+const URL_GET_PRODUCTS = 'get-products'
+const URL_GET_PRODUCT = 'get-product'
 
-export const URL_RATING_PRODUCT = 'rating-product'
-export const URL_DELETE_RATING = 'delete-rating'
+const URL_RATING_PRODUCT = 'rating-product'
+const URL_DELETE_RATING = 'delete-rating'
 
-export const URL_ADD_PRODUCT = `${ADMIN_PRODUCT_URL}/add-product`
-export const URL_UPDATE_PRODUCT = `${ADMIN_PRODUCT_URL}/update-product`
-export const URL_DELETE_PRODUCT = `${ADMIN_PRODUCT_URL}/delete-product`
-export const URL_DELETE_PRODUCTS = `${ADMIN_PRODUCT_URL}/delete-many-products`
-export const URL_DELETE_RATINGS = `${ADMIN_PRODUCT_URL}/delete-many-ratings`
-export const URL_UPDATE_RATING_STATUS = `${ADMIN_PRODUCT_URL}/update-rating-status`
+const URL_ADD_PRODUCT = `${ADMIN_PRODUCT_URL}/add-product`
+const URL_UPDATE_PRODUCT = `${ADMIN_PRODUCT_URL}/update-product`
+const URL_DELETE_PRODUCT = `${ADMIN_PRODUCT_URL}/delete-product`
+const URL_DELETE_PRODUCTS = `${ADMIN_PRODUCT_URL}/delete-many-products`
+const URL_DELETE_RATINGS = `${ADMIN_PRODUCT_URL}/delete-many-ratings`
+const URL_UPDATE_RATING_STATUS = `${ADMIN_PRODUCT_URL}/update-rating-status`
 
 const reducerPath = 'product/api' as const
 const tagTypes = ['Product'] as const

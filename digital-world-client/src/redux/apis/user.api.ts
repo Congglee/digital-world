@@ -4,31 +4,31 @@ import { User, UserList } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 
-export const USER_URL = 'users'
-export const CART_URL = 'cart'
-export const ADMIN_USER_URL = `admin/${USER_URL}`
+const USER_URL = 'users'
+const CART_URL = 'cart'
+const ADMIN_USER_URL = `admin/${USER_URL}`
 
-export const URL_GET_USERS = `${ADMIN_USER_URL}/get-users`
-export const URL_GET_ALL_USERS = `${ADMIN_USER_URL}/get-all-users`
-export const URL_GET_USER = `${ADMIN_USER_URL}/get-user`
-export const URL_ADD_USER = `${ADMIN_USER_URL}/add-user`
-export const URL_UPDATE_USER = `${ADMIN_USER_URL}/update-user`
-export const URL_DELETE_USER = `${ADMIN_USER_URL}/delete-user`
-export const URL_DELETE_USERS = `${ADMIN_USER_URL}/delete-many-users`
+// const URL_GET_USERS = `${ADMIN_USER_URL}/get-users`
+const URL_GET_ALL_USERS = `${ADMIN_USER_URL}/get-all-users`
+const URL_GET_USER = `${ADMIN_USER_URL}/get-user`
+const URL_ADD_USER = `${ADMIN_USER_URL}/add-user`
+const URL_UPDATE_USER = `${ADMIN_USER_URL}/update-user`
+const URL_DELETE_USER = `${ADMIN_USER_URL}/delete-user`
+const URL_DELETE_USERS = `${ADMIN_USER_URL}/delete-many-users`
 
-export const URL_GET_ME = `${USER_URL}/get-me`
-export const URL_UPDATE_PROFILE = `${USER_URL}/update-me`
+const URL_GET_ME = `${USER_URL}/get-me`
+const URL_UPDATE_PROFILE = `${USER_URL}/update-me`
 
-export const URL_ADD_TO_CART = `${CART_URL}/add-to-cart`
-export const URL_UPDATE_USER_CART = `${CART_URL}/update-cart`
-export const URL_DELETE_PRODUCTS_CART = `${CART_URL}/delete-products-cart`
+const URL_ADD_TO_CART = `${CART_URL}/add-to-cart`
+const URL_UPDATE_USER_CART = `${CART_URL}/update-cart`
+const URL_DELETE_PRODUCTS_CART = `${CART_URL}/delete-products-cart`
 
 const reducerPath = 'user/api' as const
 const tagTypes = ['User'] as const
 
 type BodyUpdateProfile = Omit<
   User,
-  '_id' | 'wishlist' | 'cart' | 'roles' | 'is_blocked' | 'email' | 'createdAt' | 'updatedAt' | 'is_email_verified'
+  '_id' | 'wishlist' | 'cart' | 'roles' | 'email' | 'createdAt' | 'updatedAt' | 'verify'
 > & {
   password?: string
   newPassword?: string
@@ -36,17 +36,7 @@ type BodyUpdateProfile = Omit<
 
 type BaseUserMutationFields = Pick<
   User,
-  | 'name'
-  | 'email'
-  | 'address'
-  | 'province'
-  | 'district'
-  | 'ward'
-  | 'is_blocked'
-  | 'roles'
-  | 'phone'
-  | 'date_of_birth'
-  | 'is_email_verified'
+  'name' | 'email' | 'address' | 'province' | 'district' | 'ward' | 'roles' | 'phone' | 'date_of_birth' | 'verify'
 >
 
 type BodyAddUser = BaseUserMutationFields & { password: string }

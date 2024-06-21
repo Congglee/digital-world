@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import { UserModel } from "../database/models/user.model";
 import chalk from "chalk";
+import { VERIFY_STATUS } from "../constants/verify.enum";
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ cron.schedule("* * * * *", async () => {
   console.log(chalk.blueBright(`Running cron job at ${now}`));
   try {
     const result = await UserModel.deleteMany({
-      is_email_verified: false,
+      verify: VERIFY_STATUS.UNVERIFIED,
       unverified_delete_at: { $lte: now },
     });
     if (result.deletedCount > 0) {

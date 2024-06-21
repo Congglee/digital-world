@@ -4,11 +4,11 @@ import { SuccessResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 import { MailSchema } from 'src/utils/rules'
 
-export const MAIL_URL = 'mail'
-export const ADMIN_MAIL_URL = `admin/${MAIL_URL}`
+const MAIL_URL = 'mail'
+const ADMIN_MAIL_URL = `admin/${MAIL_URL}`
 
-export const URL_SEND_NOTIFY_MAIL = `${ADMIN_MAIL_URL}/send-notify-mail`
-export const URL_SEND_COMMON_MAIL = `${MAIL_URL}/send-mail`
+const URL_SEND_NOTIFY_MAIL = `${ADMIN_MAIL_URL}/send-notify-mail`
+const URL_SEND_COMMON_MAIL = `${MAIL_URL}/send-mail`
 
 const reducerPath = 'mail/api' as const
 const tagTypes = ['Mail'] as const

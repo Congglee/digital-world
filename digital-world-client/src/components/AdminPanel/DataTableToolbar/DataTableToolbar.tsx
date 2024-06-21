@@ -7,11 +7,11 @@ import DataTableViewOptions from '../DateViewTableOptions'
 import { useAppSelector } from 'src/redux/hook'
 import {
   deliveryStatusOptions,
-  isBlockedOptions,
   orderStatusOptions,
   paymentStatusOptions,
   ratingsOptions,
-  rolesOptions
+  rolesOptions,
+  verifyOptions
 } from 'src/static/options'
 
 interface DataTableToolbarProps<TData> {
@@ -55,12 +55,8 @@ export default function DataTableToolbar<TData>({ table, placeholder }: DataTabl
         {table.getColumn('roles') && (
           <DataTableFacetedFilter column={table.getColumn('roles')} title='Vai trò' options={rolesOptions} />
         )}
-        {table.getColumn('is_blocked') && (
-          <DataTableFacetedFilter
-            column={table.getColumn('is_blocked')}
-            title='Trạng thái'
-            options={isBlockedOptions}
-          />
+        {table.getColumn('verify') && (
+          <DataTableFacetedFilter column={table.getColumn('verify')} title='Trạng thái' options={verifyOptions} />
         )}
         {table.getColumn('order_status') && (
           <DataTableFacetedFilter

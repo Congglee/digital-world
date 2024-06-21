@@ -7,14 +7,14 @@ import { CategorySchema } from 'src/utils/rules'
 import { productApi } from './product.api'
 import { setCategoriesOptionsFilter } from '../slices/category.slice'
 
-export const CATEGORY_URL = 'categories'
-export const ADMIN_CATEGORY_URL = `admin/${CATEGORY_URL}`
+const CATEGORY_URL = 'categories'
+const ADMIN_CATEGORY_URL = `admin/${CATEGORY_URL}`
 
-export const URL_GET_ALL_CATEGORIES = `get-all-categories`
-export const URL_ADD_CATEGORY = `${ADMIN_CATEGORY_URL}/add-category`
-export const URL_UPDATE_CATEGORY = `${ADMIN_CATEGORY_URL}/update-category`
-export const URL_DELETE_CATEGORY = `${ADMIN_CATEGORY_URL}/delete-category`
-export const URL_DELETE_CATEGORIES = `${ADMIN_CATEGORY_URL}/delete-many-categories`
+const URL_GET_ALL_CATEGORIES = `get-all-categories`
+const URL_ADD_CATEGORY = `${ADMIN_CATEGORY_URL}/add-category`
+const URL_UPDATE_CATEGORY = `${ADMIN_CATEGORY_URL}/update-category`
+const URL_DELETE_CATEGORY = `${ADMIN_CATEGORY_URL}/delete-category`
+const URL_DELETE_CATEGORIES = `${ADMIN_CATEGORY_URL}/delete-many-categories`
 
 const reducerPath = 'category/api' as const
 const tagTypes = ['Category'] as const

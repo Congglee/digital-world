@@ -1,16 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ArrowDownUp, CheckIcon, ImageUp, List, Loader } from 'lucide-react'
+import { ImageUp, List, Loader } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import Combobox from 'src/components/AdminPanel/Combobox'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import RichTextEditor from 'src/components/AdminPanel/RichTextEditor'
 import { Button } from 'src/components/ui/button'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from 'src/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { Switch } from 'src/components/ui/switch'
 import path from 'src/constants/path'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
@@ -18,7 +17,7 @@ import { useGetProductDetailQuery, useUpdateProductMutation } from 'src/redux/ap
 import { useUploadImagesMutation } from 'src/redux/apis/upload.api'
 import { isEntityError } from 'src/utils/helper'
 import { ProductSchema, productSchema } from 'src/utils/rules'
-import { cn, handleValidateFile, handleValidateMultiFile } from 'src/utils/utils'
+import { handleValidateFile, handleValidateMultiFile } from 'src/utils/utils'
 import PreviewProductImages from '../components/PreviewProductImages'
 
 type FormData = ProductSchema
@@ -310,53 +309,16 @@ export default function UpdateProduct() {
               control={form.control}
               name='category'
               render={({ field }) => (
-                <FormItem className='flex flex-col col-span-2 md:col-span-1'>
+                <FormItem className='col-span-2 md:col-span-1'>
                   <FormLabel>Danh mục sản phẩm</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant='outline'
-                          role='combobox'
-                          className={cn(
-                            'w-full justify-between overflow-hidden',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? categoriesOptions.find((category) => category.value === field.value)?.label
-                            : 'Hãy chọn một danh mục sản phẩm'}
-                          <ArrowDownUp className='ml-2 h-4 w-4 shrink-0 opacity-50' />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className='xs:w-96 p-0'>
-                      <Command>
-                        <CommandInput placeholder='Tìm kiếm danh mục sản phẩm...' className='h-9' />
-                        <CommandEmpty>Không tìm thấy danh mục.</CommandEmpty>
-                        <CommandGroup>
-                          {categoriesOptions.map((category) => (
-                            <CommandItem
-                              value={category.label}
-                              key={category.value}
-                              onSelect={() => {
-                                form.setValue('category', category.value)
-                                form.setValue('brand', '')
-                              }}
-                            >
-                              {category.label}
-                              <CheckIcon
-                                className={cn(
-                                  'ml-auto h-4 w-4',
-                                  category.value === field.value ? 'opacity-100' : 'opacity-0'
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                  <Combobox
+                    value={field.value}
+                    options={categoriesOptions}
+                    onSelect={(value) => form.setValue('category', value)}
+                    hasSearchCombobox={true}
+                    searchComboPlaceholder='Tìm kiếm danh mục...'
+                    searchEmptyText='Không tìm thấy danh mục.'
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -365,52 +327,16 @@ export default function UpdateProduct() {
               control={form.control}
               name='brand'
               render={({ field }) => (
-                <FormItem className='flex flex-col col-span-2 md:col-span-1'>
+                <FormItem className='col-span-2 md:col-span-1'>
                   <FormLabel>Thương hiệu sản phẩm</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant='outline'
-                          role='combobox'
-                          className={cn(
-                            'w-full justify-between overflow-hidden',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value
-                            ? brandsOptions.find((brand) => brand.value === field.value)?.label
-                            : 'Hãy chọn một thương hiệu sản phẩm'}
-                          <ArrowDownUp className='xs:block ml-2 h-4 w-4 shrink-0 opacity-50' />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className='xs:w-96 p-0'>
-                      <Command>
-                        <CommandInput placeholder='Tìm kiếm thương hiệu sản phẩm...' className='h-9' />
-                        <CommandEmpty>Không tìm thấy thương hiệu.</CommandEmpty>
-                        <CommandGroup>
-                          {brandsOptions.map((brand) => (
-                            <CommandItem
-                              value={brand.label}
-                              key={brand.value}
-                              onSelect={() => {
-                                form.setValue('brand', brand.value)
-                              }}
-                            >
-                              {brand.label}
-                              <CheckIcon
-                                className={cn(
-                                  'ml-auto h-4 w-4',
-                                  brand.value === field.value ? 'opacity-100' : 'opacity-0'
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                  <Combobox
+                    value={field.value}
+                    options={brandsOptions}
+                    onSelect={(value) => form.setValue('brand', value)}
+                    hasSearchCombobox={true}
+                    searchComboPlaceholder='Tìm kiếm thương hiệu...'
+                    searchEmptyText='Không tìm thấy thương hiệu.'
+                  />
                   <FormMessage />
                 </FormItem>
               )}

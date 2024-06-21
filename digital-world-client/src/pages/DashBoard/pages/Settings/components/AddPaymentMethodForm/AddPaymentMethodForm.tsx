@@ -10,7 +10,7 @@ import { Button } from 'src/components/ui/button'
 import { ImageUp, Loader } from 'lucide-react'
 import { Switch } from 'src/components/ui/switch'
 import { handleValidateFile } from 'src/utils/utils'
-import { useAddPaymentMethodMutation } from 'src/redux/apis/payment-method.api'
+import { useAddPaymentMethodMutation } from 'src/redux/apis/payment.api'
 import { toast } from 'react-toastify'
 import { Textarea } from 'src/components/ui/textarea'
 
@@ -108,7 +108,7 @@ export default function AddPaymentMethodForm() {
                     <FormMessage />
                   </div>
                   {previewPaymentMethodImage && (
-                    <div className='w-full max-w-[50%] h-60'>
+                    <div className='w-full max-w-[50%] h-40'>
                       <img src={previewPaymentMethodImage} alt='brand-image' className='aspect-square w-full h-full' />
                     </div>
                   )}

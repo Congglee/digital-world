@@ -3,17 +3,19 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Button from 'src/components/Button'
+import { CircleCheckBig } from 'src/components/Icons/Icons'
 import path from 'src/constants/path'
+import { PAYMENT_METHOD } from 'src/constants/payment'
 import CheckoutBreadcrumbs from 'src/pages/Checkout/components/CheckoutBreadcrumbs'
 import { type FormData as CheckoutProfileType } from 'src/pages/Checkout/pages/CheckoutProfile/CheckoutProfile'
 import { useAddOrderMutation } from 'src/redux/apis/order.api'
-import { useGetAllPaymentMethodsQuery } from 'src/redux/apis/payment-method.api'
+import {
+  useCreatePayPalPaymentMutation,
+  useCreateStripePaymentMutation,
+  useGetAllPaymentMethodsQuery
+} from 'src/redux/apis/payment.api'
 import { useGetMeQuery } from 'src/redux/apis/user.api'
-import { CircleCheckBig } from 'src/components/Icons/Icons'
 import { cn } from 'src/utils/utils'
-import { useSendCommonMailMutation } from 'src/redux/apis/mail.api'
-import { Order } from 'src/types/order.type'
-import { generateOrderNotifyEmail } from 'src/utils/mail'
 
 export default function CheckoutPayment() {
   const { data: profileData } = useGetMeQuery()
@@ -32,11 +34,12 @@ export default function CheckoutPayment() {
     }
   }, [paymentMethodData])
 
-  const [addOrder, { data, isSuccess }] = useAddOrderMutation()
-  const [sendMail, sendMailResult] = useSendCommonMailMutation()
+  const [addOrder, { data, isSuccess, isLoading }] = useAddOrderMutation()
+  const [createStripePayment, createStripePaymentResult] = useCreateStripePaymentMutation()
+  const [createPayPalPayment, createPayPalPaymentResult] = useCreatePayPalPaymentMutation()
 
   const orderDeliveryAt = checkoutProfile
-    ? `${checkoutProfile.delivery_at}, ${checkoutProfile.province}, ${checkoutProfile.district} ${checkoutProfile.ward && `, ${checkoutProfile.ward}`}`
+    ? `${checkoutProfile.delivery_at}, ${checkoutProfile.ward && `${checkoutProfile.ward}, `} ${checkoutProfile.district}, ${checkoutProfile.province}`
     : ''
 
   const handleBuyPurchases = async () => {
@@ -55,32 +58,47 @@ export default function CheckoutPayment() {
           buy_count: product.buy_count
         }))
       }
-      await addOrder(payloadData)
+      if (paymentMethod === PAYMENT_METHOD.STRIPE_GATE_WAY) {
+        await createStripePayment(payloadData)
+      } else {
+        await addOrder(payloadData)
+      }
     }
   }
 
-  useEffect(() => {
-    const handleSendOrderNotifyMail = async (order: Order) => {
-      const htmlContent = generateOrderNotifyEmail(order)
-      await sendMail({
-        email: order.order_by.user_email,
-        subject: 'Thông báo: Đơn hàng của bạn đã được đặt thành công!',
-        content: htmlContent
-      })
-    }
+  const handleCreatePayPalPayment = async (orderId: string, orderCode: string, totalAmount: number) => {
+    await createPayPalPayment({ order_id: orderId, order_code: orderCode, total_amount: totalAmount })
+  }
 
+  useEffect(() => {
     if (isSuccess) {
-      handleSendOrderNotifyMail(data?.data.data)
+      if (paymentMethod === PAYMENT_METHOD.PAYPAL_GATE_WAY) {
+        handleCreatePayPalPayment(data?.data.data._id, data?.data.data.order_code, data?.data.data.total_amount)
+      } else {
+        toast.success(data?.data.message)
+        navigate(path.checkoutSuccess.replace(':order_code', data?.data.data.order_code as string))
+        localStorage.removeItem('checkout-profile')
+      }
     }
   }, [isSuccess])
 
   useEffect(() => {
-    if (sendMailResult.isSuccess) {
-      toast.success(data?.data.message)
-      navigate(path.checkoutSuccess.replace(':order_id', data?.data.data._id as string))
+    if (createStripePaymentResult.isSuccess) {
+      const { data: createStripePaymentData } = createStripePaymentResult
+      window.location.href = createStripePaymentData?.data.data.url
       localStorage.removeItem('checkout-profile')
     }
-  }, [sendMailResult.isSuccess])
+  }, [createStripePaymentResult.isSuccess])
+
+  useEffect(() => {
+    if (createPayPalPaymentResult.isSuccess) {
+      const { data: createPayPalPaymentData } = createPayPalPaymentResult
+      const { links } = createPayPalPaymentData?.data.data
+      const payerActionUrl = links.find((link) => link.rel === 'payer-action')!
+      window.location.href = payerActionUrl.href
+      localStorage.removeItem('checkout-profile')
+    }
+  }, [createPayPalPaymentResult.isSuccess])
 
   if (!profile) return null
 
@@ -143,7 +161,7 @@ export default function CheckoutPayment() {
                           <Circle className='w-5 h-5 text-gray-500' />
                         )}
                         {item.image && (
-                          <img src={item.image} alt={item.name} className='aspect-square w-28 h-12 hidden xs:block' />
+                          <img src={item.image} alt={item.name} className='w-28 h-12 hidden xs:block object-contain' />
                         )}
                         <span className='text-sm font-medium text-[#3a3a3a]'>{item.name}</span>
                       </div>
@@ -165,8 +183,8 @@ export default function CheckoutPayment() {
             type='button'
             className='flex items-center justify-center gap-2 p-5 text-white bg-[#3a3a3a] shadow-[0_1px_0_rgba(0,_0,_0,_.05),_inset_0_-1px_0_rgba(0,_0,_0,_0.2)] hover:bg-purple transition-colors'
             onClick={handleBuyPurchases}
-            disabled={sendMailResult.isLoading}
-            isLoading={sendMailResult.isLoading}
+            disabled={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
+            isLoading={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
           >
             Đặt Đơn
           </Button>

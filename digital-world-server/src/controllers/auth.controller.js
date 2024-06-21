@@ -1,5 +1,4 @@
 import { omit } from "lodash";
-import { v4 as uuidv4 } from "uuid";
 import { config } from "../constants/config";
 import { ROLE } from "../constants/role.enum";
 import { STATUS } from "../constants/status";
@@ -14,6 +13,7 @@ import {
 import { signToken } from "../utils/jwt";
 import { ErrorHandler, responseSuccess } from "../utils/response";
 import { generateOTP } from "../utils/utils.js";
+import { VERIFY_STATUS } from "../constants/verify.enum.js";
 
 const getExpire = (req) => {
   let expireAccessTokenConfig = Number(req.headers["expire-access-token"]);
@@ -67,7 +67,7 @@ const finalRegisterController = async (req, res) => {
   });
   if (notActiveEmail) {
     notActiveEmail.email = atob(notActiveEmail?.email?.split("@")[0]);
-    notActiveEmail.is_email_verified = true;
+    notActiveEmail.verify = VERIFY_STATUS.VERIFIED;
     notActiveEmail.unverified_delete_at = null;
     notActiveEmail.save();
 

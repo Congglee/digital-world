@@ -145,7 +145,7 @@ export default function UpdateBrandDialog({
                           <img
                             src={previewBrandImage || selectedBrand?.image}
                             alt='brand-image'
-                            className='aspect-square w-full h-full'
+                            className='w-full h-full object-contain'
                           />
                         ) : (
                           <Image className='size-full opacity-60' strokeWidth={0.8} />
@@ -169,14 +169,17 @@ export default function UpdateBrandDialog({
               />
             </div>
             <DialogFooter>
-              <Button
-                type='submit'
-                disabled={isUnbranded || uploadImagesResult.isLoading || isLoading}
-                className='px-10'
-              >
-                {uploadImagesResult.isLoading || isLoading ? <Loader className='animate-spin w-4 h-4 mr-1' /> : null}
-                Lưu lại
-              </Button>
+              {isUnbranded ? (
+                <Button type='button' disabled className='px-10'>
+                  {uploadImagesResult.isLoading || isLoading ? <Loader className='animate-spin w-4 h-4 mr-1' /> : null}
+                  Lưu lại
+                </Button>
+              ) : (
+                <Button type='submit' className='px-10'>
+                  {uploadImagesResult.isLoading || isLoading ? <Loader className='animate-spin w-4 h-4 mr-1' /> : null}
+                  Lưu lại
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </Form>

@@ -389,6 +389,8 @@ export default function Header() {
     if (isSuccess) {
       dispatch(setProfile(null))
       dispatch(setAuthenticated(false))
+      localStorage.removeItem('checkout-profile')
+      localStorage.removeItem('checkout-purchases-cart')
     }
   }, [isSuccess])
 

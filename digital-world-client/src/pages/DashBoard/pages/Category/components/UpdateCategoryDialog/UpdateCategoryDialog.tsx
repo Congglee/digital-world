@@ -143,10 +143,17 @@ export default function UpdateCategoryDialog({
               />
             </div>
             <DialogFooter>
-              <Button type='submit' disabled={isUncategorized || isLoading} className='px-10'>
-                {isLoading && <Loader className='animate-spin w-4 h-4 mr-1' />}
-                Lưu lại
-              </Button>
+              {isUncategorized ? (
+                <Button type='button' disabled className='px-10'>
+                  {isLoading && <Loader className='animate-spin w-4 h-4 mr-1' />}
+                  Lưu lại
+                </Button>
+              ) : (
+                <Button type='submit' className='px-10'>
+                  {isLoading && <Loader className='animate-spin w-4 h-4 mr-1' />}
+                  Lưu lại
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </Form>

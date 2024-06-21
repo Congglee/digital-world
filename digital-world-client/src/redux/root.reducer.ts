@@ -14,7 +14,7 @@ import { authSlice } from './slices/auth.slice'
 import { brandSlice } from './slices/brand.slice'
 import { categorySlice } from './slices/category.slice'
 import { productSlice } from './slices/product.slice'
-import { paymentApi } from 'src/redux/apis/payment-method.api'
+import { paymentApi } from 'src/redux/apis/payment.api'
 
 const rootReducer = combineReducers({
   [appSlice.name]: appSlice.reducer,

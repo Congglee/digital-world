@@ -37,8 +37,7 @@ export interface User {
     name: string
   }[]
   cart: CartItem[]
-  is_blocked: boolean
-  is_email_verified: boolean
+  verify: number
   createdAt: string
   updatedAt: string
 }

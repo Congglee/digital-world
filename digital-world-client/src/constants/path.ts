@@ -15,7 +15,7 @@ const path = {
   checkout: '/checkout',
   checkoutProfile: '/checkout/profile',
   checkoutPayment: '/checkout/payment',
-  checkoutSuccess: '/checkout/success/:order_id',
+  checkoutSuccess: '/checkout/success/:order_code',
 
   dashboard: '/dashboard',
 

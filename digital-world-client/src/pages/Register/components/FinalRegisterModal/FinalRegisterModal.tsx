@@ -96,7 +96,7 @@ export default function FinalRegisterModal(props: FinalRegisterModalProps) {
                 <div className='mt-2'>
                   <p className='text-sm text-gray-500'>
                     Bạn đã đăng ký tài khoản thành công. Chúng tôi đã gửi cho bạn một email với mã OTP, vui lòng kiểm
-                    tra email và sử dụng mã OTP đó để hoàn tất việc tạo tài khoản
+                    tra email và sử dụng mã OTP đó để hoàn tất việc tạo tài khoản.
                   </p>
                 </div>
 

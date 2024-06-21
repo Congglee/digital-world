@@ -4,10 +4,10 @@ import { VietNamDistrict, VietNamLocationList, VietNamProvince, VietNamWard } fr
 import { SuccessResponse } from 'src/types/utils.type'
 import axiosBaseQuery from '../helper'
 
-export const LOCATION_URL = 'location'
-export const URL_GET_ALL_VN_PROVINCES = `${LOCATION_URL}/get-provinces`
-export const URL_GET_PROVINCE_DISTRICTS = `${LOCATION_URL}/get-province-districts`
-export const URL_GET_DISTRICT_WARDS = `${LOCATION_URL}/get-district-wards`
+const LOCATION_URL = 'location'
+const URL_GET_ALL_VN_PROVINCES = `${LOCATION_URL}/get-provinces`
+const URL_GET_PROVINCE_DISTRICTS = `${LOCATION_URL}/get-province-districts`
+const URL_GET_DISTRICT_WARDS = `${LOCATION_URL}/get-district-wards`
 
 const reducerPath = 'location/api' as const
 const tagTypes = ['Location'] as const

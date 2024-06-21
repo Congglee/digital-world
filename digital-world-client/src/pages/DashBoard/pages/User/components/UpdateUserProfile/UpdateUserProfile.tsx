@@ -3,6 +3,7 @@ import { ArrowDownUp, CheckIcon, Loader } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import Combobox from 'src/components/AdminPanel/Combobox'
 import DatePicker from 'src/components/AdminPanel/DatePicker'
 import DistrictPicker from 'src/components/AdminPanel/DistrictPicker'
 import ProvincePicker from 'src/components/AdminPanel/ProvincePicker'
@@ -12,14 +13,13 @@ import { Command, CommandGroup, CommandItem } from 'src/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
-import { Switch } from 'src/components/ui/switch'
 import {
   useGetAllVNProvincesQuery,
   useGetDistrictWardsQuery,
   useGetProvinceDistrictsQuery
 } from 'src/redux/apis/location.api'
 import { useUpdateUserMutation } from 'src/redux/apis/user.api'
-import { rolesOptions } from 'src/static/options'
+import { rolesOptions, verifyOptions } from 'src/static/options'
 import { Role, User } from 'src/types/user.type'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
@@ -30,17 +30,7 @@ interface UpdateUserProfileProps {
 
 type FormData = Pick<
   UserSchema,
-  | 'name'
-  | 'email'
-  | 'phone'
-  | 'address'
-  | 'province'
-  | 'district'
-  | 'ward'
-  | 'date_of_birth'
-  | 'roles'
-  | 'is_blocked'
-  | 'is_email_verified'
+  'name' | 'email' | 'phone' | 'address' | 'province' | 'district' | 'ward' | 'date_of_birth' | 'roles' | 'verify'
 >
 const updateUserSchema = userSchema.pick([
   'name',
@@ -52,8 +42,7 @@ const updateUserSchema = userSchema.pick([
   'ward',
   'date_of_birth',
   'roles',
-  'is_blocked',
-  'is_email_verified'
+  'verify'
 ])
 
 const initialFormState = {
@@ -66,8 +55,7 @@ const initialFormState = {
   phone: '',
   roles: [],
   date_of_birth: new Date(1990, 0, 1),
-  is_blocked: false,
-  is_email_verified: false
+  verify: 0
 }
 
 export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProps) {
@@ -99,8 +87,7 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
         phone: userProfile.phone || '',
         roles: userProfile.roles,
         date_of_birth: userProfile.date_of_birth ? new Date(userProfile.date_of_birth) : undefined,
-        is_blocked: userProfile.is_blocked,
-        is_email_verified: userProfile.is_email_verified
+        verify: userProfile.verify
       })
     }
   }, [userProfile])
@@ -286,7 +273,7 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
             control={form.control}
             name='roles'
             render={({ field }) => (
-              <FormItem className='col-span-2'>
+              <FormItem className='col-span-2 sm:col-span-1'>
                 <FormLabel htmlFor='roles'>Vai trò</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -341,25 +328,16 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
           />
           <FormField
             control={form.control}
-            name='is_blocked'
+            name='verify'
             render={({ field }) => (
-              <FormItem className='col-span-2 sm:col-span-1 flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
-                <FormLabel>Khóa tài khoản?</FormLabel>
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='is_email_verified'
-            render={({ field }) => (
-              <FormItem className='col-span-2 sm:col-span-1 flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
-                <FormLabel>Xác thực email?</FormLabel>
-                <FormControl>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} disabled />
-                </FormControl>
+              <FormItem className='col-span-2 sm:col-span-1'>
+                <FormLabel>Trạng thái</FormLabel>
+                <Combobox
+                  value={field.value.toString()}
+                  options={verifyOptions}
+                  onSelect={(value) => form.setValue('verify', Number(value))}
+                />
+                <FormMessage />
               </FormItem>
             )}
           />

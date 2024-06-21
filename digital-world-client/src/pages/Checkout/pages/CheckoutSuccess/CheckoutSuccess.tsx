@@ -1,11 +1,11 @@
 import { Check } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import path from 'src/constants/path'
-import { useGetOrderQuery } from 'src/redux/apis/order.api'
+import { useGetOrderByOrderCodeQuery } from 'src/redux/apis/order.api'
 
 export default function CheckoutSuccess() {
-  const { order_id } = useParams()
-  const { data: orderData } = useGetOrderQuery(order_id!)
+  const { order_code } = useParams()
+  const { data: orderData } = useGetOrderByOrderCodeQuery(order_code!)
   const order = orderData?.data.data
 
   if (!order) return null

@@ -1,9 +1,9 @@
 import { Image, Pencil, Trash2 } from 'lucide-react'
+import { Badge } from 'src/components/ui/badge'
 import { Button } from 'src/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from 'src/components/ui/card'
 import { Input } from 'src/components/ui/input'
 import { Label } from 'src/components/ui/label'
-import { Switch } from 'src/components/ui/switch'
 import { PaymentMethod } from 'src/types/payment.type'
 
 interface PaymentMethodCardProps {
@@ -37,18 +37,18 @@ export default function PaymentMethodCard({ paymentMethod, onDelete, onEdit }: P
           <div className='flex flex-col space-y-2'>
             <Label htmlFor='image'>Ảnh</Label>
             {paymentMethod.image ? (
-              <div className='w-full max-w-[50%] h-32'>
-                <img src={paymentMethod.image} alt={paymentMethod.name} className='w-full h-full' />
+              <div className='w-full max-w-[50%] h-40'>
+                <img src={paymentMethod.image} alt={paymentMethod.name} className='aspect-square size-full' />
               </div>
             ) : (
-              <div className='w-full max-w-[50%] h-32 border border-border rounded-md'>
+              <div className='w-full max-w-[50%] h-40 border border-border rounded-md'>
                 <Image className='size-full opacity-60' strokeWidth={0.8} />
               </div>
             )}
           </div>
           <div className='flex items-center space-x-2'>
-            <Label htmlFor='is_actived'>Trạng thái?</Label>
-            <Switch id='is_actived' checked={paymentMethod.is_actived} disabled />
+            <Label htmlFor='is_actived'>Trạng thái:</Label>
+            <Badge>{paymentMethod.is_actived ? 'Kích hoạt' : 'Lưu trữ'}</Badge>
           </div>
         </div>
       </CardContent>

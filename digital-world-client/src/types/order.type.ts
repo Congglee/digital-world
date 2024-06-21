@@ -5,6 +5,7 @@ export type PaymentMethod =
   | 'Thanh toán trực tiếp khi nhận hàng'
   | 'Thanh toán qua STK ngân hàng'
   | 'Thanh toán qua cổng Stripe'
+  | 'Thanh toán qua cổng PayPal'
 
 export interface OrderProductItem {
   _id: string

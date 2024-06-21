@@ -19,7 +19,7 @@ const addOrder = async (req, res) => {
     delivery_at,
     products,
   } = form;
-  const userInDB = await UserModel.findById(user_id).exec();
+  const userInDB = await UserModel.findById(user_id).lean().exec();
   if (products.length > 0) {
     if (userInDB) {
       let totalAmount = 0;
@@ -159,6 +159,40 @@ const getOrder = async (req, res) => {
   }
 };
 
+const getOrderByOrderCode = async (req, res) => {
+  const user_id = req.jwtDecoded.id;
+  const orderDB = await OrderModel.findOne({
+    order_code: req.params.order_code,
+  })
+    .populate({
+      path: "products.product_id",
+      select: "name price price_before_discount thumb quantity",
+    })
+    .populate({
+      path: "order_by.user_id",
+      select:
+        "name email phone avatar address province district ward date_of_birth",
+    })
+    .select({ __v: 0 })
+    .lean();
+  if (orderDB) {
+    if (orderDB.order_by.user_id._id.toString() === user_id) {
+      const response = {
+        message: "Lấy đơn hàng thành công",
+        data: orderDB,
+      };
+      return responseSuccess(res, response);
+    } else {
+      throw new ErrorHandler(
+        STATUS.FORBIDDEN,
+        "Bạn có không có quyền truy cập đơn hàng này"
+      );
+    }
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy đơn hàng");
+  }
+};
+
 const getOrders = async (req, res) => {
   let { page = 1, limit = 30, exclude, sort_by, order, status } = req.query;
 
@@ -252,6 +286,7 @@ const orderController = {
   getAllOrders,
   getUserOrders,
   getMyOrders,
+  getOrderByOrderCode,
 };
 
 export default orderController;

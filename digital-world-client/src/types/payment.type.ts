@@ -8,6 +8,16 @@ export interface PaymentMethod {
   updatedAt: string
 }
 
+export interface PayPalPayment {
+  id: string
+  status: string
+  links: {
+    href: string
+    rel: string
+    method: string
+  }[]
+}
+
 export interface PaymentMethodList {
   payment_methods: PaymentMethod[]
   pagination: {

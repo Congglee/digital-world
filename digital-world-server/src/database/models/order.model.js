@@ -46,7 +46,12 @@ const OrderSchema = new Schema(
     order_note: { type: String },
     payment_method: {
       type: String,
-      enum: [PAYMENT.DIRECTLY, PAYMENT.BANKING, PAYMENT.STRIPE_GATE],
+      enum: [
+        PAYMENT.DIRECTLY,
+        PAYMENT.BANKING,
+        PAYMENT.STRIPE_GATE_WAY,
+        PAYMENT.PAYPAL_GATE_WAY,
+      ],
     },
   },
   { timestamps: true }

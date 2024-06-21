@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { ROLE } from "../../constants/role.enum";
+import { VERIFY_STATUS } from "../../constants/verify.enum";
 
 const CartSchema = new Schema({
   product: { type: mongoose.SchemaTypes.ObjectId, ref: "products" },
@@ -21,14 +22,12 @@ const UserSchema = new Schema(
     phone: { type: String, maxlength: 20 },
     roles: { type: [String], required: true, default: [ROLE.USER] },
     avatar: { type: String, maxlength: 1000 },
-    cart: [CartSchema],
-    is_blocked: { type: Boolean, default: false },
+    cart: [CartSchema], // Refector: Switch from embedded document to reference document for cart
     wishlist: [{ type: mongoose.SchemaTypes.ObjectId, ref: "products" }],
     password_reset_token: { type: String },
     password_reset_expires: { type: String },
-
-    unverified_delete_at: { type: Date }, // The field used for cronjob to delete users from the database when the registration email authentication has not been completed after 5 minutes
-    is_email_verified: { type: Boolean, default: false },
+    verify: { type: Number, default: VERIFY_STATUS.UNVERIFIED },
+    unverified_delete_at: { type: Date },
   },
   { timestamps: true }
 );

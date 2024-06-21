@@ -5,21 +5,22 @@ import axiosBaseQuery from '../helper'
 import { Order, OrderList } from 'src/types/order.type'
 import { OrderSchema } from 'src/utils/rules'
 
-export const ORDER_URL = 'orders/'
-export const ADMIN_ORDER_URL = `admin/${ORDER_URL}`
+const ORDER_URL = 'orders'
+const ADMIN_ORDER_URL = `admin/${ORDER_URL}`
 
-export const URL_GET_ORDERS = `${ADMIN_ORDER_URL}/get-orders`
-export const URL_GET_ALL_ORDERS = `${ADMIN_ORDER_URL}/get-all-orders`
-export const URL_GET_USER_ORDERS = `${ADMIN_ORDER_URL}/get-user-orders`
-export const URL_GET_MY_ORDERS = `${ORDER_URL}/get-my-orders`
-export const URL_ADD_ORDER = `${ORDER_URL}/add-order`
-export const URL_GET_ORDER = `${ORDER_URL}/get-order`
-export const URL_UPDATE_USER_ORDER = `${ADMIN_ORDER_URL}/update-user-order`
+//  const URL_GET_ORDERS = `${ADMIN_ORDER_URL}/get-orders`
+const URL_GET_ALL_ORDERS = `${ADMIN_ORDER_URL}/get-all-orders`
+const URL_GET_USER_ORDERS = `${ADMIN_ORDER_URL}/get-user-orders`
+const URL_GET_MY_ORDERS = `${ORDER_URL}/get-my-orders`
+const URL_ADD_ORDER = `${ORDER_URL}/add-order`
+const URL_GET_ORDER = `${ADMIN_ORDER_URL}/get-order`
+const URL_GET_ORDER_BY_ORDER_CODE = `${ORDER_URL}/get-order-by-order-code`
+const URL_UPDATE_USER_ORDER = `${ADMIN_ORDER_URL}/update-user-order`
 
 const reducerPath = 'order/api' as const
 const tagTypes = ['Order'] as const
 
-type BodyAddOrder = Pick<OrderSchema, 'order_fullname' | 'order_phone' | 'delivery_at' | 'order_note'> & {
+export type BodyAddOrder = Pick<OrderSchema, 'order_fullname' | 'order_phone' | 'delivery_at' | 'order_note'> & {
   products: { _id: string; name: string; price: number; thumb: string; buy_count: number }[]
 }
 
@@ -52,6 +53,11 @@ export const orderApi = createApi({
       providesTags: (result, _error, _args) =>
         result ? [{ type: 'Order' as const, id: result?.data.data._id }] : tagTypes
     }),
+    getOrderByOrderCode: build.query<AxiosResponse<SuccessResponse<Order>>, string>({
+      query: (order_code) => ({ url: `${URL_GET_ORDER_BY_ORDER_CODE}/${order_code}`, method: 'GET' }),
+      providesTags: (result, _error, _args) =>
+        result ? [{ type: 'Order' as const, id: result?.data.data._id }] : tagTypes
+    }),
     updateUserOrder: build.mutation<
       AxiosResponse<SuccessResponse<Order>>,
       { id: string; payload: Pick<OrderSchema, 'order_status' | 'delivery_status' | 'payment_status'> }
@@ -68,5 +74,6 @@ export const {
   useUpdateUserOrderMutation,
   useGetUserOrdersQuery,
   useGetMyOrdersQuery,
-  useAddOrderMutation
+  useAddOrderMutation,
+  useGetOrderByOrderCodeQuery
 } = orderApi

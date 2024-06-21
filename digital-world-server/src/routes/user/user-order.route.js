@@ -16,11 +16,9 @@ userOrderRouter.post(
 );
 
 userOrderRouter.get(
-  "/get-order/:order_id",
+  "/get-order-by-order-code/:order_code",
   authMiddleware.verifyAccessToken,
-  helpersMiddleware.idRule("order_id"),
-  helpersMiddleware.idValidator,
-  wrapAsync(orderController.getOrder)
+  wrapAsync(orderController.getOrderByOrderCode)
 );
 
 userOrderRouter.get(

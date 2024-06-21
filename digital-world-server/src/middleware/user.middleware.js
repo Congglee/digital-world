@@ -76,16 +76,11 @@ const addUserRules = () => {
       .withMessage("avatar phải là string url")
       .isLength({ max: 1000 })
       .withMessage("URL avatar không được lớn hơn 1000 ký tự"),
-    body("is_blocked")
-      .exists()
-      .withMessage("Trạng thái tài khoản không được để trống")
-      .isBoolean()
-      .withMessage("Trạng thái tài khoản không đúng định dạng"),
-    body("is_email_verified")
+    body("verify")
       .exists()
       .withMessage("Trạng thái xác thực tài khoản không được để trống")
-      .isBoolean()
-      .withMessage("Trạng thái xác thực tài khoản không đúng định dạng"),
+      .isNumeric()
+      .withMessage("Trạng thái xác thực tài khoản phải ở định dạng number"),
   ];
 };
 
@@ -127,14 +122,6 @@ const updateUserRules = () => {
       .withMessage("Avatar phải là string url")
       .isLength({ max: 1000 })
       .withMessage("URL avatar không được lớn hơn 1000 ký tự"),
-    body("is_blocked")
-      .if((value) => value !== undefined)
-      .isBoolean()
-      .withMessage("Trạng thái tài khoản không đúng định dạng"),
-    body("is_email_verified")
-      .if((value) => value !== undefined)
-      .isBoolean()
-      .withMessage("Trạng thái xác thực tài khoản không đúng định dạng"),
     body("password")
       .if((value) => value !== undefined)
       .isLength({ min: 6, max: 160 })

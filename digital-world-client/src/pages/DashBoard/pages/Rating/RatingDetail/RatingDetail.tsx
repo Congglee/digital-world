@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
-import { CircleUserRound, Eye, EyeOff, Trash2 } from 'lucide-react'
+import { CircleUserRound, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -16,14 +16,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs
 import {
   useDeleteManyRatingsMutation,
   useDeleteRatingMutation,
-  useGetProductDetailQuery
+  useGetProductDetailQuery,
+  useUpdateRatingStatusMutation
 } from 'src/redux/apis/product.api'
 import { Rating } from 'src/types/product.type'
 import { getAvatarUrl } from 'src/utils/utils'
-import UpdateRatingStatusDialog from '../components/UpdateRatingStatusDialog/UpdateRatingStatusDialog'
 import { pdf } from '@react-pdf/renderer'
 import PDFRatingDetailTable from '../components/PDFRatingDetailTable'
 import { saveAs } from 'file-saver'
+import { Badge } from 'src/components/ui/badge'
+import { Switch } from 'src/components/ui/switch'
 
 const exportDataHeaders = ['RatingID', 'Khách hàng', 'Đánh giá', 'Bình luận', 'Ngày đăng']
 
@@ -42,9 +44,14 @@ export default function RatingDetail() {
   const [deleteRatingsDialogOpen, setDeleteRatingsDialogOpen] = useState<boolean>(false)
   const [selectedRating, setSelectedRating] = useState<Rating | string | null>(null)
   const [selectedRatingsIds, setSelectedRatingsIds] = useState<string[]>([])
-  const [updateRatingStatusDialogOpen, setUpdateRatingStatusDialogOpen] = useState<boolean>(false)
+
+  const [updateRatingStatus, updateRatingStatusResult] = useUpdateRatingStatusMutation()
   const [deleteRating, deleteRatingResult] = useDeleteRatingMutation()
   const [deleteManyRatings, deleteManyRatingsResult] = useDeleteManyRatingsMutation()
+
+  const handleUpdateRatingStatus = async (productId: string, ratingId: string, payload: { publish: boolean }) => {
+    await updateRatingStatus({ product_id: productId, rating_id: ratingId, payload })
+  }
 
   const handleDeleteRating = async (productId: string, ratingId: string) => {
     await deleteRating({ product_id: productId, rating_id: ratingId })
@@ -53,6 +60,12 @@ export default function RatingDetail() {
   const handleDeleteManyRatings = async (productId: string, ratingIds: string[]) => {
     await deleteManyRatings({ product_id: productId, payload: { list_id: ratingIds } })
   }
+
+  useEffect(() => {
+    if (updateRatingStatusResult.isSuccess) {
+      toast.success(updateRatingStatusResult.data.data.message, { position: 'top-right' })
+    }
+  }, [updateRatingStatusResult.isSuccess])
 
   useEffect(() => {
     if (deleteRatingResult.isSuccess) {
@@ -194,18 +207,17 @@ export default function RatingDetail() {
       footer: 'Trạng thái hiển thị',
       cell: ({ row }) => {
         return (
-          <div className='font-medium'>
-            {row.getValue('publish') ? (
-              <div className='flex items-center space-x-2'>
-                <Eye className='size-5' />
-                <span>Hiển thị</span>
-              </div>
-            ) : (
-              <div className='flex items-center space-x-2'>
-                <EyeOff className='size-5' />
-                <span>Ẩn</span>
-              </div>
-            )}
+          <div className='flex items-center gap-4'>
+            <Badge>{row.getValue('publish') ? 'Hiển thị' : 'Lưu trữ'}</Badge>
+            <Switch
+              disabled={updateRatingStatusResult.isLoading}
+              checked={row.getValue('publish')}
+              onCheckedChange={() =>
+                handleUpdateRatingStatus(product?._id as string, row.original._id, {
+                  publish: !row.getValue('publish')
+                })
+              }
+            />
           </div>
         )
       }
@@ -216,15 +228,11 @@ export default function RatingDetail() {
       cell: ({ row }) => (
         <DataTableRowActions
           row={row}
-          enableEditing={true}
+          enableEditing={false}
           enableDeleting={true}
           onDelete={() => {
             setSelectedRating(row.original._id)
             setDeleteRatingDialogOpen(true)
-          }}
-          onEdit={() => {
-            setSelectedRating(row.original)
-            setUpdateRatingStatusDialogOpen(true)
           }}
         />
       )
@@ -289,13 +297,6 @@ export default function RatingDetail() {
           />
         </TabsContent>
       </Tabs>
-      <UpdateRatingStatusDialog
-        open={updateRatingStatusDialogOpen}
-        onOpenChange={setUpdateRatingStatusDialogOpen}
-        selectedRating={selectedRating as Rating}
-        onAfterUpdate={setSelectedRating}
-        product={product}
-      />
       <ConfirmDialog
         open={deleteRatingDialogOpen}
         onOpenStateChange={setDeleteRatingDialogOpen}

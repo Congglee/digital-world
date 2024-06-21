@@ -16,15 +16,6 @@ adminPaymentRouter.get(
   wrapAsync(paymentMethodController.getPaymentMethods)
 );
 
-adminPaymentRouter.get(
-  "/get-all-payment-methods",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  paymentMethodMiddleware.getPaymentMethodsRules(),
-  helpersMiddleware.entityValidator,
-  wrapAsync(paymentMethodController.getAllPaymentMethods)
-);
-
 adminPaymentRouter.post(
   "/add-payment-method",
   authMiddleware.verifyAccessToken,

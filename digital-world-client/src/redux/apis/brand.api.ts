@@ -8,14 +8,14 @@ import { BrandSchema } from 'src/utils/rules'
 import { categoryApi } from './category.api'
 import { productApi } from './product.api'
 
-export const BRAND_URL = 'brands'
-export const ADMIN_BRAND_URL = `admin/${BRAND_URL}`
+const BRAND_URL = 'brands'
+const ADMIN_BRAND_URL = `admin/${BRAND_URL}`
 
-export const URL_GET_ALL_BRANDS = 'get-all-brands'
-export const URL_ADD_BRAND = `${ADMIN_BRAND_URL}/add-brand`
-export const URL_UPDATE_BRAND = `${ADMIN_BRAND_URL}/update-brand`
-export const URL_DELETE_BRAND = `${ADMIN_BRAND_URL}/delete-brand`
-export const URL_DELETE_BRANDS = `${ADMIN_BRAND_URL}/delete-many-brands`
+const URL_GET_ALL_BRANDS = 'get-all-brands'
+const URL_ADD_BRAND = `${ADMIN_BRAND_URL}/add-brand`
+const URL_UPDATE_BRAND = `${ADMIN_BRAND_URL}/update-brand`
+const URL_DELETE_BRAND = `${ADMIN_BRAND_URL}/delete-brand`
+const URL_DELETE_BRANDS = `${ADMIN_BRAND_URL}/delete-many-brands`
 
 const reducerPath = 'brand/api' as const
 const tagTypes = ['Brand'] as const

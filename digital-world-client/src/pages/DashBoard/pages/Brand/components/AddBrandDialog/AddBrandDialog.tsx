@@ -121,9 +121,9 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
                         <span>Chọn ảnh</span>
                       </Button>
                       <FormMessage />
-                      <div className='w-full h-64 border border-border rounded-md'>
+                      <div className='w-full h-52 border border-border rounded-md'>
                         {previewBrandImage ? (
-                          <img src={previewBrandImage} alt='brand-image' className='aspect-square w-full h-full' />
+                          <img src={previewBrandImage} alt='brand-image' className='w-full h-full object-contain' />
                         ) : (
                           <Image className='size-full opacity-60' strokeWidth={0.8} />
                         )}
