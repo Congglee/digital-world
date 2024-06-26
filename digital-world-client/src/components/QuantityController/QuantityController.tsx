@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import InputNumber, { InputNumberProps } from '../InputNumber'
+import InputNumber, { InputNumberProps } from 'src/components/InputNumber'
 import { cn } from 'src/utils/utils'
 
 interface QuantityControllerProps extends InputNumberProps {
@@ -22,6 +22,7 @@ export default function QuantityController({
   ...rest
 }: QuantityControllerProps) {
   const [localValue, setLocalValue] = useState<number>(Number(value || 0))
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let _value = Number(event.target.value)
     if (max !== undefined && _value > max) {
@@ -29,7 +30,6 @@ export default function QuantityController({
     } else if (_value < 1) {
       _value = 1
     }
-
     onType && onType(_value)
     setLocalValue(_value)
   }
@@ -39,7 +39,6 @@ export default function QuantityController({
     if (max !== undefined && _value > max) {
       _value = max
     }
-
     onIncrease && onIncrease(_value)
     setLocalValue(_value)
   }
@@ -49,7 +48,6 @@ export default function QuantityController({
     if (_value < 1) {
       _value = 1
     }
-
     onDecrease && onDecrease(_value)
     setLocalValue(_value)
   }

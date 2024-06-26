@@ -33,7 +33,7 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
   }, [brandImageFile])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
-  const [addBrandMutation, { isLoading, isSuccess, data }] = useAddBrandMutation()
+  const [addBrand, { isLoading, isSuccess, data }] = useAddBrandMutation()
 
   const brandImage = form.watch('image')
 
@@ -48,7 +48,7 @@ export default function AddBrandDialog({ open, onOpenChange }: AddBrandDialogPro
           brandImageUrl = uploadRes.data.data.data[0]?.url || ''
         }
       }
-      await addBrandMutation({ ...data, image: brandImageUrl })
+      await addBrand({ ...data, image: brandImageUrl })
     } catch (error) {
       console.log(error)
     }

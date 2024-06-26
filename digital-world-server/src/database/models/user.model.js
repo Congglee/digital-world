@@ -22,7 +22,7 @@ const UserSchema = new Schema(
     phone: { type: String, maxlength: 20 },
     roles: { type: [String], required: true, default: [ROLE.USER] },
     avatar: { type: String, maxlength: 1000 },
-    cart: [CartSchema], // Refector: Switch from embedded document to reference document for cart
+    cart: [CartSchema],
     wishlist: [{ type: mongoose.SchemaTypes.ObjectId, ref: "products" }],
     password_reset_token: { type: String },
     password_reset_expires: { type: String },

@@ -7,24 +7,6 @@ import categoryMiddleware from "../../middleware/category.middleware";
 
 const adminCategoryRouter = Router();
 
-adminCategoryRouter.get(
-  "/get-categories",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  categoryMiddleware.getCategoriesRules(),
-  helpersMiddleware.entityValidator,
-  wrapAsync(categoryController.getCategories)
-);
-
-adminCategoryRouter.get(
-  "/get-all-categories",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  categoryMiddleware.getCategoriesRules(),
-  helpersMiddleware.entityValidator,
-  wrapAsync(categoryController.getAllCategories)
-);
-
 adminCategoryRouter.post(
   "/add-category",
   authMiddleware.verifyAccessToken,
@@ -32,15 +14,6 @@ adminCategoryRouter.post(
   categoryMiddleware.addCategoryRules(),
   helpersMiddleware.entityValidator,
   wrapAsync(categoryController.addCategory)
-);
-
-adminCategoryRouter.get(
-  "/get-category/:category_id",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  helpersMiddleware.idRule("category_id"),
-  helpersMiddleware.idValidator,
-  wrapAsync(categoryController.getCategory)
 );
 
 adminCategoryRouter.put(

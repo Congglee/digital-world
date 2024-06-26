@@ -1,11 +1,11 @@
 import { ChevronUpIcon, Circle } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Button from 'src/components/Button'
 import { CircleCheckBig } from 'src/components/Icons/Icons'
 import path from 'src/constants/path'
-import { PAYMENT_METHOD } from 'src/constants/payment'
+import { paymentMethodOptions } from 'src/constants/payment'
 import CheckoutBreadcrumbs from 'src/pages/Checkout/components/CheckoutBreadcrumbs'
 import { type FormData as CheckoutProfileType } from 'src/pages/Checkout/pages/CheckoutProfile/CheckoutProfile'
 import { useAddOrderMutation } from 'src/redux/apis/order.api'
@@ -58,7 +58,7 @@ export default function CheckoutPayment() {
           buy_count: product.buy_count
         }))
       }
-      if (paymentMethod === PAYMENT_METHOD.STRIPE_GATE_WAY) {
+      if (paymentMethod === paymentMethodOptions.stripeGateWay) {
         await createStripePayment(payloadData)
       } else {
         await addOrder(payloadData)
@@ -66,13 +66,17 @@ export default function CheckoutPayment() {
     }
   }
 
-  const handleCreatePayPalPayment = async (orderId: string, orderCode: string, totalAmount: number) => {
-    await createPayPalPayment({ order_id: orderId, order_code: orderCode, total_amount: totalAmount })
-  }
+  const handleCreatePayPalPayment = useCallback(async (order_id: string, order_code: string, total_amount: number) => {
+    await createPayPalPayment({
+      order_id,
+      order_code,
+      total_amount
+    })
+  }, [])
 
   useEffect(() => {
     if (isSuccess) {
-      if (paymentMethod === PAYMENT_METHOD.PAYPAL_GATE_WAY) {
+      if (paymentMethod === paymentMethodOptions.stripeGateWay) {
         handleCreatePayPalPayment(data?.data.data._id, data?.data.data.order_code, data?.data.data.total_amount)
       } else {
         toast.success(data?.data.message)

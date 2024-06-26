@@ -1,13 +1,12 @@
-import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import { MoreHorizontalIcon } from 'lucide-react'
 import { Table } from '@tanstack/react-table'
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
-  DropdownMenuSeparator
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from 'src/components/ui/dropdown-menu'
 import { Button } from 'src/components/ui/button'
 

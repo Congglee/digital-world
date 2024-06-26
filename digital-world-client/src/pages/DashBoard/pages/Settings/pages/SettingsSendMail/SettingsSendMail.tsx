@@ -1,5 +1,4 @@
 import { Separator } from 'src/components/ui/separator'
-import SettingsHeading from '../../components/SettingsHeading/SettingsHeading'
 import { MailSchema, mailSchema } from 'src/utils/rules'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -11,6 +10,7 @@ import { Input } from 'src/components/ui/input'
 import { Textarea } from 'src/components/ui/textarea'
 import { Button } from 'src/components/ui/button'
 import { Loader } from 'lucide-react'
+import SettingsHeading from 'src/pages/DashBoard/pages/Settings/components/SettingsHeading'
 
 type FormData = Pick<MailSchema, 'email' | 'subject' | 'content'>
 const sendMailSchema = mailSchema.pick(['email', 'subject', 'content'])

@@ -45,11 +45,13 @@ const addToCart = async (req, res) => {
           },
         },
         { new: true }
-      ).populate({
-        path: "cart.product",
-        select: "name price price_before_discount thumb quantity",
-        populate: { path: "category", select: "name" },
-      });
+      )
+        .populate({
+          path: "cart.product",
+          select: "name price price_before_discount thumb quantity",
+          populate: { path: "category", select: "name" },
+        })
+        .lean();
     }
     const response = { message: "Thêm sản phẩm vào giỏ hàng thành công", data };
     return responseSuccess(res, response);

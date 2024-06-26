@@ -7,11 +7,16 @@ const addBrandRules = () => {
       .withMessage("Tên thương hiệu không được để trống")
       .isLength({ max: 160 })
       .withMessage("Tên thương hiệu phải ít hơn 160 kí tự"),
+    body("image")
+      .if((value) => value !== undefined)
+      .isString()
+      .withMessage("Ảnh thương hiệu phải là string url")
+      .isLength({ max: 1000 })
+      .withMessage("URL ảnh thương hiệu không được lớn hơn 1000 ký tự"),
     body("is_actived")
-      .exists()
-      .withMessage("is_actived không được để trống")
+      .if((value) => value !== undefined)
       .isBoolean()
-      .withMessage("is_actived không đúng định dạng"),
+      .withMessage("Trạng thái kích hoạt phải ở định dạng boolean"),
   ];
 };
 

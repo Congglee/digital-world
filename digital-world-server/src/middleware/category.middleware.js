@@ -8,8 +8,7 @@ const addCategoryRules = () => {
       .isLength({ max: 160 })
       .withMessage("Tên danh mục phải ít hơn 160 kí tự"),
     body("brands")
-      .exists({ checkFalsy: true })
-      .withMessage("Thương hiệu không được để trống")
+      .if((value) => value !== undefined)
       .custom((value) => {
         if (!Array.isArray(value)) {
           return false;
@@ -19,12 +18,11 @@ const addCategoryRules = () => {
         }
         return true;
       })
-      .withMessage("Thương hiệu không đúng định dạng"),
+      .withMessage("Thương hiệu phải ở định dạng mảng string"),
     body("is_actived")
-      .exists()
-      .withMessage("is_actived không được để trống")
+      .if((value) => value !== undefined)
       .isBoolean()
-      .withMessage("is_actived không đúng định dạng"),
+      .withMessage("Trạng thái kích hoạt phải ở định dạng boolean"),
   ];
 };
 

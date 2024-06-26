@@ -5,9 +5,9 @@ import { DialogClose } from 'src/components/ui/dialog'
 import { Sheet, SheetContent, SheetTrigger } from 'src/components/ui/sheet'
 import path from 'src/constants/path'
 import { cn } from 'src/utils/utils'
-import Search from '../Search'
 import { Brand, Category, Website } from 'src/components/Icons/Icons'
-import { useHorizontalScroll } from 'src/hooks/useSideScroll'
+import { useHorizontalScroll } from 'src/hooks/useScroll'
+import Search from 'src/components/AdminPanel/Search'
 
 interface MenuNavProps extends React.HTMLAttributes<HTMLElement> {
   className: string

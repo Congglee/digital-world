@@ -12,8 +12,8 @@ import {
   setAccessTokenToLS,
   setProfileToLS,
   setRefreshTokenToLS
-} from './auth'
-import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './helper'
+} from 'src/utils/auth'
+import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from 'src/utils/helper'
 
 export class Http {
   instance: AxiosInstance

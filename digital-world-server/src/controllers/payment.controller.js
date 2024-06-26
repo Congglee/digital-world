@@ -33,47 +33,43 @@ const createStripeCheckoutSession = async (req, res) => {
   const user_id = req.jwtDecoded.id;
   const userInDB = await UserModel.findById(user_id).lean().exec();
   if (products.length > 0) {
-    if (userInDB) {
-      const totalAmount = products.reduce(
-        (total, product) => total + product.price * product.buy_count,
-        0
-      );
-      const orderCode = generateOrderCode();
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        client_reference_id: orderCode,
-        line_items: products.map((product) => ({
-          price_data: {
-            currency: "vnd",
-            product_data: {
-              name: product.name,
-              images: [product.thumb],
-            },
-            unit_amount: product.price,
+    const totalAmount = products.reduce(
+      (total, product) => total + product.price * product.buy_count,
+      0
+    );
+    const orderCode = generateOrderCode();
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      client_reference_id: orderCode,
+      line_items: products.map((product) => ({
+        price_data: {
+          currency: "vnd",
+          product_data: {
+            name: product.name,
+            images: [product.thumb],
           },
-          quantity: product.buy_count,
-        })),
-        mode: "payment",
-        success_url: `${process.env.CLIENT_URL}/checkout/success/${orderCode}`,
-        cancel_url: `${process.env.CLIENT_URL}/checkout/profile`,
-        customer_email: userInDB.email,
-        metadata: {
-          payment_method,
-          delivery_at,
-          order_fullname,
-          order_phone,
-          order_note,
-          user_id,
-          total_amount: totalAmount,
+          unit_amount: product.price,
         },
-      });
-      return responseSuccess(res, {
-        message: "Tạo session thanh toán stripe thành công",
-        data: session,
-      });
-    } else {
-      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
-    }
+        quantity: product.buy_count,
+      })),
+      mode: "payment",
+      success_url: `${process.env.CLIENT_URL}/checkout/success/${orderCode}`,
+      cancel_url: `${process.env.CLIENT_URL}/checkout/profile`,
+      customer_email: userInDB.email,
+      metadata: {
+        payment_method,
+        delivery_at,
+        order_fullname,
+        order_phone,
+        order_note,
+        user_id,
+        total_amount: totalAmount,
+      },
+    });
+    return responseSuccess(res, {
+      message: "Tạo session thanh toán stripe thành công",
+      data: session,
+    });
   } else {
     throw new ErrorHandler(
       STATUS.BAD_REQUEST,
@@ -175,7 +171,7 @@ const generatePayPalAccessToken = async () => {
 
 const deletePayPalOrderCancel = async (req, res) => {
   const order_id = req.params.order_id;
-  await OrderModel.findByIdAndDelete(order_id).lean();
+  await OrderModel.findByIdAndDelete(order_id).lean().exec();
   return res.redirect(`${process.env.CLIENT_URL}/checkout/profile`);
 };
 
@@ -192,7 +188,8 @@ const createPayPalOrder = async (req, res) => {
         "name email phone avatar address province district ward date_of_birth",
     })
     .select({ __v: 0 })
-    .lean();
+    .lean()
+    .exec();
   const exchangeRate = await getExchangeRate();
   const accessToken = await generatePayPalAccessToken();
 

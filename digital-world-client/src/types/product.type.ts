@@ -29,7 +29,7 @@ export interface Product {
   view: number
   brand: string
   is_featured: boolean
-  is_published: boolean
+  is_actived: boolean
   createdAt: string
   updatedAt: string
 }

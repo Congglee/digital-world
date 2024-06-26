@@ -1,11 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
 import { SuccessResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 import { CategoryList, Category } from 'src/types/category.type'
 import { CategorySchema } from 'src/utils/rules'
-import { productApi } from './product.api'
-import { setCategoriesOptionsFilter } from '../slices/category.slice'
+import axiosBaseQuery from 'src/redux/helper'
+import { setCategoriesOptionsFilter } from 'src/redux/slices/category.slice'
+import { productApi } from 'src/redux/apis/product.api'
 
 const CATEGORY_URL = 'categories'
 const ADMIN_CATEGORY_URL = `admin/${CATEGORY_URL}`

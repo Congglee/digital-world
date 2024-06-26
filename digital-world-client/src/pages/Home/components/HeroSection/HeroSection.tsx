@@ -20,7 +20,7 @@ export default function HeroSection({ categories, products }: { categories: Cate
       return bDiscount - aDiscount
     })
     return mostDiscountProduct
-  }, [products]) // Hard code product :v (too lazy)
+  }, [products]) // Hard code product (too lazy 🥱)
 
   return (
     <>

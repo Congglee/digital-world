@@ -49,7 +49,7 @@ export default function UpdatePaymentMethodDialog({
   }, [selectedPaymentMethod])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
-  const [updatePaymentMethodMutation, { isLoading, isSuccess, data }] = useUpdatePaymentMethodMutation()
+  const [updatePaymentMethod, { isLoading, isSuccess, data }] = useUpdatePaymentMethodMutation()
 
   const paymentMethodImage = form.watch('image')
 
@@ -64,7 +64,7 @@ export default function UpdatePaymentMethodDialog({
           paymentMethodImageUrl = uploadRes.data.data.data[0]?.url || ''
         }
       }
-      await updatePaymentMethodMutation({
+      await updatePaymentMethod({
         id: selectedPaymentMethod?._id as string,
         payload: { ...data, image: paymentMethodImageUrl }
       })

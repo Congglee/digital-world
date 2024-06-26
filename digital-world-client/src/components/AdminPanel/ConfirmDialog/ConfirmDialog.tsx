@@ -35,7 +35,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
           <Button asChild variant='destructive'>
             <AlertDialogAction
               onClick={() => {
-                if (props.onConfirm) props.onConfirm()
+                props.onConfirm && props.onConfirm()
               }}
             >
               {props.confirmText || 'OK'}

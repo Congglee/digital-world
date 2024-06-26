@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { format } from 'date-fns'
 import { PlusCircle, Star } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -10,7 +10,7 @@ import ConfirmModal from 'src/components/ConfirmModal'
 import ProductRating from 'src/components/ProductRating'
 import path from 'src/constants/path'
 import { usePagination } from 'src/hooks/usePagination'
-import { useDeleteRatingMutation, useRatingProductMutation } from 'src/redux/apis/product.api'
+import { useDeleteMyRatingMutation, useRatingProductMutation } from 'src/redux/apis/product.api'
 import { useAppSelector } from 'src/redux/hook'
 import { Product, Rating } from 'src/types/product.type'
 import { RatingSchema, ratingSchema } from 'src/utils/rules'
@@ -37,13 +37,13 @@ export default function ProductReview({ product }: ProductReviewProps) {
     setValue,
     reset
   } = form
-
   const [hoverStar, setHoverStar] = useState<number>(0)
   const [reviewFormActive, setReviewFormActive] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const navigate = useNavigate()
+
   const [ratingProduct, ratingProductResult] = useRatingProductMutation()
-  const [deleteRating, deleteRatingResult] = useDeleteRatingMutation()
+  const [deleteMyRating, deleteMyRatingResult] = useDeleteMyRatingMutation()
   const { data: productRatings, nextPage, page, totalPages } = usePagination(product.ratings, 3)
 
   const userRating = profile && (product.ratings.find((rating) => rating.posted_by === profile._id) as Rating) // No more memo 😃
@@ -76,17 +76,17 @@ export default function ProductReview({ product }: ProductReviewProps) {
     }
   }
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setOpen(false)
-  }
+  }, [])
 
   const handleDeleteRating = async (productId: string, ratingId: string) => {
-    await deleteRating({ product_id: productId, rating_id: ratingId })
+    await deleteMyRating({ product_id: productId, rating_id: ratingId })
   }
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await ratingProduct({ ...data, product_id: product._id })
+      await ratingProduct({ id: product._id, payload: data })
     } catch (error) {
       console.log(error)
     }
@@ -99,13 +99,13 @@ export default function ProductReview({ product }: ProductReviewProps) {
   }, [ratingProductResult.isSuccess])
 
   useEffect(() => {
-    if (deleteRatingResult.isSuccess) {
-      toast.success(deleteRatingResult.data?.data.message)
+    if (deleteMyRatingResult.isSuccess) {
+      toast.success(deleteMyRatingResult.data?.data.message)
       closeModal()
       reset({ star: 0, comment: '' })
       setHoverStar(0)
     }
-  }, [deleteRatingResult.isSuccess])
+  }, [deleteMyRatingResult.isSuccess])
 
   return (
     <>
@@ -279,9 +279,9 @@ export default function ProductReview({ product }: ProductReviewProps) {
         closeModal={closeModal}
         title='Bạn có chắc là muốn xóa đánh giá của bạn chứ?'
         description='Đánh giá sản phẩm sau bị xóa sẽ không thể khôi phục được'
-        loading={deleteRatingResult.isLoading}
+        isLoading={deleteMyRatingResult.isLoading}
         handleConfirm={() => {
-          if (!deleteRatingResult.isLoading) {
+          if (!deleteMyRatingResult.isLoading) {
             userRating && handleDeleteRating(product._id, userRating._id)
           }
         }}

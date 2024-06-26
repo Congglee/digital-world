@@ -29,8 +29,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#bfbfbf',
     borderWidth: 1
-    // borderRightWidth: 0,
-    // borderBottomWidth: 0
   },
   tableRow: {
     display: 'flex',
@@ -56,13 +54,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 0
   },
   tableCellHeader: {
-    // margin: 'auto',
     margin: 8,
     fontSize: 8,
     fontWeight: 500
   },
   tableCell: {
-    // margin: 'auto',
     margin: 8,
     fontSize: 8
   },

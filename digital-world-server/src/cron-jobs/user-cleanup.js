@@ -15,8 +15,7 @@ if (!mongoose.connection.readyState) {
   });
 }
 
-// Schedule a cron job to run every minute
-cron.schedule("* * * * *", async () => {
+const removeExpiredUsers = async () => {
   const now = new Date();
   console.log(chalk.blueBright(`Running cron job at ${now}`));
   try {
@@ -36,4 +35,8 @@ cron.schedule("* * * * *", async () => {
   } catch (error) {
     console.error(chalk.redBright("Error deleting expired users:", error));
   }
-});
+};
+
+// Schedule a cron job to run every minute
+const userCleanUpJob = cron.schedule("* * * * *", removeExpiredUsers);
+userCleanUpJob.start();

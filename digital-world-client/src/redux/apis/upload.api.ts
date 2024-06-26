@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
+import axiosBaseQuery from 'src/redux/helper'
 import { UploadResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 
 const URL_UPLOAD_IMAGES = 'media/upload-images'
 

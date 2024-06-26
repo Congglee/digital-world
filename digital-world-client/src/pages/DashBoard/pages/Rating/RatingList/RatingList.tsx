@@ -13,7 +13,7 @@ import path from 'src/constants/path'
 import { useGetAllProductsQuery } from 'src/redux/apis/product.api'
 import { Product, Rating } from 'src/types/product.type'
 
-const exportDataHeaders = ['ProductID', 'Tên sản phẩm', 'Đánh giá', 'Số lượt đánh giá', 'Cập nhật vào']
+const exportDataHeaders = ['ID', 'Tên sản phẩm', 'Đánh giá', 'Số lượt đánh giá', 'Cập nhật vào']
 
 export default function RatingList() {
   const { data: productsData } = useGetAllProductsQuery()

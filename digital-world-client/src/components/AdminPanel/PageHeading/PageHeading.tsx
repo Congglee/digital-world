@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger
 } from 'src/components/ui/dropdown-menu'
 import { CSV, PDF, Preview } from 'src/components/Icons/Icons'
-import CalendarDateRangePicker from '../CalendarDateRangePicker'
+import CalendarDateRangePicker from 'src/components/AdminPanel/CalendarDateRangePicker'
 
 interface PageHeadingProps {
   heading: string
@@ -26,7 +26,7 @@ interface PageHeadingProps {
   hasPdfDownload?: boolean
   hasCsvDownload?: boolean
 
-  csvData?: (string | number | undefined)[][]
+  csvData?: (string | number)[][]
   csvFileName?: string
   handleDownloadPdf?: () => void
   pdfViewDocument?: React.ReactElement<DocumentProps>

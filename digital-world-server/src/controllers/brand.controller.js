@@ -75,7 +75,7 @@ const getAllBrands = async (req, res) => {
     .select({ __v: 0 })
     .lean();
   const response = {
-    message: "Lấy tât cả thương hiệu thành công",
+    message: "Lấy danh sách tất cả thương hiệu thành công",
     data: { brands },
   };
   return responseSuccess(res, response);
@@ -92,7 +92,7 @@ const getBrand = async (req, res) => {
     };
     return responseSuccess(res, response);
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy thương hiệu");
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy thương hiệu");
   }
 };
 
@@ -125,13 +125,13 @@ const deleteBrand = async (req, res) => {
   const brand_id = req.params.brand_id;
   const brandDB = await BrandModel.findByIdAndDelete(brand_id).lean();
   if (brandDB) {
-    const productsUpdated = await ProductModel.find({ brand: brandDB.name });
-    if (productsUpdated.length > 0) {
+    const products = await ProductModel.find({
+      brand: brandDB.name,
+    }).lean();
+    if (products.length > 0) {
       await ProductModel.updateMany(
         { brand: brandDB.name },
-        {
-          $set: { brand: "Unbranded" },
-        }
+        { $set: { brand: "Unbranded" } }
       );
     }
     await CategoryModel.updateMany(
@@ -167,8 +167,9 @@ const deleteManyBrands = async (req, res) => {
       message: `Xóa ${deletedData.deletedCount} thương hiệu thành công`,
       data: { deleted_count: deletedData.deletedCount },
     });
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy thương hiệu");
   }
-  throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy thương hiệu");
 };
 
 const brandController = {

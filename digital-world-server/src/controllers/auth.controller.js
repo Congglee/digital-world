@@ -31,9 +31,9 @@ const getExpire = (req) => {
 };
 
 const registerController = async (req, res) => {
-  const body = req.body;
-  const { email, password, name } = body;
-  const userInDB = await UserModel.findOne({ email: email }).exec();
+  const form = req.body;
+  const { email, password, name } = form;
+  const userInDB = await UserModel.findOne({ email: email }).lean().exec();
 
   if (!userInDB) {
     const otpCode = generateOTP();
@@ -64,9 +64,9 @@ const finalRegisterController = async (req, res) => {
   const { token } = req.params;
   const notActiveEmail = await UserModel.findOne({
     email: new RegExp(`${token}$`),
-  });
+  }).exec();
   if (notActiveEmail) {
-    notActiveEmail.email = atob(notActiveEmail?.email?.split("@")[0]);
+    notActiveEmail.email = atob(notActiveEmail.email.split("@")[0]);
     notActiveEmail.verify = VERIFY_STATUS.VERIFIED;
     notActiveEmail.unverified_delete_at = null;
     notActiveEmail.save();
@@ -105,7 +105,7 @@ const finalRegisterController = async (req, res) => {
         expires: config.EXPIRE_ACCESS_TOKEN,
         refresh_token,
         expires_refresh_token: expireRefreshTokenConfig,
-        user: omit(notActiveEmail.toObject(), ["password"]),
+        user: omit(notActiveEmail.toObject(), ["password", "__v"]),
       },
     };
     return responseSuccess(res, response);
@@ -118,8 +118,8 @@ const finalRegisterController = async (req, res) => {
 
 const loginController = async (req, res) => {
   const { expireAccessTokenConfig, expireRefreshTokenConfig } = getExpire(req);
-  const body = req.body;
-  const { email, password } = body;
+  const form = req.body;
+  const { email, password } = form;
   const userInDB = await UserModel.findOne({ email: email }).lean();
   if (!userInDB) {
     throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
@@ -132,7 +132,8 @@ const loginController = async (req, res) => {
         password: "Email hoặc password không đúng",
       });
     }
-    let payloadJWT = {
+
+    const payloadJWT = {
       id: userInDB._id,
       email: userInDB.email,
       roles: userInDB.roles,
@@ -144,7 +145,6 @@ const loginController = async (req, res) => {
       config.SECRET_KEY,
       expireAccessTokenConfig
     );
-
     const refresh_token = await signToken(
       payloadJWT,
       config.SECRET_KEY,
@@ -167,7 +167,7 @@ const loginController = async (req, res) => {
         expires: expireAccessTokenConfig,
         refresh_token,
         expires_refresh_token: expireRefreshTokenConfig,
-        user: omit(userInDB, ["password"]),
+        user: omit(userInDB, ["password", "__v"]),
       },
     };
     return responseSuccess(res, response);
@@ -176,7 +176,7 @@ const loginController = async (req, res) => {
 
 const refreshTokenController = async (req, res) => {
   const { expireAccessTokenConfig } = getExpire(req);
-  const userDB = await UserModel.findById(req.jwtDecoded.id).lean();
+  const userDB = await UserModel.findById(req.jwtDecoded.id).lean().exec();
   if (userDB) {
     const payload = {
       id: userDB._id,
@@ -184,6 +184,7 @@ const refreshTokenController = async (req, res) => {
       roles: userDB.roles,
       created_at: new Date().toISOString(),
     };
+
     const access_token = await signToken(
       payload,
       config.SECRET_KEY,
@@ -193,13 +194,14 @@ const refreshTokenController = async (req, res) => {
       user_id: req.jwtDecoded.id,
       token: access_token,
     }).save();
+
     const response = {
       message: "Refresh Token thành công",
       data: { access_token: "Bearer " + access_token },
     };
     return responseSuccess(res, response);
   }
-  throw new ErrorHandler(401, "Refresh Token không tồn tại");
+  throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy người dùng");
 };
 
 const logoutController = async (req, res) => {
@@ -209,8 +211,9 @@ const logoutController = async (req, res) => {
 };
 
 const forgotPasswordController = async (req, res) => {
-  const { email } = req.body;
-  const userInDB = await UserModel.findOne({ email });
+  const form = req.body;
+  const { email } = form;
+  const userInDB = await UserModel.findOne({ email }).exec();
   if (userInDB) {
     const { resetToken, passwordResetExpires, passwordResetToken } =
       generatePasswordResetToken();
@@ -228,13 +231,13 @@ const forgotPasswordController = async (req, res) => {
 };
 
 const resetPasswordController = async (req, res) => {
-  const body = req.body;
-  const { token, password } = body;
+  const form = req.body;
+  const { token, password } = form;
   const passwordResetToken = hashValue(token);
   const userInDB = await UserModel.findOne({
     password_reset_token: passwordResetToken,
     password_reset_expires: { $gt: Date.now() },
-  });
+  }).exec();
   if (userInDB) {
     userInDB.password = hashValue(password);
     userInDB.password_reset_token = "";

@@ -1,7 +1,9 @@
+import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
+import { saveAs } from 'file-saver'
 import { CircleUserRound, Trash2 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
@@ -10,24 +12,22 @@ import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHead
 import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import ProductRating from 'src/components/ProductRating'
+import { Badge } from 'src/components/ui/badge'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
+import { Switch } from 'src/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
+import PDFRatingDetailTable from 'src/pages/DashBoard/pages/Rating/components/PDFRatingDetailTable'
 import {
   useDeleteManyRatingsMutation,
-  useDeleteRatingMutation,
+  useDeleteUserRatingMutation,
   useGetProductDetailQuery,
   useUpdateRatingStatusMutation
 } from 'src/redux/apis/product.api'
 import { Rating } from 'src/types/product.type'
 import { getAvatarUrl } from 'src/utils/utils'
-import { pdf } from '@react-pdf/renderer'
-import PDFRatingDetailTable from '../components/PDFRatingDetailTable'
-import { saveAs } from 'file-saver'
-import { Badge } from 'src/components/ui/badge'
-import { Switch } from 'src/components/ui/switch'
 
-const exportDataHeaders = ['RatingID', 'Khách hàng', 'Đánh giá', 'Bình luận', 'Ngày đăng']
+const exportDataHeaders = ['ID', 'Khách hàng', 'Đánh giá', 'Bình luận', 'Ngày đăng']
 
 export default function RatingDetail() {
   const { product_id } = useParams()
@@ -46,7 +46,7 @@ export default function RatingDetail() {
   const [selectedRatingsIds, setSelectedRatingsIds] = useState<string[]>([])
 
   const [updateRatingStatus, updateRatingStatusResult] = useUpdateRatingStatusMutation()
-  const [deleteRating, deleteRatingResult] = useDeleteRatingMutation()
+  const [deleteUserRating, deleteUserRatingResult] = useDeleteUserRatingMutation()
   const [deleteManyRatings, deleteManyRatingsResult] = useDeleteManyRatingsMutation()
 
   const handleUpdateRatingStatus = async (productId: string, ratingId: string, payload: { publish: boolean }) => {
@@ -54,7 +54,7 @@ export default function RatingDetail() {
   }
 
   const handleDeleteRating = async (productId: string, ratingId: string) => {
-    await deleteRating({ product_id: productId, rating_id: ratingId })
+    await deleteUserRating({ product_id: productId, rating_id: ratingId })
   }
 
   const handleDeleteManyRatings = async (productId: string, ratingIds: string[]) => {
@@ -68,10 +68,10 @@ export default function RatingDetail() {
   }, [updateRatingStatusResult.isSuccess])
 
   useEffect(() => {
-    if (deleteRatingResult.isSuccess) {
-      toast.success(deleteRatingResult.data.data.message)
+    if (deleteUserRatingResult.isSuccess) {
+      toast.success(deleteUserRatingResult.data.data.message)
     }
-  }, [deleteRatingResult.isSuccess])
+  }, [deleteUserRatingResult.isSuccess])
 
   useEffect(() => {
     if (deleteManyRatingsResult.isSuccess) {
@@ -92,11 +92,11 @@ export default function RatingDetail() {
     return [exportDataHeaders, ...rows]
   }, [product])
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = useCallback(() => {
     pdf(<PDFRatingDetailTable ratings={product?.ratings!} productName={product?.name!} />)
       .toBlob()
       .then((blob) => saveAs(blob, 'danh_sach_danh_gia.pdf'))
-  }
+  }, [product])
 
   const columns: ColumnDef<Rating>[] = [
     {
@@ -190,7 +190,7 @@ export default function RatingDetail() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Bình luận' />,
       footer: 'Bình luận',
       cell: ({ row }) => {
-        return <div className='font-medium'>{row.getValue('comment')}</div>
+        return <div>{row.getValue('comment')}</div>
       }
     },
     {
@@ -198,7 +198,7 @@ export default function RatingDetail() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Ngày đăng' />,
       footer: 'Ngày đăng',
       cell: ({ row }) => {
-        return <div className='font-medium'>{format(row.getValue('date'), 'dd-MM-yyyy')}</div>
+        return <div>{format(row.getValue('date'), 'dd-MM-yyyy')}</div>
       }
     },
     {
@@ -303,7 +303,7 @@ export default function RatingDetail() {
         title='Bạn có chắc là muốn xóa đánh giá này chứ?'
         description='Đánh giá sau khi bị xóa không thể khôi phục'
         onConfirm={() => {
-          if (!deleteRatingResult.isLoading) {
+          if (!deleteUserRatingResult.isLoading) {
             handleDeleteRating(product._id, selectedRating as string)
             setSelectedRating(null)
           }

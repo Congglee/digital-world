@@ -12,7 +12,6 @@ import { useResetPasswordMutation } from 'src/redux/apis/auth.api'
 import { Schema, schema } from 'src/utils/rules'
 
 type FormData = Pick<Schema, 'password' | 'confirm_password'>
-
 const resetPasswordSchema = schema.pick(['password', 'confirm_password'])
 
 export default function ResetPassword() {

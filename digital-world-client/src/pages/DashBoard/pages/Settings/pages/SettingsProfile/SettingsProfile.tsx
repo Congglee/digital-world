@@ -1,5 +1,4 @@
 import { Separator } from 'src/components/ui/separator'
-import SettingsHeading from '../../components/SettingsHeading/SettingsHeading'
 import { useForm } from 'react-hook-form'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
@@ -25,6 +24,7 @@ import { isEntityError } from 'src/utils/helper'
 import { useAppDispatch } from 'src/redux/hook'
 import { setProfile } from 'src/redux/slices/auth.slice'
 import { setProfileToLS } from 'src/utils/auth'
+import SettingsHeading from 'src/pages/DashBoard/pages/Settings/components/SettingsHeading'
 
 type FormData = Pick<
   UserSchema,
@@ -115,6 +115,23 @@ export default function SettingsProfile() {
     }
   }, [provinceData, districtsData, form.watch('province'), form.watch('district')])
 
+  const handleSelectProvince = (provinceId: string, provinceValue: string) => {
+    setProvinceId(provinceId)
+    form.setValue('province', provinceValue)
+    form.setValue('district', '')
+    form.setValue('ward', '')
+  }
+
+  const handleSelectDistrict = (districtId: string, districtValue: string) => {
+    setDistrictId(districtId)
+    form.setValue('district', districtValue)
+    form.setValue('ward', '')
+  }
+
+  const handleSelectWard = (wardValue: string) => {
+    form.setValue('ward', wardValue)
+  }
+
   const onSubmit = form.handleSubmit(async (data) => {
     try {
       let avatarUrl = avatar
@@ -159,24 +176,6 @@ export default function SettingsProfile() {
       }
     }
   }, [isError])
-
-  const handleSelectProvince = (provinceId: string, provinceValue: string) => {
-    setProvinceId(provinceId)
-    setDistrictId('')
-    form.setValue('province', provinceValue)
-    form.setValue('district', '')
-    form.setValue('ward', '')
-  }
-
-  const handleSelectDistrict = (districtId: string, districtValue: string) => {
-    setDistrictId(districtId)
-    form.setValue('district', districtValue)
-    form.setValue('ward', '')
-  }
-
-  const handleSelectWard = (wardValue: string) => {
-    form.setValue('ward', wardValue)
-  }
 
   return (
     <div className='space-y-6'>

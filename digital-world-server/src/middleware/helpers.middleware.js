@@ -11,7 +11,15 @@ const idRule = (...id) => {
 
 const listIdRule = (list_id) => {
   return body(list_id)
-    .custom((value) => value.findIndex((item) => !isMongoId(item)))
+    .custom((value) => {
+      if (!Array.isArray(value)) {
+        return false;
+      }
+      if (value.length === 0) {
+        return false;
+      }
+      return value.findIndex((item) => !isMongoId(item));
+    })
     .withMessage(`${list_id} không đúng định dạng`);
 };
 

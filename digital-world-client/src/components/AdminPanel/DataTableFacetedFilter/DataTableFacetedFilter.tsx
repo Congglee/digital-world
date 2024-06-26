@@ -1,6 +1,6 @@
 import { Column } from '@tanstack/react-table'
 import { CheckIcon, PlusCircleIcon } from 'lucide-react'
-import * as React from 'react'
+import { ComponentType } from 'react'
 import { Badge } from 'src/components/ui/badge'
 import { Button } from 'src/components/ui/button'
 import {
@@ -22,7 +22,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   options: {
     label: string
     value: string
-    icon?: React.ComponentType<{ className?: string }>
+    icon?: ComponentType<{ className?: string }>
   }[]
 }
 

@@ -58,7 +58,6 @@ export default function OrderList() {
           ])
         )
       : []
-
     return [exportDataHeaders, ...rows]
   }, [ordersData])
 
@@ -89,7 +88,7 @@ export default function OrderList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Mã đơn hàng' />,
       footer: 'Mã đơn hàng',
       cell: ({ row }) => (
-        <div>
+        <div className='font-medium'>
           <Button variant='outline' asChild>
             <Link to={`${path.orderDashBoard}/${row.original._id}`}>{row.getValue('order_code')}</Link>
           </Button>
@@ -109,7 +108,7 @@ export default function OrderList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số lượng' />,
       footer: 'Số lượng',
       cell: ({ row }) => {
-        return <div className='font-medium'>{(row.getValue('products') as OrderProductItem[]).length} sản phẩm</div>
+        return <div>{(row.getValue('products') as OrderProductItem[]).length} sản phẩm</div>
       }
     },
     {
@@ -158,7 +157,7 @@ export default function OrderList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Ngày đặt' />,
       footer: 'Ngày đặt',
       cell: ({ row }) => {
-        return <div className='font-medium'>{format(row.getValue('date_of_order'), 'dd/MM/yyyy', { locale: vi })}</div>
+        return <div>{format(row.getValue('date_of_order'), 'dd/MM/yyyy', { locale: vi })}</div>
       }
     },
     {
@@ -166,7 +165,7 @@ export default function OrderList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Cập nhật vào' />,
       footer: 'Cập nhật vào',
       cell: ({ row }) => {
-        return <div className='font-medium'>{format(row.getValue('updatedAt'), 'dd/MM/yyyy', { locale: vi })}</div>
+        return <div>{format(row.getValue('updatedAt'), 'dd/MM/yyyy', { locale: vi })}</div>
       }
     },
     {

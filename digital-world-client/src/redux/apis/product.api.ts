@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
 import { ListConfig, SuccessResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 import { Product, ProductList } from 'src/types/product.type'
 import { ProductSchema, RatingSchema } from 'src/utils/rules'
+import axiosBaseQuery from 'src/redux/helper'
 
 const PRODUCT_URL = 'products'
 const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
@@ -13,12 +13,13 @@ const URL_GET_PRODUCTS = 'get-products'
 const URL_GET_PRODUCT = 'get-product'
 
 const URL_RATING_PRODUCT = 'rating-product'
-const URL_DELETE_RATING = 'delete-rating'
+const URL_DELETE_MY_RATING = 'delete-my-rating'
 
 const URL_ADD_PRODUCT = `${ADMIN_PRODUCT_URL}/add-product`
 const URL_UPDATE_PRODUCT = `${ADMIN_PRODUCT_URL}/update-product`
 const URL_DELETE_PRODUCT = `${ADMIN_PRODUCT_URL}/delete-product`
 const URL_DELETE_PRODUCTS = `${ADMIN_PRODUCT_URL}/delete-many-products`
+const URL_DELETE_USER_RATING = `${ADMIN_PRODUCT_URL}/delete-user-rating`
 const URL_DELETE_RATINGS = `${ADMIN_PRODUCT_URL}/delete-many-ratings`
 const URL_UPDATE_RATING_STATUS = `${ADMIN_PRODUCT_URL}/update-rating-status`
 
@@ -66,14 +67,23 @@ export const productApi = createApi({
     }),
     ratingProduct: build.mutation<
       AxiosResponse<SuccessResponse<string>>,
-      Pick<RatingSchema, 'star' | 'comment'> & { product_id: string }
+      { id: string; payload: Pick<RatingSchema, 'star' | 'comment'> }
     >({
-      query: (payload) => ({ url: `${PRODUCT_URL}/${URL_RATING_PRODUCT}`, method: 'PUT', data: payload }),
-      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Product', id: args.product_id }, ...tagTypes])
+      query: ({ id, payload }) => ({ url: `${PRODUCT_URL}/${URL_RATING_PRODUCT}/${id}`, method: 'PUT', data: payload }),
+      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Product', id: args.id }, ...tagTypes])
     }),
-    deleteRating: build.mutation<AxiosResponse<SuccessResponse<string>>, { product_id: string; rating_id: string }>({
+    deleteUserRating: build.mutation<AxiosResponse<SuccessResponse<string>>, { product_id: string; rating_id: string }>(
+      {
+        query: ({ product_id, rating_id }) => ({
+          url: `${URL_DELETE_USER_RATING}/${product_id}/${rating_id}`,
+          method: 'DELETE'
+        }),
+        invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+      }
+    ),
+    deleteMyRating: build.mutation<AxiosResponse<SuccessResponse<string>>, { product_id: string; rating_id: string }>({
       query: ({ product_id, rating_id }) => ({
-        url: `${PRODUCT_URL}/${URL_DELETE_RATING}/${product_id}/${rating_id}`,
+        url: `${PRODUCT_URL}/${URL_DELETE_MY_RATING}/${product_id}/${rating_id}`,
         method: 'DELETE'
       }),
       invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
@@ -112,7 +122,8 @@ export const {
   useRatingProductMutation,
   useDeleteProductMutation,
   useDeleteManyProductsMutation,
-  useDeleteRatingMutation,
   useDeleteManyRatingsMutation,
-  useUpdateRatingStatusMutation
+  useUpdateRatingStatusMutation,
+  useDeleteMyRatingMutation,
+  useDeleteUserRatingMutation
 } = productApi

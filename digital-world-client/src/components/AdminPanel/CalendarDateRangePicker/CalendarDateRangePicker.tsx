@@ -1,14 +1,14 @@
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
-import React from 'react'
+import { HTMLAttributes, useState } from 'react'
 import { Button } from 'src/components/ui/button'
 import { Calendar } from 'src/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { cn } from 'src/utils/utils'
 
-export default function CalendarDateRangePicker({ className }: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+export default function CalendarDateRangePicker({ className }: HTMLAttributes<HTMLDivElement>) {
+  const [date, setDate] = useState<Date | undefined>(new Date())
 
   return (
     <div className={cn('grid gap-2', className)}>

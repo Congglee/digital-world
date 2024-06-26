@@ -15,11 +15,9 @@ export default function ProductRating({
     if (order <= rating) {
       return '100%'
     }
-
     if (order > rating && order - rating < 1) {
       return (rating - Math.floor(rating)) * 100 + '%'
     }
-
     return '0%'
   }
 

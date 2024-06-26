@@ -35,9 +35,7 @@ export default function PreviewProductImages({
               <Button
                 type='button'
                 onClick={() => {
-                  if (handleRemoveProductImages) {
-                    handleRemoveProductImages(index)
-                  }
+                  handleRemoveProductImages && handleRemoveProductImages(index)
                 }}
                 className='absolute top-2 right-2 size-5 p-1 bg-red-500 rounded-full hover:bg-red-300'
               >

@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
 import { SuccessResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 import { Order, OrderList } from 'src/types/order.type'
 import { OrderSchema } from 'src/utils/rules'
+import axiosBaseQuery from 'src/redux/helper'
 
 const ORDER_URL = 'orders'
 const ADMIN_ORDER_URL = `admin/${ORDER_URL}`

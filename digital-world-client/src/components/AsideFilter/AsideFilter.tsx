@@ -11,8 +11,8 @@ import { ListConfig, NoUnderfinedField } from 'src/types/utils.type'
 import { DongCoin } from 'src/components/Icons/Icons'
 import { Schema, schema } from 'src/utils/rules'
 import Button from '../Button'
-import InputNumber from '../InputNumber'
 import { ChevronsUpDown } from 'lucide-react'
+import InputNumber from 'src/components/InputNumber'
 
 interface AsideFilterProps {
   queryConfig: QueryConfig

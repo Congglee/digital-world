@@ -13,7 +13,6 @@ import { Schema, schema } from 'src/utils/rules'
 import { isEntityError } from 'src/utils/helper'
 
 type FormData = Pick<Schema, 'email' | 'password'>
-
 const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {

@@ -1,6 +1,6 @@
 import DOMPurify from 'dompurify'
 import { Eye } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Button from 'src/components/Button'
@@ -19,9 +19,9 @@ export default function ProductInfomation({ product }: ProductInfomationProps) {
   const [buyCount, setBuyCount] = useState(1)
   const [addToCart, { data, isSuccess, isLoading }] = useAddToCartMutation()
 
-  const handleBuyCount = (value: number) => {
+  const handleBuyCount = useCallback((value: number) => {
     setBuyCount(value)
-  }
+  }, [])
 
   const handleAddToCart = async () => {
     await addToCart({ product_id: product._id, buy_count: buyCount })

@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Separator } from 'src/components/ui/separator'
-import SideBarNav from '../../components/SideBarNav'
 import path from 'src/constants/path'
+import SideBarNav from 'src/pages/DashBoard/pages/Settings/components/SideBarNav'
 
 const sidebarNavItems = [
   {

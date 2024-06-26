@@ -20,53 +20,50 @@ const addOrder = async (req, res) => {
     products,
   } = form;
   const userInDB = await UserModel.findById(user_id).lean().exec();
+
   if (products.length > 0) {
-    if (userInDB) {
-      let totalAmount = 0;
-      const productsData = products.map((product) => {
-        totalAmount += product.price * product.buy_count;
-        return {
-          product_id: product._id,
-          product_name: product.name,
-          product_price: product.price,
-          product_thumb: product.thumb,
-          buy_count: product.buy_count,
-        };
+    let totalAmount = 0;
+    const productsData = products.map((product) => {
+      totalAmount += product.price * product.buy_count;
+      return {
+        product_id: product._id,
+        product_name: product.name,
+        product_price: product.price,
+        product_thumb: product.thumb,
+        buy_count: product.buy_count,
+      };
+    });
+    const orderCode = generateOrderCode();
+    const order = {
+      order_code: orderCode,
+      order_by: {
+        user_avatar: userInDB.avatar,
+        user_email: userInDB.email,
+        user_id,
+      },
+      products: productsData,
+      total_amount: totalAmount,
+      date_of_order: new Date().toISOString(),
+      shipping_address: { order_fullname, order_phone, delivery_at },
+      order_note,
+      payment_method,
+    };
+    const orderAdd = await new OrderModel(order).save();
+    for (const product of products) {
+      await ProductModel.findByIdAndUpdate(product._id, {
+        $inc: { sold: product.buy_count, quantity: -product.buy_count },
       });
-      const orderCode = generateOrderCode();
-      const order = {
-        order_code: orderCode,
-        order_by: {
-          user_avatar: userInDB.avatar,
-          user_email: userInDB.email,
-          user_id,
-        },
-        products: productsData,
-        total_amount: totalAmount,
-        date_of_order: new Date().toISOString(),
-        shipping_address: { order_fullname, order_phone, delivery_at },
-        order_note,
-        payment_method,
-      };
-      const orderAdd = await new OrderModel(order).save();
-      for (const product of products) {
-        await ProductModel.findByIdAndUpdate(product._id, {
-          $inc: { sold: product.buy_count, quantity: -product.buy_count },
-        });
-      }
-      const response = {
-        message: "Tạo mới đơn hàng thành công",
-        data: orderAdd.toObject({
-          transform: (doc, ret, option) => {
-            delete ret.__v;
-            return ret;
-          },
-        }),
-      };
-      return responseSuccess(res, response);
-    } else {
-      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
     }
+    const response = {
+      message: "Tạo mới đơn hàng thành công",
+      data: orderAdd.toObject({
+        transform: (doc, ret, option) => {
+          delete ret.__v;
+          return ret;
+        },
+      }),
+    };
+    return responseSuccess(res, response);
   } else {
     throw new ErrorHandler(
       STATUS.BAD_REQUEST,
@@ -96,42 +93,47 @@ const updateUserOrder = async (req, res) => {
     };
     return responseSuccess(res, response);
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy đơn hàng");
+    throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy đơn hàng");
   }
 };
 
 const updateMyOrder = async (req, res) => {
+  const order_id = req.params.order_id;
   const form = req.body;
   const { order_status } = form;
   const order = omitBy(
     { order_status },
     (value) => value === undefined || value === ""
   );
-  const { delivery_status } = await OrderModel.findById(
-    req.params.order_id
-  ).select("delivery_status");
-  if (delivery_status === DELIVERY_STATUS.WAIT_FOR_CONFIRMATION) {
-    const orderDB = await OrderModel.findOneAndUpdate(
-      { _id: req.params.order_id, "order_by.user_id": req.jwtDecoded.id },
-      order,
-      { new: true }
-    )
-      .select({ __v: 0 })
-      .lean();
-    if (orderDB) {
+  const orderDB = await OrderModel.findById({
+    _id: order_id,
+    "order_by.user_id": req.jwtDecoded.id,
+  })
+    .select({ __v: 0 })
+    .lean();
+  if (orderDB) {
+    if (
+      orderDB.delivery_status === DELIVERY_STATUS.WAIT_FOR_CONFIRMATION ||
+      orderDB.delivery_status === DELIVERY_STATUS.CONFIRMED
+    ) {
+      const userOrderDB = await OrderModel.findByIdAndUpdate(order_id, order, {
+        new: true,
+      })
+        .lean()
+        .exec();
       const response = {
         message: "Cập nhật đơn hàng thành công",
-        data: orderDB,
+        data: userOrderDB,
       };
       return responseSuccess(res, response);
     } else {
-      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy đơn hàng");
+      throw new ErrorHandler(
+        STATUS.BAD_REQUEST,
+        "Đơn hàng đã được xác nhận hoặc đang chuyển hàng, không thể hủy đơn hàng"
+      );
     }
   } else {
-    throw new ErrorHandler(
-      STATUS.BAD_REQUEST,
-      "Không thể cập nhật trạng thái đơn hàng. Trạng thái giao hàng không phải là 'Đợi xác nhận'"
-    );
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy đơn hàng");
   }
 };
 

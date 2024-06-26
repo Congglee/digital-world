@@ -1,8 +1,8 @@
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from 'src/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs'
-import OverviewChart from './components/OverviewChart'
-import RecentSales from './components/RecentSales'
+import OverviewChart from 'src/pages/DashBoard/pages/Overview/components/OverviewChart'
+import RecentSales from 'src/pages/DashBoard/pages/Overview/components/RecentSales'
 
 export default function Overview() {
   return (

@@ -112,7 +112,7 @@ export const productSchema = yup.object({
   quantity: yup.number().required('Số lượng sản phẩm là bắt buộc').min(0, 'Số lượng sản phẩm không được âm'),
   brand: yup.string().trim().required('Thương hiệu sản phẩm là bắt buộc').max(160, 'Độ dài tối đa 160 ký tự'),
   is_featured: yup.boolean().required('Vui lòng chọn sản phẩm này có phải là sản phẩm nổi bật không?'),
-  is_published: yup.boolean().required('Vui lòng chọn trạng thái hiện thị cho sản phẩm'),
+  is_actived: yup.boolean().required('Vui lòng chọn trạng thái hiện thị cho sản phẩm'),
   overview: yup.string().trim().required('Thông số kỹ thuật là bắt buộc'),
   description: yup.string().trim()
 })

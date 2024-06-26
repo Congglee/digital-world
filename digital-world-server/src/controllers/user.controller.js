@@ -1,10 +1,10 @@
-import { hashValue } from "../utils/crypt";
-import { responseSuccess, ErrorHandler } from "../utils/response";
-import { UserModel } from "../database/models/user.model";
-import { STATUS } from "../constants/status";
 import { omitBy } from "lodash";
-import { ORDER, USERS_SORT_BY } from "../constants/sort";
 import mongoose from "mongoose";
+import { ORDER, USERS_SORT_BY } from "../constants/sort";
+import { STATUS } from "../constants/status";
+import { UserModel } from "../database/models/user.model";
+import { hashValue } from "../utils/crypt";
+import { ErrorHandler, responseSuccess } from "../utils/response";
 
 const addUser = async (req, res) => {
   const form = req.body;
@@ -109,7 +109,7 @@ const getAllUsers = async (req, res) => {
     .select({ __v: 0, password: 0 })
     .lean();
   const response = {
-    message: "Lấy tất cả người dùng thành công",
+    message: "Lấy danh sách tất cả người dùng thành công",
     data: { users },
   };
   return responseSuccess(res, response);
@@ -140,7 +140,7 @@ const getUser = async (req, res) => {
     const response = { message: "Lấy người dùng thành công", data: userDB };
     return responseSuccess(res, response);
   } else {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy người dùng");
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
   }
 };
 
@@ -175,7 +175,7 @@ const updateUser = async (req, res) => {
     },
     (value) => value === undefined
   );
-  const userDB = await UserModel.findById(req.params.user_id);
+  const userDB = await UserModel.findById(req.params.user_id).lean();
   if (userDB) {
     let updatedUserDB;
     if (user.password) {

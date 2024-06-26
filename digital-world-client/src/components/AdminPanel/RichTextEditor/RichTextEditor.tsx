@@ -22,7 +22,7 @@ export default function RichTextEditor({
         content_style: 'body { font-family: "Inter", sans-serif; font-size: 14px }'
       }}
       initialValue={value || '<p></p>'}
-      onEditorChange={(newValue, editor) => onChange(newValue)}
+      onEditorChange={(newValue) => onChange(newValue)}
       // onChange={(e) => onChange(e.target.getContent())}
     />
   )

@@ -1,11 +1,11 @@
 import { omitBy } from "lodash";
+import mongoose from "mongoose";
 import { ORDER, PRODUCTS_SORT_BY } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { ProductModel } from "../database/models/product.model";
-import { ErrorHandler, responseSuccess } from "../utils/response";
-import mongoose from "mongoose";
-import { isAdmin } from "../utils/validate";
 import { UserModel } from "../database/models/user.model";
+import { ErrorHandler, responseSuccess } from "../utils/response";
+import { isAdmin } from "../utils/validate";
 
 const addProduct = async (req, res) => {
   const form = req.body;
@@ -21,7 +21,7 @@ const addProduct = async (req, res) => {
     quantity,
     brand,
     is_featured,
-    is_published,
+    is_actived,
   } = form;
   const product = {
     name,
@@ -35,7 +35,7 @@ const addProduct = async (req, res) => {
     quantity,
     brand,
     is_featured,
-    is_published,
+    is_actived,
   };
   const productAdd = await new ProductModel(product).save();
   const response = {
@@ -103,7 +103,7 @@ const getProducts = async (req, res) => {
   }
   let [products, totalProducts] = await Promise.all([
     ProductModel.find(condition)
-      .populate({ path: "category" })
+      .populate({ path: "category", select: "name" })
       .sort({ [sort_by]: order === "desc" ? -1 : 1 })
       .skip(page * limit - limit)
       .limit(limit)
@@ -113,7 +113,7 @@ const getProducts = async (req, res) => {
   ]);
   const page_size = Math.ceil(totalProducts / limit) || 1;
   const response = {
-    message: "Lấy các sản phẩm thành công",
+    message: "Lấy danh sách sản phẩm thành công",
     data: {
       products,
       total_products: totalProducts,
@@ -134,12 +134,12 @@ const getAllProducts = async (req, res) => {
     condition = { category: category };
   }
   const products = await ProductModel.find(condition)
-    .populate({ path: "category" })
+    .populate({ path: "category", select: "name" })
     .sort({ createdAt: -1 })
     .select({ __v: 0, description: 0 })
     .lean();
   const response = {
-    message: "Lấy tất cả sản phẩm thành công",
+    message: "Lấy danh sách tất cả sản phẩm thành công",
     data: { products },
   };
   return responseSuccess(res, response);
@@ -177,7 +177,7 @@ const updateProduct = async (req, res) => {
     quantity,
     brand,
     is_featured,
-    is_published,
+    is_actived,
   } = form;
   const product = omitBy(
     {
@@ -192,7 +192,7 @@ const updateProduct = async (req, res) => {
       quantity,
       brand,
       is_featured,
-      is_published,
+      is_actived,
     },
     (value) => value === undefined || value === ""
   );
@@ -210,7 +210,7 @@ const updateProduct = async (req, res) => {
     };
     return responseSuccess(res, response);
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
+    throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy sản phẩm");
   }
 };
 
@@ -224,7 +224,7 @@ const deleteProduct = async (req, res) => {
     );
     return responseSuccess(res, { message: "Xóa sản phẩm thành công" });
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
+    throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy sản phẩm");
   }
 };
 
@@ -244,7 +244,7 @@ const deleteManyProducts = async (req, res) => {
       data: { deleted_count: deletedData.deletedCount },
     });
   } else {
-    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
+    throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy sản phẩm");
   }
 };
 
@@ -255,7 +255,7 @@ const searchProduct = async (req, res) => {
   if (!isAdmin(req)) {
     condition = Object.assign(condition, { visible: true });
   }
-  let products = await ProductModel.find(condition)
+  const products = await ProductModel.find(condition)
     .populate("category")
     .sort({ createdAt: -1 })
     .select({ __v: 0, description: 0 })
@@ -267,7 +267,7 @@ const searchProduct = async (req, res) => {
   return responseSuccess(res, response);
 };
 
-const ProductController = {
+const productController = {
   addProduct,
   getProducts,
   getAllProducts,
@@ -278,4 +278,4 @@ const ProductController = {
   searchProduct,
 };
 
-export default ProductController;
+export default productController;

@@ -13,7 +13,7 @@ interface DatePickerProps {
   onChange?: (...event: any[]) => void
 }
 
-export default function DatePicker({ className = '', value, onChange }: DatePickerProps) {
+export default function DatePicker({ className, value, onChange }: DatePickerProps) {
   return (
     <div className={className}>
       <Popover>
@@ -37,7 +37,7 @@ export default function DatePicker({ className = '', value, onChange }: DatePick
             onSelect={onChange}
             disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
             fromYear={1960}
-            toYear={2030}
+            toYear={new Date().getFullYear() + 1}
           />
         </PopoverContent>
       </Popover>

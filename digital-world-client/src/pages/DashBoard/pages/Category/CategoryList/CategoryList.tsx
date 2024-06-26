@@ -2,7 +2,7 @@ import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
 import { PlusCircle, Trash2 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
 import DataTable from 'src/components/AdminPanel/DataTable'
@@ -11,6 +11,9 @@ import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
+import AddCategoryDialog from 'src/pages/DashBoard/pages/Category/components/AddCategoryDialog'
+import PDFCategoriesTableDocument from 'src/pages/DashBoard/pages/Category/components/PDFCategoriesTable'
+import UpdateCategoryDialog from 'src/pages/DashBoard/pages/Category/components/UpdateCategoryDialog'
 import { useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 import {
   useDeleteCategoryMutation,
@@ -19,9 +22,6 @@ import {
 } from 'src/redux/apis/category.api'
 import { Brand } from 'src/types/brand.type'
 import { Category } from 'src/types/category.type'
-import AddCategoryDialog from '../components/AddCategoryDialog'
-import PDFCategoriesTableDocument from '../components/PDFCategoriesTable'
-import UpdateCategoryDialog from '../components/UpdateCategoryDialog'
 
 const exportDataHeaders = ['ID', 'Tên danh mục', 'Thương hiệu']
 
@@ -34,6 +34,7 @@ export default function CategoryList() {
   const [updateCategoryDialogOpen, setUpdateCategoryDialogOpen] = useState<boolean>(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [selectedCategoriesIds, setSelectedCategoriesIds] = useState<string[]>([])
+
   const [deleteCategory, deleteCategoryResult] = useDeleteCategoryMutation()
   const [deleteManyCategories, deleteManyCategoriesResult] = useDeleteManyCategoriesMutation()
 
@@ -56,11 +57,11 @@ export default function CategoryList() {
     await deleteManyCategories({ list_id: categoriesIds })
   }
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = useCallback(() => {
     pdf(<PDFCategoriesTableDocument categories={categoriesData?.data.categories!} />)
       .toBlob()
       .then((blob) => saveAs(blob, 'danh_sach_danh_muc.pdf'))
-  }
+  }, [categoriesData])
 
   useEffect(() => {
     if (deleteCategoryResult.isSuccess) {

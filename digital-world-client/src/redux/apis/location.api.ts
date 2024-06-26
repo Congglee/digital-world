@@ -1,8 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
+import axiosBaseQuery from 'src/redux/helper'
 import { VietNamDistrict, VietNamLocationList, VietNamProvince, VietNamWard } from 'src/types/location.type'
 import { SuccessResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 
 const LOCATION_URL = 'location'
 const URL_GET_ALL_VN_PROVINCES = `${LOCATION_URL}/get-provinces`

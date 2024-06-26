@@ -29,7 +29,7 @@ export default function AddPaymentMethodForm() {
   }, [paymentMethodImageFile])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
-  const [addPaymentMethodMutation, { isLoading, isSuccess, data }] = useAddPaymentMethodMutation()
+  const [addPaymentMethod, { isLoading, isSuccess, data }] = useAddPaymentMethodMutation()
 
   const paymentMethodImage = form.watch('image')
 
@@ -44,7 +44,7 @@ export default function AddPaymentMethodForm() {
           paymentMethodImageUrl = uploadRes.data.data.data[0]?.url || ''
         }
       }
-      await addPaymentMethodMutation({ ...data, image: paymentMethodImageUrl })
+      await addPaymentMethod({ ...data, image: paymentMethodImageUrl })
     } catch (error) {
       console.log(error)
     }

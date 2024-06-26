@@ -2,7 +2,7 @@ import { FloatingPortal, useFloating, arrow, shift, offset, type Placement } fro
 import { type ElementType, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-interface Props {
+interface PopoverProps {
   children: React.ReactNode
   renderPopover: React.ReactNode
   className?: string
@@ -18,7 +18,7 @@ export default function Popover({
   as: Element = 'div',
   initialOpen,
   placement = 'bottom-end'
-}: Props) {
+}: PopoverProps) {
   const [open, setOpen] = useState(initialOpen || false)
   const arrowRef = useRef<HTMLElement>(null)
   const { x, y, refs, strategy, middlewareData } = useFloating({

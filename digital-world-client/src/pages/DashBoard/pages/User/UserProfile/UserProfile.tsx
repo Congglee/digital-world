@@ -23,7 +23,7 @@ export default function UserProfile() {
 
   return (
     <>
-      <PageHeading heading='Thông tin người dùng' hasDownload={false}></PageHeading>
+      <PageHeading heading='Thông tin người dùng' hasDownload={false} />
       <div className='grid grid-cols-3 grid-flow-row border border-border divide-x divide-border bg-background shadow rounded-md'>
         <div className='col-span-3 lg:col-span-1 p-6'>
           <UserProfileInformation

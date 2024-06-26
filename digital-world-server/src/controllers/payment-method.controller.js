@@ -72,7 +72,7 @@ const getAllPaymentMethods = async (req, res) => {
     .select({ __v: 0 })
     .lean();
   const response = {
-    message: "Lấy tât cả phương thức thanh toán thành công",
+    message: "Lấy tất cả phương thức thanh toán thành công",
     data: { payment_methods: paymentMethods },
   };
   return responseSuccess(res, response);
@@ -92,7 +92,7 @@ const getPaymentMethod = async (req, res) => {
     return responseSuccess(res, response);
   } else {
     throw new ErrorHandler(
-      STATUS.BAD_REQUEST,
+      STATUS.NOT_FOUND,
       "Không tìm thấy phương thức thanh toán"
     );
   }

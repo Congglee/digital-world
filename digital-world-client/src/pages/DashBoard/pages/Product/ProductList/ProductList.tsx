@@ -2,7 +2,7 @@ import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
 import { PlusCircle, Star, Trash2 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
@@ -13,6 +13,7 @@ import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
+import PDFProductsTableDocument from 'src/pages/DashBoard/pages/Product/components/PDFProductsTable'
 import { useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import {
@@ -23,7 +24,6 @@ import {
 import { Category } from 'src/types/category.type'
 import { Product } from 'src/types/product.type'
 import { convertHTMLToPlainText, formatCurrency } from 'src/utils/utils'
-import PDFProductsTableDocument from '../components/PDFProductsTable'
 
 const exportDataHeaders = [
   'ID',
@@ -41,11 +41,11 @@ export default function ProductList() {
   const { data: productsData } = useGetAllProductsQuery()
   useGetAllBrandsQuery()
   useGetAllCategoriesQuery()
-
   const [deleteProductDialogOpen, setDeleteProductDialogOpen] = useState<boolean>(false)
   const [deleteProductsDialogOpen, setDeleteProductsDialogOpen] = useState<boolean>(false)
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
   const [selectedProductsIds, setSelectedProductsIds] = useState<string[]>([])
+
   const [deleteProduct, deleteProductResult] = useDeleteProductMutation()
   const [deleteManyProducts, deleteManyProductsResult] = useDeleteManyProductsMutation()
   const navigate = useNavigate()
@@ -64,7 +64,6 @@ export default function ProductList() {
           convertHTMLToPlainText(product.overview)
         ])
       : []
-
     return [exportDataHeaders, ...rows]
   }, [productsData])
 
@@ -76,11 +75,11 @@ export default function ProductList() {
     await deleteManyProducts({ list_id: productIds })
   }
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = useCallback(() => {
     pdf(<PDFProductsTableDocument products={productsData?.data.products!} />)
       .toBlob()
       .then((blob) => saveAs(blob, 'danh_sach_san_pham.pdf'))
-  }
+  }, [productsData])
 
   useEffect(() => {
     if (deleteProductResult.isSuccess) {
@@ -157,7 +156,7 @@ export default function ProductList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Giá sản phẩm' />,
       footer: 'Giá sản phẩm',
       cell: ({ row }) => {
-        return <div className='font-medium'>{formatCurrency(row.getValue('price'))}đ</div>
+        return <div>{formatCurrency(row.getValue('price'))}đ</div>
       }
     },
     {
@@ -165,7 +164,7 @@ export default function ProductList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Giá gốc' />,
       footer: 'Giá gốc',
       cell: ({ row }) => {
-        return <div className='font-medium'>{formatCurrency(row.getValue('price_before_discount'))}đ</div>
+        return <div>{formatCurrency(row.getValue('price_before_discount'))}đ</div>
       }
     },
     {
@@ -186,7 +185,7 @@ export default function ProductList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Thương hiệu' />,
       footer: 'Thương hiệu',
       cell: ({ row }) => {
-        return <div className='font-medium'>{row.getValue('brand')}</div>
+        return <div>{row.getValue('brand')}</div>
       },
       enableGlobalFilter: true,
       filterFn: (row, id, value) => {
@@ -198,7 +197,7 @@ export default function ProductList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Danh mục' />,
       footer: 'Danh mục',
       cell: ({ row }) => {
-        return <div className='font-medium'>{(row.getValue('category') as Category).name}</div>
+        return <div>{(row.getValue('category') as Category).name}</div>
       },
       filterFn: (row, id, value) => {
         return value.includes((row.getValue(id) as Category)._id)

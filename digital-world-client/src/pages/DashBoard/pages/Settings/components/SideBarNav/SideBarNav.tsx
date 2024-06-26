@@ -1,8 +1,9 @@
+import { HTMLAttributes } from 'react'
 import { NavLink } from 'react-router-dom'
 import { buttonVariants } from 'src/components/ui/button'
 import { cn } from 'src/utils/utils'
 
-interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
+interface SidebarNavProps extends HTMLAttributes<HTMLElement> {
   items: {
     path: string
     label: string

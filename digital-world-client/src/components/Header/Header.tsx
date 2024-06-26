@@ -4,7 +4,6 @@ import { Link, createSearchParams } from 'react-router-dom'
 import logo from 'src/assets/images/logo.png'
 import path from 'src/constants/path'
 import { TriangleDown } from 'src/components/Icons/Icons'
-import MenuDrawer from '../MenuDrawer'
 import { cn } from 'src/utils/utils'
 import { useAppDispatch, useAppSelector } from 'src/redux/hook'
 import Popover from '../Popover'
@@ -17,14 +16,15 @@ import { useGetMeQuery } from 'src/redux/apis/user.api'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import { Category } from 'src/types/category.type'
 import useQueryConfig from 'src/hooks/useQueryConfig'
+import MenuDrawer from 'src/components/MenuDrawer'
 
 function DesktopTopHeader({
   handleLogout,
-  authenticated,
+  isAuthenticated,
   profile
 }: {
   handleLogout: () => Promise<void>
-  authenticated: boolean
+  isAuthenticated: boolean
   profile: UserType | null
 }) {
   const isAllowedRole = profile && profile.roles.some((role: string) => allowedRoles.includes(role))
@@ -44,7 +44,7 @@ function DesktopTopHeader({
             </div>
           </div>
           <div>
-            {authenticated && (
+            {isAuthenticated && (
               <Popover
                 className='flex items-center py-1 hover:text-gray-300 cursor-pointer ml-6'
                 renderPopover={
@@ -89,7 +89,7 @@ function DesktopTopHeader({
               </Popover>
             )}
 
-            {!authenticated && (
+            {!isAuthenticated && (
               <>
                 <Link to={path.login} className='px-[10px]'>
                   Tài khoản
@@ -117,7 +117,7 @@ function MegaMenu({
 }) {
   const [activeDropdownMenu, setActiveDropdownMenu] = useState(false)
   useEffect(() => {
-    window.setTimeout(function () {
+    window.setTimeout(() => {
       if (window.innerWidth > 992) {
         setActiveDropdownMenu(true)
       }
@@ -396,11 +396,11 @@ export default function Header() {
 
   return (
     <header>
-      <DesktopTopHeader handleLogout={handleLogout} authenticated={isAuthenticated} profile={profile} />
+      <DesktopTopHeader handleLogout={handleLogout} isAuthenticated={isAuthenticated} profile={profile} />
       <div className='md:py-10 text-[#505050]'>
         <div className='container'>
           <MenuDrawer
-            authenticated={isAuthenticated}
+            isAuthenticated={isAuthenticated}
             active={active}
             setActive={setActive}
             handleLogout={handleLogout}

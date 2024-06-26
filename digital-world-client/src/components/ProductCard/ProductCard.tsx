@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
-import ProductRating from '../ProductRating'
 import { cn, formatCurrency, generateNameId, scrollToTop } from 'src/utils/utils'
 import { AlignJustify, Eye, Heart } from 'lucide-react'
 import { Product } from 'src/types/product.type'
 import DOMPurify from 'dompurify'
 import path from 'src/constants/path'
+import ProductRating from 'src/components/ProductRating'
 
 interface ProductLabel {
   title: string

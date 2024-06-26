@@ -51,7 +51,7 @@ export default function UpdateBrandDialog({
   }, [selectedBrand])
 
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
-  const [updateBrandMutation, { isLoading, isSuccess, data }] = useUpdateBrandMutation()
+  const [updateBrand, { isLoading, isSuccess, data }] = useUpdateBrandMutation()
 
   const brandImage = form.watch('image')
 
@@ -66,7 +66,7 @@ export default function UpdateBrandDialog({
           brandImageUrl = uploadRes.data.data.data[0]?.url || ''
         }
       }
-      await updateBrandMutation({ id: selectedBrand?._id as string, payload: { ...data, image: brandImageUrl } })
+      await updateBrand({ id: selectedBrand?._id as string, payload: { ...data, image: brandImageUrl } })
     } catch (error) {
       console.log(error)
     }

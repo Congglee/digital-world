@@ -12,10 +12,10 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
+import DataTablePagination from 'src/components/AdminPanel/DataTablePagination'
+import DataTableToolbar from 'src/components/AdminPanel/DataTableToolbar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'src/components/ui/table'
-import DataTablePagination from '../DataTablePagination/DataTablePagination'
-import DataTableToolbar from '../DataTableToolbar'
 
 interface DataTableProps<TData extends { _id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -34,11 +34,12 @@ export default function DataTable<TData extends { _id: string }, TValue>({
   // queryConfig,
   // pageCount
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
 
+  // Making server side pagination
   // const { page, limit } = queryConfig
   // const [searchParams] = useSearchParams()
   // const location = useLocation()
@@ -110,7 +111,7 @@ export default function DataTable<TData extends { _id: string }, TValue>({
     // manualPagination: true
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     const selectedRowModel = table.getSelectedRowModel().rows
     if (table.getIsAllPageRowsSelected()) {
       const selectedRowIds = selectedRowModel.map((row) => row.id)

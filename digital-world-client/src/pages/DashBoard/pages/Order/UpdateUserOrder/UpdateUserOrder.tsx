@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { saveAs } from 'file-saver'
 import { ArrowDownUp, CheckIcon, List, Loader, Send, Truck } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -15,13 +15,13 @@ import { Command, CommandGroup, CommandItem } from 'src/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from 'src/components/ui/table'
-import { deliveryStatusOptions, orderStatusOptions, paymentStatusOptions } from 'src/static/options'
 import path from 'src/constants/path'
+import PDFInvoiceDetailDocument from 'src/pages/DashBoard/pages/Order/components/PDFInvoiceDetail'
+import ShippingStatusDialog from 'src/pages/DashBoard/pages/Order/components/ShippingStatusDialog'
 import { useGetOrderQuery, useUpdateUserOrderMutation } from 'src/redux/apis/order.api'
+import { deliveryStatusOptions, orderStatusOptions, paymentStatusOptions } from 'src/static/options'
 import { OrderSchema, orderSchema } from 'src/utils/rules'
 import { cn, formatCurrency, getAvatarUrl } from 'src/utils/utils'
-import PDFInvoiceDetailDocument from '../components/PDFInvoiceDetail'
-import ShippingStatusDialog from '../components/ShippingStatusDialog'
 
 type FormData = Pick<OrderSchema, 'order_status' | 'payment_status'>
 const updateUserOrderSchema = orderSchema.pick(['order_status', 'payment_status'])
@@ -59,11 +59,11 @@ export default function UpdateUserOrder() {
     }
   }, [isSuccess])
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = useCallback(() => {
     pdf(<PDFInvoiceDetailDocument order={order!} />)
       .toBlob()
       .then((blob) => saveAs(blob, 'hoa_don.pdf'))
-  }
+  }, [order])
 
   if (!order) return null
 

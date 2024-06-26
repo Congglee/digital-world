@@ -84,7 +84,7 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
   const { data: provinceData } = useGetAllVNProvincesQuery()
   const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, { skip: provinceId ? false : true })
   const { data: wardsData } = useGetDistrictWardsQuery(districtId, { skip: districtId ? false : true })
-  const [addUserMutaton, { data, isLoading, isSuccess, isError, error }] = useAddUserMutation()
+  const [addUser, { data, isLoading, isSuccess, isError, error }] = useAddUserMutation()
 
   const handleSelectProvince = (provinceId: string, provinceValue: string) => {
     setProvinceId(provinceId)
@@ -116,7 +116,7 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
         roles: data.roles as Role[],
         password: data.password as string
       }
-      await addUserMutaton(payloadData)
+      await addUser(payloadData)
     } catch (error) {
       console.log(error)
     }

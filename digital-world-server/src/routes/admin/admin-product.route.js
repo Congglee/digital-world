@@ -1,7 +1,7 @@
 import { Router } from "express";
 import helpersMiddleware from "../../middleware/helpers.middleware";
 import authMiddleware from "../../middleware/auth.middleware";
-import ProductController from "../../controllers/product.controller";
+import productController from "../../controllers/product.controller";
 import productMiddleware from "../../middleware/product.middleware";
 import { wrapAsync } from "../../utils/response";
 import reviewController from "../../controllers/review.controller";
@@ -14,34 +14,7 @@ adminProductRouter.post(
   authMiddleware.verifyAdmin,
   productMiddleware.addProductRules(),
   helpersMiddleware.entityValidator,
-  wrapAsync(ProductController.addProduct)
-);
-
-adminProductRouter.get(
-  "/get-products",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  productMiddleware.getProductsRules(),
-  helpersMiddleware.entityValidator,
-  wrapAsync(ProductController.getProducts)
-);
-
-adminProductRouter.get(
-  "/get-all-products",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  productMiddleware.getAllProductsRules(),
-  helpersMiddleware.entityValidator,
-  wrapAsync(ProductController.getAllProducts)
-);
-
-adminProductRouter.get(
-  "/get-product/:product_id",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  helpersMiddleware.idRule("product_id"),
-  helpersMiddleware.idValidator,
-  wrapAsync(ProductController.getProduct)
+  wrapAsync(productController.addProduct)
 );
 
 adminProductRouter.put(
@@ -52,7 +25,7 @@ adminProductRouter.put(
   helpersMiddleware.idValidator,
   productMiddleware.updateProductRules(),
   helpersMiddleware.entityValidator,
-  wrapAsync(ProductController.updateProduct)
+  wrapAsync(productController.updateProduct)
 );
 
 adminProductRouter.delete(
@@ -61,7 +34,7 @@ adminProductRouter.delete(
   authMiddleware.verifyAdmin,
   helpersMiddleware.idRule("product_id"),
   helpersMiddleware.idValidator,
-  wrapAsync(ProductController.deleteProduct)
+  wrapAsync(productController.deleteProduct)
 );
 
 adminProductRouter.delete(
@@ -70,17 +43,17 @@ adminProductRouter.delete(
   authMiddleware.verifyAdmin,
   helpersMiddleware.listIdRule("list_id"),
   helpersMiddleware.idValidator,
-  wrapAsync(ProductController.deleteManyProducts)
+  wrapAsync(productController.deleteManyProducts)
 );
 
 adminProductRouter.delete(
-  "/delete-rating/:product_id/:rating_id",
+  "/delete-user-rating/:product_id/:rating_id",
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,
   helpersMiddleware.idRule("product_id"),
   helpersMiddleware.idRule("rating_id"),
   helpersMiddleware.idValidator,
-  wrapAsync(reviewController.deleteRating)
+  wrapAsync(reviewController.deleteUserRating)
 );
 
 adminProductRouter.delete(
@@ -88,7 +61,6 @@ adminProductRouter.delete(
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,
   helpersMiddleware.idRule("product_id"),
-  helpersMiddleware.idValidator,
   helpersMiddleware.listIdRule("list_id"),
   helpersMiddleware.idValidator,
   wrapAsync(reviewController.deleteManyRatings)

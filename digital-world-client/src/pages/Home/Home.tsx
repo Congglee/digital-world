@@ -1,12 +1,12 @@
+import BlogPostSection from 'src/pages/Home/components/BlogPostSection'
+import BrandsSection from 'src/pages/Home/components/BrandsSection'
+import FeaturedProductsSection from 'src/pages/Home/components/FeaturedProductsSection'
+import HeroSection from 'src/pages/Home/components/HeroSection'
+import HotCollectionsSection from 'src/pages/Home/components/HotCollectionsSection'
+import NewArrivalsSection from 'src/pages/Home/components/NewArrivalsSection'
+import { useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import { useGetAllProductsQuery } from 'src/redux/apis/product.api'
-import BlogPostSection from './components/BlogPostSection'
-import BrandsSection from './components/BrandsSection'
-import FeaturedProductsSection from './components/FeaturedProductsSection'
-import HeroSection from './components/HeroSection'
-import HotCollectionsSection from './components/HotCollectionsSection'
-import NewArrivalsSection from './components/NewArrivalsSection'
-import { useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 
 export default function Home() {
   const { data: categoriesData } = useGetAllCategoriesQuery()

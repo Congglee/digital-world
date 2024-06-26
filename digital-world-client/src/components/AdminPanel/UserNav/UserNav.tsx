@@ -39,16 +39,16 @@ export default function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-8 w-8'>
-            <AvatarImage src={profile.avatar ? profile.avatar : config.defaultUserImageUrl} alt='@shadcn' />
-            <AvatarFallback>SC</AvatarFallback>
+            <AvatarImage src={profile?.avatar ? profile.avatar : config.defaultUserImageUrl} alt={profile?.name} />
+            <AvatarFallback>{profile?.name.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56 font-normal' align='end' forceMount>
         <DropdownMenuLabel>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>{profile.name}</p>
-            <p className='text-xs leading-none text-muted-foreground'>{profile.email}</p>
+            <p className='text-sm font-medium leading-none'>{profile?.name}</p>
+            <p className='text-xs leading-none text-muted-foreground'>{profile?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

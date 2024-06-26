@@ -8,15 +8,6 @@ import brandMiddleware from "../../middleware/brand.middleware";
 const adminBrandRouter = Router();
 
 adminBrandRouter.get(
-  "/get-brands",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  brandMiddleware.getBrandsRules(),
-  helpersMiddleware.entityValidator,
-  wrapAsync(brandController.getBrands)
-);
-
-adminBrandRouter.get(
   "/get-all-brands",
   authMiddleware.verifyAccessToken,
   authMiddleware.verifyAdmin,
@@ -32,15 +23,6 @@ adminBrandRouter.post(
   brandMiddleware.addBrandRules(),
   helpersMiddleware.entityValidator,
   wrapAsync(brandController.addBrand)
-);
-
-adminBrandRouter.get(
-  "/get-brand/:brand_id",
-  authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
-  helpersMiddleware.idRule("brand_id"),
-  helpersMiddleware.idValidator,
-  wrapAsync(brandController.getBrand)
 );
 
 adminBrandRouter.put(

@@ -1,12 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
 import { SuccessResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 import { Brand, BrandList } from 'src/types/brand.type'
-import { setBrandsOptionsFilter } from '../slices/brand.slice'
 import { BrandSchema } from 'src/utils/rules'
-import { categoryApi } from './category.api'
-import { productApi } from './product.api'
+import axiosBaseQuery from 'src/redux/helper'
+import { setBrandsOptionsFilter } from 'src/redux/slices/brand.slice'
+import { categoryApi } from 'src/redux/apis/category.api'
+import { productApi } from 'src/redux/apis/product.api'
 
 const BRAND_URL = 'brands'
 const ADMIN_BRAND_URL = `admin/${BRAND_URL}`

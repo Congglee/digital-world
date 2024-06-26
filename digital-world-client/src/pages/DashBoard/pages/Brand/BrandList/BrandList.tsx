@@ -2,7 +2,7 @@ import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
 import { PlusCircle, Trash2 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
 import DataTable from 'src/components/AdminPanel/DataTable'
@@ -11,11 +11,11 @@ import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
+import AddBrandDialog from 'src/pages/DashBoard/pages/Brand/components/AddBrandDialog'
+import PDFBrandsTableDocument from 'src/pages/DashBoard/pages/Brand/components/PDFBrandsTable'
+import UpdateBrandDialog from 'src/pages/DashBoard/pages/Brand/components/UpdateBrandDialog'
 import { useDeleteBrandMutation, useDeleteManyBrandsMutation, useGetAllBrandsQuery } from 'src/redux/apis/brand.api'
 import { Brand } from 'src/types/brand.type'
-import AddBrandDialog from '../components/AddBrandDialog'
-import UpdateBrandDialog from '../components/UpdateBrandDialog'
-import PDFBrandsTableDocument from '../components/PDFBrandsTable'
 
 const exportDataHeaders = ['ID', 'Tên thương hiệu']
 
@@ -27,6 +27,7 @@ export default function BrandList() {
   const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null)
   const [selectedBrandsIds, setSelectedBrandsIds] = useState<string[]>([])
   const [updateBrandDialogOpen, setUpdateBrandDialogOpen] = useState<boolean>(false)
+
   const [deleteBrand, deleteBrandResult] = useDeleteBrandMutation()
   const [deleteManyBrands, deleteManyBrandsResult] = useDeleteManyBrandsMutation()
 
@@ -44,11 +45,11 @@ export default function BrandList() {
     await deleteManyBrands({ list_id: brandsIds })
   }
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = useCallback(() => {
     pdf(<PDFBrandsTableDocument brands={brandsData?.data.brands!} />)
       .toBlob()
-      .then((blob) => saveAs(blob, 'danh_sach_thuong_hieu.pdf'))
-  }
+      .then((blob) => saveAs(blob, 'name_sach_thuong_hieu.pdf'))
+  }, [brandsData])
 
   useEffect(() => {
     if (deleteBrandResult.isSuccess) {

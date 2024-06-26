@@ -36,7 +36,7 @@ export default function UpdateCategoryDialog({
     resolver: yupResolver(updateCategorySchema),
     defaultValues: { name: '', brands: [], is_actived: true }
   })
-  const [updateCategoryMutation, { isLoading, isSuccess, data }] = useUpdateCategoryMutation()
+  const [updateCategory, { isLoading, isSuccess, data }] = useUpdateCategoryMutation()
   const [isUncategorized, setIsUncategorized] = useState<boolean>(false)
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function UpdateCategoryDialog({
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      await updateCategoryMutation({ id: selectedCategory?._id as string, payload: data })
+      await updateCategory({ id: selectedCategory?._id as string, payload: data })
     } catch (error) {
       console.log(error)
     }

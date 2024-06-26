@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ArrowDownUp, CheckIcon, Loader } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import mapApi from 'src/apis/map.api'
@@ -12,14 +12,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from 'src/components/ui/input'
 import { Label } from 'src/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
-import { deliveryStatusOptions } from 'src/static/options'
 import { useDebounce } from 'src/hooks/useDebounce'
+import Map from 'src/pages/DashBoard/pages/Order/components/Map'
 import { useUpdateUserOrderMutation } from 'src/redux/apis/order.api'
+import { deliveryStatusOptions } from 'src/static/options'
 import { AutoCompleteAddress } from 'src/types/location.type'
 import { Order } from 'src/types/order.type'
 import { OrderSchema, orderSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-import Map from '../Map'
 
 interface ShippingStatusDialogProps {
   open: boolean
@@ -70,10 +70,10 @@ export default function ShippingStatusDialog({ open, onOpenChange, order }: Ship
     }
   }, [open])
 
-  const getAutoCompleteAddress = async (query: string) => {
+  const getAutoCompleteAddress = useCallback(async (query: string) => {
     const { data } = await mapApi.getAddressAutoComplete(query)
     setAutoCompleteAddress(data.data.results)
-  }
+  }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({ ...address, place: event.target.value })
@@ -98,9 +98,9 @@ export default function ShippingStatusDialog({ open, onOpenChange, order }: Ship
     setAutoCompleteAddress([])
   }
 
-  const handleUpdateCoordinates = (latitude: number, longitude: number) => {
-    setAddress({ ...address, latitude, longitude })
-  }
+  const handleUpdateCoordinates = useCallback((latitude: number, longitude: number) => {
+    setAddress((prevAddress) => ({ ...prevAddress, latitude, longitude }))
+  }, [])
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {

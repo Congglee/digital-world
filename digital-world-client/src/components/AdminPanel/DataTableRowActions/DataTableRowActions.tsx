@@ -7,7 +7,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from 'src/components/ui/dropdown-menu'
-
 import { Button } from 'src/components/ui/button'
 
 interface DataTableRowActionsProps<TData> {
@@ -41,7 +40,7 @@ export default function DataTableRowActions<TData>(props: DataTableRowActionsPro
               disabled={!props.enableViewDetail}
               className='cursor-pointer'
               onClick={() => {
-                if (props.onViewDetail) props.onViewDetail()
+                props.onViewDetail && props.onViewDetail()
               }}
             >
               <Eye className='w-4 h-4 mr-2' />
@@ -53,7 +52,7 @@ export default function DataTableRowActions<TData>(props: DataTableRowActionsPro
         <DropdownMenuItem
           disabled={!props.enableEditing}
           onClick={() => {
-            if (props.onEdit) props.onEdit()
+            props.onEdit && props.onEdit()
           }}
           className='cursor-pointer'
         >
@@ -67,7 +66,7 @@ export default function DataTableRowActions<TData>(props: DataTableRowActionsPro
               disabled={!props.enableEditPassword}
               className='cursor-pointer'
               onClick={() => {
-                if (props.onEditPassword) props.onEditPassword()
+                props.onEditPassword && props.onEditPassword()
               }}
             >
               <LockKeyhole className='w-4 h-4 mr-2' />
@@ -82,7 +81,7 @@ export default function DataTableRowActions<TData>(props: DataTableRowActionsPro
               disabled={!props.enableSendMail}
               className='cursor-pointer'
               onClick={() => {
-                if (props.onSendMail) props.onSendMail()
+                props.onSendMail && props.onSendMail()
               }}
             >
               <Mail className='w-4 h-4 mr-2' />
@@ -95,7 +94,7 @@ export default function DataTableRowActions<TData>(props: DataTableRowActionsPro
           disabled={!props.enableDeleting}
           className='cursor-pointer'
           onClick={() => {
-            if (props.onDelete) props.onDelete()
+            props.onDelete && props.onDelete()
           }}
         >
           <Trash2 className='w-4 h-4 mr-2' />

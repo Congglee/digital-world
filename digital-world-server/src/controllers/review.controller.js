@@ -5,13 +5,15 @@ import { UserModel } from "../database/models/user.model";
 import { ErrorHandler, responseSuccess } from "../utils/response";
 
 const ratingProduct = async (req, res) => {
+  const product_id = req.params.product_id;
+  const user_id = req.jwtDecoded.id;
   const form = req.body;
-  const { star, comment, product_id } = form;
-  const userInDB = await UserModel.findById(req.jwtDecoded.id).exec();
+  const { star, comment } = form;
+  const userInDB = await UserModel.findById(user_id).lean().exec();
   const productDB = await ProductModel.findOne({ _id: product_id });
   if (productDB) {
     const alreadyRatingProduct = productDB.ratings.find(
-      (item) => item.posted_by.toString() === req.jwtDecoded.id
+      (item) => item.posted_by.toString() === user_id
     );
     if (alreadyRatingProduct) {
       alreadyRatingProduct.star = star;
@@ -23,7 +25,7 @@ const ratingProduct = async (req, res) => {
         comment,
         user_name: userInDB.name,
         user_avatar: userInDB.avatar,
-        posted_by: req.jwtDecoded.id,
+        posted_by: user_id,
         publish: true,
         date: new Date().toISOString(),
       });
@@ -46,7 +48,7 @@ const ratingProduct = async (req, res) => {
   }
 };
 
-const deleteRating = async (req, res) => {
+const deleteUserRating = async (req, res) => {
   const { product_id, rating_id } = req.params;
   const productDB = await ProductModel.findOneAndUpdate(
     { _id: product_id },
@@ -69,6 +71,44 @@ const deleteRating = async (req, res) => {
     return responseSuccess(res, {
       message: "Xóa đánh giá sản phẩm thành công",
     });
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
+  }
+};
+
+const deleteMyRating = async (req, res) => {
+  const user_id = req.jwtDecoded.id;
+  const { product_id, rating_id } = req.params;
+  const productDB = await ProductModel.findOne({ _id: product_id });
+  if (productDB) {
+    const rating = productDB.ratings.find(
+      (item) =>
+        item._id.toString() === rating_id &&
+        item.posted_by.toString() === user_id
+    );
+    if (rating) {
+      productDB.ratings.pull({ _id: rating_id });
+      const ratingCount = productDB.ratings.length;
+      if (ratingCount > 0) {
+        const sumRatings = productDB.ratings.reduce(
+          (sum, item) => sum + item.star,
+          0
+        );
+        productDB.total_ratings =
+          Math.round((sumRatings * 10) / ratingCount) / 10;
+      } else {
+        productDB.total_ratings = 0;
+      }
+      await productDB.save();
+      return responseSuccess(res, {
+        message: "Xóa đánh giá sản phẩm thành công",
+      });
+    } else {
+      throw new ErrorHandler(
+        STATUS.NOT_FOUND,
+        "Không tìm thấy đánh giá sản phẩm"
+      );
+    }
   } else {
     throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
   }
@@ -111,7 +151,7 @@ const updateRatingStatus = async (req, res) => {
     { _id: product_id, "ratings._id": rating_id },
     { $set: { "ratings.$.publish": publish } },
     { new: true }
-  );
+  ).lean();
   if (productDB) {
     return responseSuccess(res, {
       message: "Cập nhật trạng thái hiển thị của đánh giá thành công",
@@ -123,9 +163,10 @@ const updateRatingStatus = async (req, res) => {
 
 const reviewController = {
   ratingProduct,
-  deleteRating,
+  deleteUserRating,
   deleteManyRatings,
   updateRatingStatus,
+  deleteMyRating,
 };
 
 export default reviewController;

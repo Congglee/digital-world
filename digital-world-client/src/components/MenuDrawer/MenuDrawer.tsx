@@ -10,7 +10,7 @@ interface MenuDrawerProps {
   active: boolean
   setActive: React.Dispatch<React.SetStateAction<boolean>>
   handleLogout: () => Promise<void>
-  authenticated: boolean
+  isAuthenticated: boolean
 }
 
 export default function MenuDrawer(props: MenuDrawerProps) {
@@ -47,7 +47,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
         <li className='text-white uppercase py-3 border-b border-[#343535]'>Liên hệ</li>
       </ul>
       <div className='mb-5'>
-        {!props.authenticated && (
+        {!props.isAuthenticated && (
           <>
             <Link to={path.login} className='flex items-center text-white py-3'>
               <LogIn size={20} />
@@ -60,7 +60,7 @@ export default function MenuDrawer(props: MenuDrawerProps) {
           </>
         )}
 
-        {props.authenticated && (
+        {props.isAuthenticated && (
           <>
             <Link to={path.profile} className='flex items-center text-white py-3'>
               <span className='uppercase'>Tài khoản</span>

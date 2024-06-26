@@ -1,9 +1,9 @@
 import { useAppDispatch } from 'src/redux/hook'
-import useRouteElements from './useRouteElements'
 import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
 import { setExtendedPurchasesCart } from 'src/redux/slices/cart.slice'
 import { useEffect } from 'react'
 import { LocalStorageEventTarget } from 'src/utils/auth'
+import useRouteElements from 'src/useRouteElements'
 
 function App() {
   const routeElements = useRouteElements()

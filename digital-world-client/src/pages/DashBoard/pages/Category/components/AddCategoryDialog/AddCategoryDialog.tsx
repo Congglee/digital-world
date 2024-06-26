@@ -35,11 +35,11 @@ export default function AddCategoryDialog({ open, onOpenChange, brands }: AddCat
     }
   }, [unbranded])
 
-  const [addCategoryMutation, { isLoading, isSuccess, data }] = useAddCategoryMutation()
+  const [addCategory, { isLoading, isSuccess, data }] = useAddCategoryMutation()
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      await addCategoryMutation(data)
+      await addCategory(data)
     } catch (error) {
       console.log(error)
     }

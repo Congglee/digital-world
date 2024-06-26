@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from 'src/components/ui/carousel'
+import ProductTab from 'src/pages/Home/components/ProductTab'
 import { Product } from 'src/types/product.type'
 import { cn } from 'src/utils/utils'
-import ProductTab from '../ProductTab/ProductTab'
 
 export default function HeroTabs({ products }: { products: Product[] }) {
   const [activeTab, setActiveTab] = useState(0)

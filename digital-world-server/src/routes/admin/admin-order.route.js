@@ -47,8 +47,6 @@ adminOrderRouter.put(
   authMiddleware.verifyAdmin,
   helpersMiddleware.idRule("order_id"),
   helpersMiddleware.idValidator,
-  orderMiddleware.updateUserOrderRules(),
-  helpersMiddleware.entityValidator,
   wrapAsync(orderController.updateUserOrder)
 );
 

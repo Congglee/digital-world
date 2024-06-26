@@ -1,10 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
 import { SuccessResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 import { PayPalPayment, PaymentMethod, PaymentMethodList } from 'src/types/payment.type'
 import { PaymentMethodSchema } from 'src/utils/rules'
 import { BodyAddOrder } from 'src/redux/apis/order.api'
+import axiosBaseQuery from 'src/redux/helper'
 
 const PAYMENT_URL = 'payment'
 const ADMIN_PAYMENT_URL = `admin/${PAYMENT_URL}`

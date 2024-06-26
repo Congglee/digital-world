@@ -5,9 +5,9 @@ import { Button, buttonVariants } from 'src/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { RadioGroup, RadioGroupItem } from 'src/components/ui/radio-group'
 import { Separator } from 'src/components/ui/separator'
+import SettingsHeading from 'src/pages/DashBoard/pages/Settings/components/SettingsHeading'
 import { cn } from 'src/utils/utils'
 import * as yup from 'yup'
-import SettingsHeading from '../../components/SettingsHeading/SettingsHeading'
 
 const appearanceFormSchema = yup.object().shape({
   theme: yup.string().oneOf(['light', 'dark']).required('Vui lòng chọn một theme.'),

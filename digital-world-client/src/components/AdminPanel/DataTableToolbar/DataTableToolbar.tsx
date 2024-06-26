@@ -1,9 +1,9 @@
-import { X } from 'lucide-react'
 import { Table } from '@tanstack/react-table'
-import { Input } from 'src/components/ui/input'
+import { X } from 'lucide-react'
+import DataTableFacetedFilter from 'src/components/AdminPanel/DataTableFacetedFilter'
+import DataTableViewOptions from 'src/components/AdminPanel/DateViewTableOptions'
 import { Button } from 'src/components/ui/button'
-import DataTableFacetedFilter from '../DataTableFacetedFilter'
-import DataTableViewOptions from '../DateViewTableOptions'
+import { Input } from 'src/components/ui/input'
 import { useAppSelector } from 'src/redux/hook'
 import {
   deliveryStatusOptions,

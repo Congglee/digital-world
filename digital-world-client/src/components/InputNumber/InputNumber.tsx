@@ -16,9 +16,7 @@ const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function Inpu
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
     if (/^\d+$/.test(value) || value === '') {
-      // Thực thi onChange callback từ bên ngoài truyền vào props
       onChange && onChange(event)
-      // Cập nhật localValue state
       setLocalValue(value)
     }
   }
@@ -35,7 +33,6 @@ const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function Inpu
         {...rest}
         ref={ref}
       />
-
       <div className={cn('mt-1 text-red-600 min-h-[1.25rem] text-sm', classNameError)}>{errorMessage}</div>
     </div>
   )

@@ -44,7 +44,7 @@ export default function ProductList() {
             <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-5'>
               {productsData &&
                 productsData.data.products
-                  .filter((product) => product.is_published)
+                  .filter((product) => product.is_actived)
                   .map((product) => (
                     <div className='col-span-1' key={product._id}>
                       <ProductCard

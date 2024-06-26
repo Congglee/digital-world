@@ -11,7 +11,6 @@ import { generateResetPasswordEmail } from 'src/utils/mail'
 import { Schema, schema } from 'src/utils/rules'
 
 type FormData = Pick<Schema, 'email'>
-
 const forgotPasswordSchema = schema.pick(['email'])
 
 export default function ForgotPassword() {
@@ -24,17 +23,17 @@ export default function ForgotPassword() {
     resolver: yupResolver(forgotPasswordSchema)
   })
 
-  const [forgotPasswordMutation, { isSuccess, data }] = useForgotPasswordMutation()
-  const [sendMailMutation, sendMailMutationResult] = useSendCommonMailMutation()
+  const [forgotPassword, { isSuccess, data }] = useForgotPasswordMutation()
+  const [sendMail, sendMailResult] = useSendCommonMailMutation()
 
   const onSubmit = handleSubmit(async (data) => {
-    await forgotPasswordMutation(data)
+    await forgotPassword(data)
   })
 
   useEffect(() => {
     const handleSendResetPasswordMail = async (token: string) => {
       const htmlContent = generateResetPasswordEmail(token)
-      await sendMailMutation({
+      await sendMail({
         email: getValues('email'),
         subject: 'Quên mật khẩu - Digital World 2',
         content: htmlContent
@@ -46,10 +45,10 @@ export default function ForgotPassword() {
   }, [isSuccess])
 
   useEffect(() => {
-    if (sendMailMutationResult.isSuccess) {
+    if (sendMailResult.isSuccess) {
       toast.success(data?.data.message)
     }
-  }, [sendMailMutationResult.isSuccess])
+  }, [sendMailResult.isSuccess])
 
   return (
     <>
@@ -72,8 +71,8 @@ export default function ForgotPassword() {
               <Button
                 type='submit'
                 className='w-full text-center uppercase bg-purple py-[11px] px-[15px] text-sm text-white hover:bg-[#333] hover:opacity-90 transition-colors flex items-center justify-center gap-2'
-                disabled={sendMailMutationResult.isLoading}
-                isLoading={sendMailMutationResult.isLoading}
+                disabled={sendMailResult.isLoading}
+                isLoading={sendMailResult.isLoading}
               >
                 Xác nhận
               </Button>

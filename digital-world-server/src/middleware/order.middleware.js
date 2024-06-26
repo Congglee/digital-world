@@ -27,9 +27,9 @@ const addOrderRules = () => {
       .withMessage("Họ và tên phải ít hơn 160 kí tự"),
     body("order_phone")
       .exists({ checkFalsy: true })
-      .withMessage("SDT không được để trống")
+      .withMessage("SĐT không được để trống")
       .isLength({ max: 20 })
-      .withMessage("SDT phải ít hơn 20 kí tự"),
+      .withMessage("SĐT phải ít hơn 20 kí tự"),
     body("payment_method")
       .exists({ checkFalsy: true })
       .withMessage("Phương thức thanh toán không được để trống")
@@ -37,35 +37,13 @@ const addOrderRules = () => {
       .withMessage("Phương thức thanh toán phải ít hơn 160 kí tự"),
     body("delivery_at")
       .exists({ checkFalsy: true })
-      .withMessage("Địa chỉ giao hàng không được để trống")
-      .isLength({ max: 160 })
-      .withMessage("Địa chỉ giao hàng phải ít hơn 160 kí tự"),
-  ];
-};
-
-const updateUserOrderRules = () => {
-  return [
-    body("order_status")
-      .exists({ checkFalsy: true })
-      .withMessage("Trạng thái đơn hàng không được để trống")
-      .isLength({ max: 160 })
-      .withMessage("Trạng thái đơn hàng phải ít hơn 160 kí tự"),
-    body("delivery_status")
-      .exists({ checkFalsy: true })
-      .withMessage("Trạng thái vận chuyển không được để trống"),
-    body("payment_status")
-      .exists({ checkFalsy: true })
-      .withMessage("Trạng thái thanh toán không được để trống")
-      .isLength({ max: 160 })
-      .withMessage("Trạng thái thanh toán phải ít hơn 160 kí tự"),
+      .withMessage("Địa chỉ giao hàng không được để trống"),
   ];
 };
 
 const updateMyOrderRules = () => {
   return [
     body("order_status")
-      .exists({ checkFalsy: true })
-      .withMessage("Trạng thái đơn hàng không được để trống")
       .equals(ORDER_STATUS.CANCELLED)
       .withMessage(
         `Trạng thái đơn hàng chỉ chấp nhận giá trị là '${ORDER_STATUS.CANCELLED}'`
@@ -75,7 +53,6 @@ const updateMyOrderRules = () => {
 
 const orderMiddleware = {
   addOrderRules,
-  updateUserOrderRules,
   updateMyOrderRules,
   getOrdersRules,
 };

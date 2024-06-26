@@ -34,23 +34,31 @@ const addProductRules = () => {
   return [
     body("name")
       .exists({ checkFalsy: true })
-      .withMessage("Tiêu đề không được để trống")
+      .withMessage("Tên sản phẩm không được để trống")
       .isLength({ max: 160 })
-      .withMessage("Tiêu đề phải ít hơn 160 kí tự"),
+      .withMessage("Tên sản phẩm phải ít hơn 160 kí tự"),
     body("thumb")
       .exists({ checkFalsy: true })
-      .withMessage("Thumb không được để trống")
+      .withMessage("Ảnh đại diện không được để trống")
       .isLength({ max: 1000 })
-      .withMessage("Thumb phải ít hơn 1000 kí tự"),
+      .withMessage("Ảnh đại diện phải ít hơn 1000 kí tự"),
     body("images")
       .if((value) => value !== undefined)
-      .isArray()
-      .withMessage("Images phải dạng string[]"),
+      .custom((value) => {
+        if (!Array.isArray(value)) {
+          return false;
+        }
+        if (value.some((item) => typeof item !== "string")) {
+          return false;
+        }
+        return true;
+      })
+      .withMessage("Ảnh phải ở định dạng mảng string"),
     body("category")
       .exists({ checkFalsy: true })
       .withMessage("Danh mục không được để trống")
       .isMongoId()
-      .withMessage(`Danh mục không đúng định dạng id`),
+      .withMessage("Danh mục phải là id"),
     body("price")
       .if((value) => value !== undefined)
       .isNumeric()
@@ -72,15 +80,13 @@ const addProductRules = () => {
       .exists({ checkFalsy: true })
       .withMessage("Thông số kỹ thuật không được để trống"),
     body("is_featured")
-      .exists()
-      .withMessage("is_featured không được để trống")
+      .if((value) => value !== undefined)
       .isBoolean()
-      .withMessage("is_featured không đúng định dạng"),
-    body("is_published")
-      .exists()
-      .withMessage("is_published không được để trống")
+      .withMessage("Trạng thái nổi bật phải ở định dạng boolean"),
+    body("is_actived")
+      .if((value) => value !== undefined)
       .isBoolean()
-      .withMessage("is_published không đúng định dạng"),
+      .withMessage("Trạng thái hiển thị phải ở định dạng boolean"),
   ];
 };
 
@@ -91,11 +97,6 @@ const ratingProductRules = () => {
       .withMessage("Số sao không được để trống")
       .isNumeric()
       .withMessage("Số sao phải ở định dạng number"),
-    body("product_id")
-      .exists({ checkFalsy: true })
-      .withMessage("product_id không được để trống")
-      .isMongoId()
-      .withMessage(`product_id không đúng định dạng id`),
   ];
 };
 
@@ -113,7 +114,7 @@ const updateProductRules = () => {
   return addProductRules();
 };
 
-const ProductMiddleware = {
+const productMiddleware = {
   addProductRules,
   getProductsRules,
   getAllProductsRules,
@@ -122,4 +123,4 @@ const ProductMiddleware = {
   updateRatingStatusRules,
 };
 
-export default ProductMiddleware;
+export default productMiddleware;

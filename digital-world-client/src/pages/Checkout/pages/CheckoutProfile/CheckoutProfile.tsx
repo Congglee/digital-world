@@ -437,9 +437,11 @@ export default function CheckoutProfile() {
         title='Bạn có muốn cập nhật thông tin trên vào hồ sơ của bạn không?'
         description='Nếu bạn không cập nhật, thông tin này sẽ không được lưu lại vào tài khoản của bạn.'
         confirmButtonClassName='bg-green-500 hover:bg-green-600/80'
-        loading={isLoading}
+        isLoading={isLoading}
         handleConfirm={() => {
-          if (!isLoading) handleUpdateProfile()
+          if (!isLoading) {
+            handleUpdateProfile()
+          }
         }}
       />
     </>

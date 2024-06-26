@@ -1,10 +1,10 @@
 import { omitBy } from "lodash";
+import mongoose from "mongoose";
 import { CATEGORY_SORT_BY, ORDER } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { CategoryModel } from "../database/models/category.model";
 import { ProductModel } from "../database/models/product.model";
 import { ErrorHandler, responseSuccess } from "../utils/response";
-import mongoose from "mongoose";
 
 const addCategory = async (req, res) => {
   const form = req.body;
@@ -76,7 +76,7 @@ const getAllCategories = async (req, res) => {
     .select({ __v: 0 })
     .lean();
   const response = {
-    message: "Lấy tất cả danh mục thành công",
+    message: "Lấy danh sách tất cả danh mục thành công",
     data: { categories },
   };
   return responseSuccess(res, response);
@@ -134,9 +134,7 @@ const deleteCategory = async (req, res) => {
       });
       await ProductModel.updateMany(
         { category: categoryDB._id },
-        {
-          $set: { category: uncategorized._id, brand: "Unbranded" },
-        }
+        { $set: { category: uncategorized._id, brand: "Unbranded" } }
       );
     }
     return responseSuccess(res, { message: "Xóa danh mục thành công" });

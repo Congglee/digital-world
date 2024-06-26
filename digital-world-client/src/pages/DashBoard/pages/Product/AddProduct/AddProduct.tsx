@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ImageUp, List, Loader } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -12,13 +12,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from 'src/components/ui/input'
 import { Switch } from 'src/components/ui/switch'
 import path from 'src/constants/path'
+import PreviewProductImages from 'src/pages/DashBoard/pages/Product/components/PreviewProductImages'
 import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import { useAddProductMutation } from 'src/redux/apis/product.api'
 import { useUploadImagesMutation } from 'src/redux/apis/upload.api'
 import { isEntityError } from 'src/utils/helper'
 import { ProductSchema, productSchema } from 'src/utils/rules'
 import { handleValidateFile, handleValidateMultiFile } from 'src/utils/utils'
-import PreviewProductImages from '../components/PreviewProductImages'
 
 type FormData = ProductSchema
 const addProductSchema = productSchema
@@ -29,7 +29,7 @@ const initialFormState = {
   images: [],
   overview: '',
   is_featured: false,
-  is_published: true,
+  is_actived: true,
   price: 0,
   price_before_discount: 0,
   category: '',
@@ -71,10 +71,13 @@ export default function AddProduct() {
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
   const [addProduct, { data, isSuccess, isError, error, isLoading }] = useAddProductMutation()
 
-  const handleRemoveImageFiles = (index: number) => {
-    const updatedFiles = imageFiles.filter((_, idx) => idx !== index)
-    setImageFiles(updatedFiles)
-  }
+  const handleRemoveImageFiles = useCallback(
+    (index: number) => {
+      const updatedFiles = imageFiles.filter((_, idx) => idx !== index)
+      setImageFiles(updatedFiles)
+    },
+    [imageFiles]
+  )
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
@@ -309,7 +312,7 @@ export default function AddProduct() {
             <div className='col-span-2 md:col-span-1 flex flex-col xs:flex-row xs:items-center gap-5'>
               <FormField
                 control={form.control}
-                name='is_published'
+                name='is_actived'
                 render={({ field }) => (
                   <FormItem className='flex flex-row gap-3 space-y-0 items-center justify-between rounded-lg border p-3 shadow-sm'>
                     <FormLabel>Hiển thị</FormLabel>

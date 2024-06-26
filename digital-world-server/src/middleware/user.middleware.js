@@ -73,7 +73,7 @@ const addUserRules = () => {
     body("avatar")
       .if((value) => value !== undefined)
       .isString()
-      .withMessage("avatar phải là string url")
+      .withMessage("Avatar phải là string url")
       .isLength({ max: 1000 })
       .withMessage("URL avatar không được lớn hơn 1000 ký tự"),
     body("verify")
@@ -202,7 +202,7 @@ const addToCartRules = () => {
       .exists({ checkFalsy: true })
       .withMessage("product_id không được để trống")
       .isMongoId()
-      .withMessage("product_id không đúng định dạng"),
+      .withMessage("product_id phải là id"),
     body("buy_count")
       .exists({ checkFalsy: true })
       .withMessage("buy_count không được để trống")

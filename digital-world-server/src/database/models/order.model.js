@@ -7,23 +7,23 @@ import {
 } from "../../constants/purchase";
 
 const OrderBySchema = new Schema({
-  user_email: { type: String },
-  user_avatar: { type: String },
+  user_email: { type: String, maxlength: 160 },
+  user_avatar: { type: String, maxlength: 1000 },
   user_id: { type: mongoose.SchemaTypes.ObjectId, ref: "users" },
 });
 
 const OrderProductsSchema = new Schema({
   product_id: { type: mongoose.SchemaTypes.ObjectId, ref: "products" },
-  product_name: { type: String },
-  product_price: { type: Number },
-  product_thumb: { type: String },
+  product_name: { type: String, maxlength: 160 },
+  product_price: { type: Number, default: 0 },
+  product_thumb: { type: String, maxlength: 1000 },
   buy_count: Number,
 });
 
 const ShippingAddressSchema = new Schema({
-  order_fullname: { type: String, maxlength: 160 },
-  order_phone: { type: String, maxlength: 20 },
-  delivery_at: { type: String },
+  order_fullname: { type: String, required: true, maxlength: 160 },
+  order_phone: { type: String, required: true, maxlength: 20 },
+  delivery_at: { type: String, required: true },
 });
 
 const OrderSchema = new Schema(
@@ -39,13 +39,14 @@ const OrderSchema = new Schema(
       type: String,
       default: DELIVERY_STATUS.WAIT_FOR_CONFIRMATION,
     },
-    total_amount: { type: Number },
+    total_amount: { type: Number, default: 0 },
     payment_status: { type: String, default: PAYMENT_STATUS.UNPAID },
-    date_of_order: { type: Date, maxlength: 160 },
+    date_of_order: { type: Date },
     shipping_address: { type: ShippingAddressSchema },
     order_note: { type: String },
     payment_method: {
       type: String,
+      default: PAYMENT.DIRECTLY,
       enum: [
         PAYMENT.DIRECTLY,
         PAYMENT.BANKING,

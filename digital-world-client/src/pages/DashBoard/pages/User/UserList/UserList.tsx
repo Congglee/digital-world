@@ -2,7 +2,7 @@ import { pdf } from '@react-pdf/renderer'
 import { ColumnDef } from '@tanstack/react-table'
 import { saveAs } from 'file-saver'
 import { CircleUserRound, PlusCircle, Trash2 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ConfirmDialog from 'src/components/AdminPanel/ConfirmDialog'
@@ -31,9 +31,7 @@ const exportDataHeaders = [
   'Tỉnh',
   'Quận huyện',
   'Phường',
-  'SĐT',
-  'Vai trò',
-  'Trạng thái tài khoản'
+  'SĐT'
 ]
 
 export default function UserList() {
@@ -43,8 +41,10 @@ export default function UserList() {
   const [selectedUsersIds, setSelectedUsersIds] = useState<string[]>([])
   const [deleteUserDialogOpen, setDeleteUserDialogOpen] = useState<boolean>(false)
   const [deleteUsersDialogOpen, setDeleteUsersDialogOpen] = useState<boolean>(false)
+
   const { profile } = useAppSelector((state) => state.auth)
   const usersList = usersData?.data.users.filter((user) => user._id !== profile?._id)
+
   const [deleteUser, deleteUserResult] = useDeleteUserMutation()
   const [deleteManyUsers, deleteManyUsersResult] = useDeleteManyUsersMutation()
   const navigate = useNavigate()
@@ -58,12 +58,10 @@ export default function UserList() {
           user.avatar || '',
           user.date_of_birth || '',
           user.address || '',
-          user.province,
-          user.district,
-          user.ward,
-          user.phone,
-          user.roles?.[0],
-          getVerifyStatusLabel(user.verify)
+          user.province || '',
+          user.district || '',
+          user.ward || '',
+          user.phone || ''
         ])
       : []
     return [exportDataHeaders, ...rows]
@@ -77,11 +75,11 @@ export default function UserList() {
     await deleteManyUsers({ list_id: usersIds })
   }
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = useCallback(() => {
     pdf(<PDFUsersTableDocument users={usersList!} />)
       .toBlob()
       .then((blob) => saveAs(blob, 'danh_sach_nguoi_dung.pdf'))
-  }
+  }, [usersList])
 
   useEffect(() => {
     if (deleteUserResult.isSuccess) {

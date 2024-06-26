@@ -4,9 +4,9 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Product } from 'src/types/product.type'
 import { cn } from 'src/utils/utils'
-import ProductReview from '../ProductReview'
 import { useAppSelector } from 'src/redux/hook'
 import { tabOptions } from 'src/static/options'
+import ProductReview from 'src/pages/ProductDetail/components/ProductReview'
 
 interface ProductDetailTabsProps {
   product: Product
@@ -15,12 +15,10 @@ interface ProductDetailTabsProps {
 
 const tabContentVariants: Variants = {
   initial: {
-    // y: -50,
     visibility: 'hidden',
     opacity: 0
   },
   enter: {
-    // y: 0,
     visibility: 'visible',
     opacity: 1
   }

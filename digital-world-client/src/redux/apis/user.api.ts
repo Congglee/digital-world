@@ -1,8 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
+import axiosBaseQuery from 'src/redux/helper'
 import { User, UserList } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
-import axiosBaseQuery from '../helper'
 
 const USER_URL = 'users'
 const CART_URL = 'cart'

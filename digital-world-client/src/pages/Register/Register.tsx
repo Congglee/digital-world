@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import omit from 'lodash/omit'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -16,7 +16,6 @@ import { useSendCommonMailMutation } from 'src/redux/apis/mail.api'
 import { generateRegistrationEmail } from 'src/utils/mail'
 
 type FormData = Pick<Schema, 'name' | 'email' | 'password' | 'confirm_password'>
-
 const registerSchema = schema.pick(['name', 'email', 'password', 'confirm_password'])
 
 export default function Register() {
@@ -31,12 +30,12 @@ export default function Register() {
   })
 
   const [registerMutation, { isSuccess, isError, data, error }] = useRegisterMutation()
-  const [sendMailMutation, sendMailMutationResult] = useSendCommonMailMutation()
+  const [sendMail, sendMailResult] = useSendCommonMailMutation()
   const [open, setOpen] = useState(false)
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setOpen(false)
-  }
+  }, [])
 
   const openModal = () => {
     setOpen(true)
@@ -50,7 +49,7 @@ export default function Register() {
   useEffect(() => {
     const handleSendRegistrationMail = async (otpCode: string) => {
       const htmlContent = generateRegistrationEmail(otpCode)
-      await sendMailMutation({
+      await sendMail({
         email: getValues('email'),
         subject: 'Xác nhận đăng ký tài khoản Digital World 2',
         content: htmlContent
@@ -62,11 +61,11 @@ export default function Register() {
   }, [isSuccess])
 
   useEffect(() => {
-    if (sendMailMutationResult.isSuccess) {
+    if (sendMailResult.isSuccess) {
       toast.success(data?.data.message)
       openModal()
     }
-  }, [sendMailMutationResult.isSuccess])
+  }, [sendMailResult.isSuccess])
 
   useEffect(() => {
     if (isError && isEntityError(error)) {
@@ -124,8 +123,8 @@ export default function Register() {
               <Button
                 type='submit'
                 className='w-full text-center uppercase bg-purple py-[11px] px-[15px] text-sm text-white hover:bg-[#333] hover:opacity-90 transition-colors flex items-center justify-center gap-2'
-                disabled={sendMailMutationResult.isLoading}
-                isLoading={sendMailMutationResult.isLoading}
+                disabled={sendMailResult.isLoading}
+                isLoading={sendMailResult.isLoading}
               >
                 Đăng ký
               </Button>

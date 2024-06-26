@@ -13,7 +13,7 @@ interface ConfirmModalProps {
   cancelText?: string
   cancelButtonClassName?: string
   handleConfirm: () => void
-  loading?: boolean
+  isLoading?: boolean
 }
 
 export default function ConfirmModal({
@@ -26,7 +26,7 @@ export default function ConfirmModal({
   cancelText,
   cancelButtonClassName,
   handleConfirm,
-  loading
+  isLoading
 }: ConfirmModalProps) {
   return (
     <Transition appear show={open} as={Fragment}>
@@ -69,10 +69,10 @@ export default function ConfirmModal({
                       'flex items-center justify-center space-x-2 rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-[#333] hover:opacity-90 transition-colors focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
                       confirmButtonClassName
                     )}
-                    disabled={loading}
-                    isLoading={loading}
+                    disabled={isLoading}
+                    isLoading={isLoading}
                     onClick={() => {
-                      if (handleConfirm) handleConfirm()
+                      handleConfirm && handleConfirm()
                     }}
                   >
                     {confirmText || 'Xác nhận'}

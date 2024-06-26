@@ -6,7 +6,7 @@ import { ErrorHandler, responseSuccess } from "../utils/response";
 const sendNotifyMail = async (req, res) => {
   const form = req.body;
   const { email, content, subject } = form;
-  const userInDB = await UserModel.findOne({ email: email }).exec();
+  const userInDB = await UserModel.findOne({ email: email }).lean();
   if (userInDB) {
     await sendMail({
       email,
@@ -17,8 +17,9 @@ const sendNotifyMail = async (req, res) => {
       message: "Đã gửi mail thông báo đến người dùng thành công",
     };
     return responseSuccess(res, response);
+  } else {
+    throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
   }
-  throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy người dùng");
 };
 
 const sendCommonMail = async (req, res) => {

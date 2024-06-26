@@ -7,7 +7,7 @@ import { wrapAsync } from "../../utils/response";
 const commonCategoryRouter = Router();
 
 commonCategoryRouter.get(
-  "/",
+  "/get-categories",
   categoryMiddleware.getCategoriesRules(),
   helpersMiddleware.entityValidator,
   wrapAsync(categoryController.getCategories)
