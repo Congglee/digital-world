@@ -11,7 +11,7 @@ const CartSchema = new Schema({
 
 const UserSchema = new Schema(
   {
-    name: { type: String, maxlength: 160 },
+    name: { type: String, required: true, maxlength: 160 },
     email: { type: String, required: true, minlength: 5, maxlength: 160 },
     password: { type: String, required: true, minlength: 6, maxlength: 160 },
     date_of_birth: { type: Date, maxlength: 160 },

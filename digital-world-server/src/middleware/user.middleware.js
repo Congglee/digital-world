@@ -23,40 +23,63 @@ const addUserRules = () => {
     body("email")
       .isEmail()
       .withMessage("Email không đúng định dạng")
-      .isLength({ min: 6, max: 160 })
-      .withMessage("Email phải từ 6-160 kí tự"),
+      .isLength({ min: 5, max: 160 })
+      .withMessage("Email phải từ 5-160 kí tự"),
     body("name")
+      .trim()
       .exists({ checkFalsy: true })
-      .withMessage("Tên không được để trống")
+      .withMessage("Họ và tên không được để trống")
+      .isString()
+      .withMessage("Họ và tên phải là string")
       .isLength({ max: 160 })
-      .withMessage("Tên phải ít hơn 160 kí tự"),
+      .withMessage("Họ và tên phải ít hơn 160 kí tự"),
     body("password")
+      .trim()
+      .exists({ checkFalsy: true })
+      .withMessage("Mật khẩu không được để trống")
+      .isString()
+      .withMessage("Mật khẩu phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu phải từ 6-160 kí tự"),
     body("date_of_birth")
       .if((value) => value !== undefined)
       .isISO8601()
-      .withMessage("Ngày sinh không đúng định dạng"),
+      .withMessage("Ngày sinh phải ở định dạng ISO8601"),
     body("address")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Địa chỉ phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Địa chỉ phải ít hơn 160 kí tự"),
     body("province")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Tỉnh phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Tỉnh phải ít hơn 160 kí tự"),
     body("district")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Quận huyện phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Quận huyện phải ít hơn 160 kí tự"),
     body("ward")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Phường phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Phường phải ít hơn 160 kí tự"),
     body("phone")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Số điện thoại phải là kiểu string")
       .isLength({ max: 20 })
-      .withMessage("SDT không được lớn hơn 20 kí tự"),
+      .withMessage("Số điện thoại phải ít hơn 20 kí tự"),
     body("roles")
       .exists({ checkFalsy: true })
       .withMessage("Phân quyền không được để trống")
@@ -69,18 +92,19 @@ const addUserRules = () => {
         }
         return true;
       })
-      .withMessage("Role không đúng định dạng"),
+      .withMessage("Role phải là kiểu string array"),
     body("avatar")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Avatar phải là string url")
+      .withMessage("Avatar phải là kiểu string url")
       .isLength({ max: 1000 })
-      .withMessage("URL avatar không được lớn hơn 1000 ký tự"),
+      .withMessage("Url avatar không được lớn hơn 1000 ký tự"),
     body("verify")
       .exists()
       .withMessage("Trạng thái xác thực tài khoản không được để trống")
-      .isNumeric()
-      .withMessage("Trạng thái xác thực tài khoản phải ở định dạng number"),
+      .isInt()
+      .withMessage("Trạng thái xác thực tài khoản phải là kiểu number"),
   ];
 };
 
@@ -88,22 +112,52 @@ const updateUserRules = () => {
   return [
     body("name")
       .if((value) => value !== undefined)
+      .trim()
       .exists({ checkFalsy: true })
-      .withMessage("Tên không được để trống")
+      .withMessage("Họ và tên không được để trống")
+      .isString()
+      .withMessage("Họ và tên phải là string")
       .isLength({ max: 160 })
-      .withMessage("Tên phải ít hơn 160 kí tự"),
+      .withMessage("Họ và tên phải ít hơn 160 kí tự"),
     body("date_of_birth")
       .if((value) => value !== undefined)
       .isISO8601()
-      .withMessage("Ngày sinh không đúng định dạng"),
+      .withMessage("Ngày sinh phải ở định dạng ISO8601"),
     body("address")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Địa chỉ phải ở định dạng string")
       .isLength({ max: 160 })
       .withMessage("Địa chỉ phải ít hơn 160 kí tự"),
+    body("province")
+      .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Tỉnh phải là kiểu string")
+      .isLength({ max: 160 })
+      .withMessage("Tỉnh phải ít hơn 160 kí tự"),
+    body("district")
+      .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Quận huyện phải là kiểu string")
+      .isLength({ max: 160 })
+      .withMessage("Quận huyện phải ít hơn 160 kí tự"),
+    body("ward")
+      .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Phường phải là kiểu string")
+      .isLength({ max: 160 })
+      .withMessage("Phường phải ít hơn 160 kí tự"),
     body("phone")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Số điện thoại phải là kiểu string")
       .isLength({ max: 20 })
-      .withMessage("SDT phải ít hơn 20 kí tự"),
+      .withMessage("Số điện thoại phải ít hơn 20 kí tự"),
     body("roles")
       .if((value) => value !== undefined)
       .custom((value) => {
@@ -115,19 +169,26 @@ const updateUserRules = () => {
         }
         return true;
       })
-      .withMessage("Role không đúng định dạng"),
+      .withMessage("Role phải là kiểu string array"),
     body("avatar")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Avatar phải là string url")
+      .withMessage("Avatar phải là kiểu string url")
       .isLength({ max: 1000 })
-      .withMessage("URL avatar không được lớn hơn 1000 ký tự"),
+      .withMessage("Url avatar không được lớn hơn 1000 ký tự"),
     body("password")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Mật khẩu phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu phải từ 6-160 kí tự"),
     body("new_password")
       .if((value) => value !== undefined)
+      .trim()
+      .isString()
+      .withMessage("Mật khẩu mới phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu mới phải từ 6-160 kí tự"),
   ];
@@ -137,60 +198,71 @@ const updateMeRules = () => {
   return [
     body("name")
       .if((value) => value !== undefined)
+      .trim()
+      .exists({ checkFalsy: true })
+      .withMessage("Họ và tên không được để trống")
       .isString()
-      .withMessage("Tên phải ở định dạng string")
+      .withMessage("Họ và tên phải là string")
       .isLength({ max: 160 })
-      .withMessage("Tên phải ít hơn 160 kí tự"),
+      .withMessage("Họ và tên phải ít hơn 160 kí tự"),
     body("date_of_birth")
       .if((value) => value !== undefined)
       .isISO8601()
-      .withMessage("Ngày sinh không đúng định dạng"),
+      .withMessage("Ngày sinh phải ở định dạng ISO8601"),
     body("address")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
       .withMessage("Địa chỉ phải ở định dạng string")
       .isLength({ max: 160 })
       .withMessage("Địa chỉ phải ít hơn 160 kí tự"),
     body("province")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Tỉnh phải ở định dạng string")
+      .withMessage("Tỉnh phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Tỉnh phải ít hơn 160 kí tự"),
     body("district")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Quận huyện phải ở định dạng string")
+      .withMessage("Quận huyện phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Quận huyện phải ít hơn 160 kí tự"),
     body("ward")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Phường phải ở định dạng string")
+      .withMessage("Phường phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Phường phải ít hơn 160 kí tự"),
     body("phone")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("SDT phải ở định dạng string")
+      .withMessage("Số điện thoại phải là kiểu string")
       .isLength({ max: 20 })
-      .withMessage("SDT phải ít hơn 20 kí tự"),
+      .withMessage("Số điện thoại phải ít hơn 20 kí tự"),
     body("avatar")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Avatar phải là string url")
+      .withMessage("Avatar phải là kiểu string url")
       .isLength({ max: 1000 })
-      .withMessage("URL avatar không được lớn hơn 1000 ký tự"),
+      .withMessage("Url avatar không được lớn hơn 1000 ký tự"),
     body("password")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Mật khẩu phải ở định dạng string")
+      .withMessage("Mật khẩu phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu phải từ 6-160 kí tự"),
     body("new_password")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Mật khẩu mới phải ở định dạng string")
+      .withMessage("Mật khẩu mới phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu mới phải từ 6-160 kí tự"),
   ];
@@ -200,23 +272,14 @@ const addToCartRules = () => {
   return [
     body("product_id")
       .exists({ checkFalsy: true })
-      .withMessage("product_id không được để trống")
+      .withMessage("Sản phẩm không được để trống")
       .isMongoId()
-      .withMessage("product_id phải là id"),
+      .withMessage("Sản phẩm phải là định dạng id"),
     body("buy_count")
       .exists({ checkFalsy: true })
-      .withMessage("buy_count không được để trống")
-      .custom((value) => {
-        if (
-          typeof value !== "number" ||
-          value < 1 ||
-          !Number.isInteger(value)
-        ) {
-          return false;
-        }
-        return true;
-      })
-      .withMessage("buy_count phải là số nguyên lớn hơn 0"),
+      .withMessage("Số lượng mua không được để trống")
+      .isInt({ min: 1 })
+      .withMessage("Số lượng mua phải là kiểu number và lớn hơn 0"),
   ];
 };
 
@@ -227,15 +290,13 @@ const updateCartRules = () => {
 const deleteProductsCartRules = () => {
   return [
     body()
-      .isArray()
-      .withMessage("body phải là array")
       .custom((value) => {
         if (value.length === 0) {
           return false;
         }
         return value.every((id) => isMongoId(id));
       })
-      .withMessage("body phải là array id"),
+      .withMessage("body phải là kiểu id array"),
   ];
 };
 

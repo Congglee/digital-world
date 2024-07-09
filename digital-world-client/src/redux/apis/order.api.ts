@@ -20,7 +20,8 @@ const URL_UPDATE_USER_ORDER = `${ADMIN_ORDER_URL}/update-user-order`
 const reducerPath = 'order/api' as const
 const tagTypes = ['Order'] as const
 
-export type BodyAddOrder = Pick<OrderSchema, 'order_fullname' | 'order_phone' | 'delivery_at' | 'order_note'> & {
+export type BodyAddOrder = Omit<OrderSchema, 'order_status' | 'delivery_status' | 'payment_status'> & {
+  payment_method: string
   products: { _id: string; name: string; price: number; thumb: string; buy_count: number }[]
 }
 

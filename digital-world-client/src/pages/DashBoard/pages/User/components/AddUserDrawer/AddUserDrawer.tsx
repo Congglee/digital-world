@@ -1,9 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ArrowDownUp, CheckIcon, Loader } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import Combobox from 'src/components/AdminPanel/Combobox'
 import DatePicker from 'src/components/AdminPanel/DatePicker'
+import DistrictPicker from 'src/components/AdminPanel/DistrictPickerV2'
+import ProvincePicker from 'src/components/AdminPanel/ProvincePickerV2'
+import WardPicker from 'src/components/AdminPanel/WardPickerV2'
 import { Button } from 'src/components/ui/button'
 import { Command, CommandGroup, CommandItem } from 'src/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
@@ -11,21 +15,13 @@ import { Input } from 'src/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'src/components/ui/sheet'
-import {
-  useGetAllVNProvincesQuery,
-  useGetDistrictWardsQuery,
-  useGetProvinceDistrictsQuery
-} from 'src/redux/apis/location.api'
+import { useHandleAddressData } from 'src/hooks/useHandleAddressData'
 import { useAddUserMutation } from 'src/redux/apis/user.api'
+import { rolesOptions, verifyOptions } from 'src/static/options'
 import { Role } from 'src/types/user.type'
 import { isEntityError } from 'src/utils/helper'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import { cn } from 'src/utils/utils'
-import DistrictPicker from 'src/components/AdminPanel/DistrictPicker'
-import ProvincePicker from 'src/components/AdminPanel/ProvincePicker'
-import WardPicker from 'src/components/AdminPanel/WardPicker'
-import { rolesOptions, verifyOptions } from 'src/static/options'
-import Combobox from 'src/components/AdminPanel/Combobox'
 
 interface AddUserDrawerProps {
   open: boolean
@@ -79,11 +75,13 @@ export default function AddUserDrawer({ open, onOpenChange }: AddUserDrawerProps
     resolver: yupResolver(addUserSchema),
     defaultValues: initialFormState
   })
-  const [provinceId, setProvinceId] = useState('')
-  const [districtId, setDistrictId] = useState('')
-  const { data: provinceData } = useGetAllVNProvincesQuery()
-  const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, { skip: provinceId ? false : true })
-  const { data: wardsData } = useGetDistrictWardsQuery(districtId, { skip: districtId ? false : true })
+  const { watch } = form
+  const { provinceData, districtsData, wardsData, provinceId, districtId, setProvinceId, setDistrictId } =
+    useHandleAddressData({
+      watch,
+      provinceFieldName: 'province',
+      districtFieldName: 'district'
+    })
   const [addUser, { data, isLoading, isSuccess, isError, error }] = useAddUserMutation()
 
   const handleSelectProvince = (provinceId: string, provinceValue: string) => {

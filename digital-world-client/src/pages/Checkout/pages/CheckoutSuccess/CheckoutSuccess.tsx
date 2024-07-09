@@ -17,7 +17,7 @@ export default function CheckoutSuccess() {
           <Check className='w-[30px] h-[30px]' />
         </div>
         <div className='space-y-1'>
-          <h3 className='text-2xl font-medium'>Cảm ơn Công Lê! 🎉</h3>
+          <h3 className='text-2xl font-medium'>Cảm ơn {order.order_by.user_fullname}! 🎉</h3>
           <p className='text-[#3a3a3a]'>
             Quý khách có thể theo dõi đơn hàng tại trang{' '}
             <Link to={path.historyOrder} className='text-[#2c6ecb] underline'>
@@ -33,13 +33,15 @@ export default function CheckoutSuccess() {
           <div className='grid gap-[30px] place-content-between'>
             <div className='flex flex-col'>
               <h3 className='mb-2 text-xl'>Thông tin liên hệ</h3>
-              <span>{order.shipping_address.order_fullname}</span>
+              <span>{order.order_by.user_fullname}</span>
               <span className='break-all'>{order.order_by.user_email}</span>
             </div>
             <div className='flex flex-col'>
               <h3 className='mb-2 text-xl'>Địa chỉ giao hàng</h3>
-              <span>{order.shipping_address.order_fullname}</span>
-              <span>{order.shipping_address.delivery_at}</span>
+              <span>{order.shipping_address.address}</span>
+              <span>{order.shipping_address.province}</span>
+              <span>{order.shipping_address.district}</span>
+              <span>{order.shipping_address.ward}</span>
             </div>
           </div>
           <div className='grid gap-[30px] place-content-between'>
@@ -49,8 +51,10 @@ export default function CheckoutSuccess() {
             </div>
             <div className='flex flex-col'>
               <h3 className='mb-2 text-xl'>Địa chỉ thanh toán</h3>
-              <span>{order.shipping_address.order_fullname}</span>
-              <span>{order.shipping_address.delivery_at}</span>
+              <span>{order.billing_address.address}</span>
+              <span>{order.billing_address.province}</span>
+              <span>{order.billing_address.district}</span>
+              <span>{order.billing_address.ward}</span>
             </div>
           </div>
         </div>

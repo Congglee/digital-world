@@ -246,7 +246,7 @@ export default function UserList() {
         open={deleteUserDialogOpen}
         onOpenStateChange={setDeleteUserDialogOpen}
         title='Bạn có chắc là muốn xóa tài khoản người dùng này chứ?'
-        description='Người dùng sau khi bị xóa không thể khôi phục'
+        description='Người dùng sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteUserResult.isLoading) {
             handleDeleteUser(selectedUser?._id!)
@@ -258,7 +258,7 @@ export default function UserList() {
         open={deleteUsersDialogOpen}
         onOpenStateChange={setDeleteUsersDialogOpen}
         title='Bạn có chắc là muốn xóa những tài khoản người dùng này chứ?'
-        description='Tài khoản sau khi bị xóa không thể khôi phục'
+        description='Tài khoản sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteManyUsersResult.isLoading) {
             handleDeleteManyUsers(selectedUsersIds)

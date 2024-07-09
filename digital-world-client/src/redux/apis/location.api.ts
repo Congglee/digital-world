@@ -5,7 +5,7 @@ import { VietNamDistrict, VietNamLocationList, VietNamProvince, VietNamWard } fr
 import { SuccessResponse } from 'src/types/utils.type'
 
 const LOCATION_URL = 'location'
-const URL_GET_ALL_VN_PROVINCES = `${LOCATION_URL}/get-provinces`
+const URL_GET_ALL_VIET_NAM_PROVINCES = `${LOCATION_URL}/get-provinces`
 const URL_GET_PROVINCE_DISTRICTS = `${LOCATION_URL}/get-province-districts`
 const URL_GET_DISTRICT_WARDS = `${LOCATION_URL}/get-district-wards`
 
@@ -17,9 +17,9 @@ export const locationApi = createApi({
   tagTypes,
   baseQuery: axiosBaseQuery(),
   endpoints: (build) => ({
-    getAllVNProvinces: build.query<SuccessResponse<VietNamLocationList<VietNamProvince[]>>, void>({
+    getAllVietNamProvinces: build.query<SuccessResponse<VietNamLocationList<VietNamProvince[]>>, void>({
       query: () => ({
-        url: URL_GET_ALL_VN_PROVINCES,
+        url: URL_GET_ALL_VIET_NAM_PROVINCES,
         method: 'GET'
       }),
       transformResponse: (response: AxiosResponse<SuccessResponse<VietNamLocationList<VietNamProvince[]>>>) =>
@@ -37,4 +37,4 @@ export const locationApi = createApi({
   })
 })
 
-export const { useGetAllVNProvincesQuery, useGetProvinceDistrictsQuery, useGetDistrictWardsQuery } = locationApi
+export const { useGetAllVietNamProvincesQuery, useGetProvinceDistrictsQuery, useGetDistrictWardsQuery } = locationApi

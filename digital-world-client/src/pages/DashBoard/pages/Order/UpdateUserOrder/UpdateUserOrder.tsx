@@ -244,7 +244,7 @@ export default function UpdateUserOrder() {
                       className='aspect-square size-full'
                     />
                   </div>
-                  <p className='text-sm font-medium'>{order.shipping_address.order_fullname}</p>
+                  <p className='text-sm font-medium'>{order.order_by.user_fullname}</p>
                 </div>
               </div>
               <div className='flex items-center justify-between space-x-4 py-3'>
@@ -253,11 +253,67 @@ export default function UpdateUserOrder() {
               </div>
               <div className='flex items-center justify-between space-x-4 py-3'>
                 <h3 className='font-semibold'>Điện thoại</h3>
-                <p className='text-sm font-medium'>{order.shipping_address.order_phone}</p>
+                <p className='text-sm font-medium'>{order.order_by.user_phone}</p>
               </div>
             </div>
           </CardContent>
         </Card>
+        <Card className='bg-accent'>
+          <CardHeader>
+            <CardTitle className='capitalize'>Giao hàng tới</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='grid divide-y-2 divide-foreground'>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Địa chỉ</h3>
+                <p className='text-sm font-medium'>{order.shipping_address.address}</p>
+              </div>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Tỉnh</h3>
+                <p className='text-sm font-medium'>{order.shipping_address.province}</p>
+              </div>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Quận huyện</h3>
+                <p className='text-sm font-medium'>{order.shipping_address.district}</p>
+              </div>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Phường</h3>
+                <p className='text-sm font-medium'>{order.shipping_address.ward}</p>
+              </div>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Tình trạng vận chuyển</h3>
+                <p className='text-sm font-medium'>{order.delivery_status}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className='bg-accent'>
+          <CardHeader>
+            <CardTitle className='capitalize'>Thanh toán</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='grid divide-y-2 divide-foreground'>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Địa chỉ</h3>
+                <p className='text-sm font-medium'>{order.billing_address.address}</p>
+              </div>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Tỉnh</h3>
+                <p className='text-sm font-medium'>{order.billing_address.province}</p>
+              </div>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Quận huyện</h3>
+                <p className='text-sm font-medium'>{order.billing_address.district}</p>
+              </div>
+              <div className='flex items-center justify-between space-x-4 py-3'>
+                <h3 className='font-semibold'>Phường</h3>
+                <p className='text-sm font-medium'>{order.billing_address.ward}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <Card className='bg-accent'>
           <CardHeader>
             <CardTitle className='capitalize'>Tóm tắt đơn hàng</CardTitle>
@@ -285,63 +341,6 @@ export default function UpdateUserOrder() {
         </Card>
         <Card className='bg-accent'>
           <CardHeader>
-            <CardTitle className='capitalize'>Giao hàng tới</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='grid divide-y-2 divide-foreground'>
-              <div className='flex items-center justify-between space-x-4 py-3'>
-                <h3 className='font-semibold'>Địa chỉ</h3>
-                <p className='text-sm font-medium'>{order.shipping_address.delivery_at}</p>
-              </div>
-              <div className='flex items-center justify-between space-x-4 py-3'>
-                <h3 className='font-semibold'>Tình trạng vận chuyển</h3>
-                <p className='text-sm font-medium'>{order.delivery_status}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className='bg-accent md:col-span-2'>
-          <CardHeader>
-            <CardTitle className='capitalize'>Sản phẩm</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableCaption>Danh sách sản phẩm trong đơn hàng.</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className='w-[100px]' colSpan={2}>
-                    Sản phẩm
-                  </TableHead>
-                  <TableHead>Đơn giá</TableHead>
-                  <TableHead>Số lượng</TableHead>
-                  <TableHead className='text-right'>Tổng</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {order.products.map((product) => (
-                  <TableRow key={product._id}>
-                    <TableCell className='font-medium' colSpan={2}>
-                      <div className='flex space-x-4'>
-                        <div className='size-20 shrink-0 overflow-hidden rounded-md flex'>
-                          <img src={product.product_thumb} alt='product thumb' className='aspect-square size-full' />
-                        </div>
-                        <p className='text-sm font-medium'>{product.product_name}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatCurrency(product.product_price)}đ</TableCell>
-                    <TableCell>{product.buy_count} sản phẩm</TableCell>
-                    <TableCell className='text-right'>
-                      {formatCurrency(product.buy_count * product.product_price)}đ
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-        <Card className='bg-accent col-span-1 md:col-span-2 lg:col-span-1 h-fit'>
-          <CardHeader>
             <CardTitle className='capitalize'>Tổng đơn hàng</CardTitle>
           </CardHeader>
           <CardContent>
@@ -362,6 +361,45 @@ export default function UpdateUserOrder() {
           </CardContent>
         </Card>
       </div>
+      <Card className='bg-accent col-span-3'>
+        <CardHeader>
+          <CardTitle className='capitalize'>Sản phẩm</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableCaption>Danh sách sản phẩm trong đơn hàng.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className='w-[100px]' colSpan={2}>
+                  Sản phẩm
+                </TableHead>
+                <TableHead>Đơn giá</TableHead>
+                <TableHead>Số lượng</TableHead>
+                <TableHead className='text-right'>Tổng</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {order.products.map((product) => (
+                <TableRow key={product._id}>
+                  <TableCell className='font-medium' colSpan={2}>
+                    <div className='flex space-x-4'>
+                      <div className='size-20 shrink-0 overflow-hidden rounded-md flex'>
+                        <img src={product.product_thumb} alt='product thumb' className='aspect-square size-full' />
+                      </div>
+                      <p className='text-sm font-medium'>{product.product_name}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>{formatCurrency(product.product_price)}đ</TableCell>
+                  <TableCell>{product.buy_count} sản phẩm</TableCell>
+                  <TableCell className='text-right'>
+                    {formatCurrency(product.buy_count * product.product_price)}đ
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
       <ShippingStatusDialog open={shippingStatusDialogOpen} onOpenChange={setShippingStatusDialogOpen} order={order} />
     </>
   )

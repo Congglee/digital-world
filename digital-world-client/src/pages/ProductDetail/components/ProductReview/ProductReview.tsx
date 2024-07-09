@@ -278,7 +278,7 @@ export default function ProductReview({ product }: ProductReviewProps) {
         open={open}
         closeModal={closeModal}
         title='Bạn có chắc là muốn xóa đánh giá của bạn chứ?'
-        description='Đánh giá sản phẩm sau bị xóa sẽ không thể khôi phục được'
+        description='Đánh giá sản phẩm sau bị xóa sẽ không thể khôi phục được.'
         isLoading={deleteMyRatingResult.isLoading}
         handleConfirm={() => {
           if (!deleteMyRatingResult.isLoading) {

@@ -45,7 +45,7 @@ export default function CheckoutSummary() {
         <div className='grid grid-cols-3 gap-[10px]'>
           <div className='col-span-1'>Tổng phụ</div>
           <div className='col-span-2 flex justify-between'>
-            <span>{checkoutPurchasesCart.length} sản phẩm</span>
+            <span>{checkoutPurchasesCart.reduce((total, item) => total + item.buy_count, 0)} sản phẩm</span>
             <span className='pl-4'>{formatCurrency(totalPurchaseAmount)}₫</span>
           </div>
         </div>

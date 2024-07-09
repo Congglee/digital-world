@@ -25,12 +25,12 @@ export default function Login() {
     resolver: yupResolver(loginSchema)
   })
 
-  const [loginMutation, { isLoading, isSuccess, isError, data, error }] = useLoginMutation()
+  const [login, { isLoading, isSuccess, isError, data, error }] = useLoginMutation()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const onSubmit = handleSubmit(async (data) => {
-    await loginMutation(data)
+    await login(data)
   })
 
   useEffect(() => {

@@ -375,14 +375,14 @@ function MobileHeader({
 export default function Header() {
   const [active, setActive] = useState(false)
   const dispatch = useAppDispatch()
-  const [logoutMutation, { isSuccess }] = useLogoutMutation()
+  const [logout, { isSuccess }] = useLogoutMutation()
   const { isAuthenticated, profile } = useAppSelector((state) => state.auth)
   const { data: profileData } = useGetMeQuery(undefined, { skip: !isAuthenticated })
   const { data: categoriesData } = useGetAllCategoriesQuery()
   const userProfile = profileData?.data.data
 
   const handleLogout = async () => {
-    await logoutMutation()
+    await logout()
   }
 
   useEffect(() => {

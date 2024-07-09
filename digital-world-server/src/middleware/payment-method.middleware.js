@@ -3,15 +3,17 @@ import { body, query } from "express-validator";
 const addPaymentMethodRules = () => {
   return [
     body("name")
+      .trim()
       .exists({ checkFalsy: true })
       .withMessage("Tên phương thức thanh toán không được để trống")
+      .isString()
+      .withMessage("Tên phương thức thanh toán phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Tên phương thức thanh toán phải ít hơn 160 kí tự"),
     body("is_actived")
-      .exists()
-      .withMessage("is_actived không được để trống")
+      .if((value) => value !== undefined)
       .isBoolean()
-      .withMessage("is_actived không đúng định dạng"),
+      .withMessage("Trạng thái kích hoạt phải là kiểu boolean"),
   ];
 };
 

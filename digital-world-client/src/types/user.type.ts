@@ -25,7 +25,7 @@ export interface User {
   name: string
   email: string
   roles: Role[]
-  date_of_birth?: string // ISO8601
+  date_of_birth?: string
   avatar?: string
   address?: string
   province?: string

@@ -3,20 +3,24 @@ import { body, query } from "express-validator";
 const addBrandRules = () => {
   return [
     body("name")
+      .trim()
       .exists({ checkFalsy: true })
       .withMessage("Tên thương hiệu không được để trống")
+      .isString()
+      .withMessage("Tên thương hiệu phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Tên thương hiệu phải ít hơn 160 kí tự"),
     body("image")
       .if((value) => value !== undefined)
+      .trim()
       .isString()
-      .withMessage("Ảnh thương hiệu phải là string url")
+      .withMessage("Ảnh thương hiệu phải là kiểu string url")
       .isLength({ max: 1000 })
-      .withMessage("URL ảnh thương hiệu không được lớn hơn 1000 ký tự"),
+      .withMessage("Ảnh thương hiệu không được lớn hơn 1000 ký tự"),
     body("is_actived")
       .if((value) => value !== undefined)
       .isBoolean()
-      .withMessage("Trạng thái kích hoạt phải ở định dạng boolean"),
+      .withMessage("Trạng thái kích hoạt phải là kiểu boolean"),
   ];
 };
 

@@ -124,9 +124,9 @@ export default function PDFInvoiceDetailDocument({ order }: { order: Order }) {
             <Text style={styles.invoiceNumber}>Mã hóa đơn: {order.order_code}</Text>
           </View>
           <View>
-            <Text style={styles.addressTitle}>{order.shipping_address.order_fullname}</Text>
+            <Text style={styles.addressTitle}>{order.order_by.user_fullname}</Text>
             <WrapText text={order.order_by.user_email} />
-            <Text style={styles.addressTitle}>{order.shipping_address.order_phone}</Text>
+            <Text style={styles.addressTitle}>{order.order_by.user_phone}</Text>
           </View>
         </View>
       </View>
@@ -137,11 +137,23 @@ export default function PDFInvoiceDetailDocument({ order }: { order: Order }) {
     return (
       <View style={styles.titleContainer}>
         <View style={styles.spaceBetween}>
-          <View style={{ maxWidth: 200 }}>
-            <Text style={styles.addressTitle}>Địa chỉ giao tới</Text>
-            <Text style={styles.address}>{order.shipping_address.delivery_at}</Text>
+          <View style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
+            <View style={{ maxWidth: 200 }}>
+              <Text style={styles.addressTitle}>Địa chỉ giao tới</Text>
+              <Text style={styles.address}>{order.shipping_address.address}</Text>
+              <Text style={styles.address}>{order.shipping_address.province}</Text>
+              <Text style={styles.address}>{order.shipping_address.district}</Text>
+              <Text style={styles.address}>{order.shipping_address.ward}</Text>
+            </View>
+            <View style={{ maxWidth: 200 }}>
+              <Text style={styles.addressTitle}>Địa chỉ thanh toán</Text>
+              <Text style={styles.address}>{order.billing_address.address}</Text>
+              <Text style={styles.address}>{order.billing_address.province}</Text>
+              <Text style={styles.address}>{order.billing_address.district}</Text>
+              <Text style={styles.address}>{order.billing_address.ward}</Text>
+            </View>
           </View>
-          <Text style={styles.addressTitle}>{format(order.date_of_order, 'dd/MM/yyyy', { locale: vi })}</Text>
+          <Text style={styles.addressTitle}>Ngày đặt: {format(order.date_of_order, 'dd/MM/yyyy', { locale: vi })}</Text>
         </View>
       </View>
     )
@@ -200,7 +212,7 @@ export default function PDFInvoiceDetailDocument({ order }: { order: Order }) {
           <Text></Text>
         </View>
         <View style={styles.total}>
-          <Text> </Text>
+          <Text />
         </View>
         <View style={styles.tbody}>
           <Text>Tổng cộng</Text>

@@ -57,7 +57,10 @@ export default function ProductDetailTabs({ product, nameId }: ProductDetailTabs
                 'w-full py-[9px] px-5 border-b-transparent uppercase text-[15px] border border-[#ebebeb] transition-all duration-500 hover:bg-white hover:text-black text-left md:text-center',
                 activeTab && activeTab.name === tab.name ? 'text-black bg-white' : 'text-[#505050] bg-[#f1f1f1]'
               )}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => {
+                setActiveTab(tab)
+                setIsExpand(false)
+              }}
             >
               {tab.label}
             </button>

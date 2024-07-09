@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { ORDER, USERS_SORT_BY } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { UserModel } from "../database/models/user.model";
-import { hashValue } from "../utils/crypt";
+import { hashValue } from "../utils/crypto";
 import { ErrorHandler, responseSuccess } from "../utils/response";
 
 const addUser = async (req, res) => {

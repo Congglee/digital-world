@@ -4,17 +4,17 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '
 import { FormControl } from 'src/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
 import { ScrollArea } from 'src/components/ui/scroll-area'
-import { VietNamDistrict } from 'src/types/location.type'
+import { VietNamWard } from 'src/types/location.type'
 import { cn } from 'src/utils/utils'
 
-interface DistrictPickerProps {
+interface WardPickerV2Props {
   value?: string
-  districts: VietNamDistrict[]
-  provinceId: string
-  onSelect?: (districtId: string, districtValue: string) => void
+  wards: VietNamWard[]
+  districtId: string
+  onSelect: (wardValue: string) => void
 }
 
-export default function DistrictPicker({ value, provinceId, districts, onSelect }: DistrictPickerProps) {
+export default function WardPickerV2({ value, wards, districtId, onSelect }: WardPickerV2Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -24,29 +24,29 @@ export default function DistrictPicker({ value, provinceId, districts, onSelect 
             role='combobox'
             className={cn('w-full justify-between overflow-hidden', !value && 'text-muted-foreground')}
           >
-            {value ? districts.find((district) => district.district_name === value)?.district_name : 'Quận huyện'}
+            {value ? wards.find((ward) => ward.ward_name === value)?.ward_name : 'Phường'}
             <ArrowDownUp className='ml-2 h-4 w-4 shrink-0 opacity-50' />
           </Button>
         </FormControl>
       </PopoverTrigger>
       <PopoverContent className='w-full p-0'>
         <Command>
-          <CommandInput placeholder='Tìm kiếm quận huyện...' className='h-9' />
-          <CommandEmpty>Không tìm thấy quận huyện.</CommandEmpty>
+          <CommandInput placeholder='Tìm kiếm phường...' className='h-9' />
+          <CommandEmpty>Không tìm thấy phường.</CommandEmpty>
           <ScrollArea className='h-48 overflow-auto'>
-            {provinceId && (
+            {districtId && (
               <CommandGroup>
-                {districts.map((district) => (
+                {wards.map((ward) => (
                   <CommandItem
-                    value={district.district_name}
-                    key={district.district_id}
+                    value={ward.ward_name}
+                    key={ward.ward_id}
                     onSelect={() => {
-                      onSelect && onSelect(district.district_id.toString(), district.district_name)
+                      onSelect && onSelect(ward.ward_name)
                     }}
                   >
-                    {district.district_name}
+                    {ward.ward_name}
                     <CheckIcon
-                      className={cn('ml-auto h-4 w-4', district.district_name === value ? 'opacity-100' : 'opacity-0')}
+                      className={cn('ml-auto h-4 w-4', ward.ward_name === value ? 'opacity-100' : 'opacity-0')}
                     />
                   </CommandItem>
                 ))}

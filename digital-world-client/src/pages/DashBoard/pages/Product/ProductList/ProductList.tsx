@@ -265,7 +265,7 @@ export default function ProductList() {
         open={deleteProductDialogOpen}
         onOpenStateChange={setDeleteProductDialogOpen}
         title='Bạn có chắc là muốn xóa sản phẩm này chứ?'
-        description='Sản phẩm sau khi bị xóa không thể khôi phục'
+        description='Sản phẩm sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteProductResult.isLoading) {
             handleDeleteProduct(selectedProduct!)
@@ -277,7 +277,7 @@ export default function ProductList() {
         open={deleteProductsDialogOpen}
         onOpenStateChange={setDeleteProductsDialogOpen}
         title='Bạn có chắc là muốn xóa những sản phẩm này chứ?'
-        description='Sản phẩm sau khi bị xóa không thể khôi phục'
+        description='Sản phẩm sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteManyProductsResult.isLoading) {
             handleDeleteManyProducts(selectedProductsIds)

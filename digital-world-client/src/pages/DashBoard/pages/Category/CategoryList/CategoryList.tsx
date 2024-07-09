@@ -9,6 +9,7 @@ import DataTable from 'src/components/AdminPanel/DataTable'
 import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHeader'
 import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
+import { Badge } from 'src/components/ui/badge'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import AddCategoryDialog from 'src/pages/DashBoard/pages/Category/components/AddCategoryDialog'
@@ -142,7 +143,11 @@ export default function CategoryList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
       footer: 'Trạng thái',
       cell: ({ row }) => {
-        return <div className='font-medium'>{row.getValue('is_actived') ? 'Kích hoạt' : 'Lưu trữ'}</div>
+        return (
+          <div className='font-medium'>
+            <Badge>{row.getValue('is_actived') ? 'Kích hoạt' : 'Lưu trữ'}</Badge>
+          </div>
+        )
       }
     },
     {
@@ -216,7 +221,7 @@ export default function CategoryList() {
         open={deleteCategoryDialogOpen}
         onOpenStateChange={setDeleteCategoryDialogOpen}
         title='Bạn có chắc là muốn xóa danh mục này chứ?'
-        description='Danh mục sản phẩm sau khi bị xóa không thể khôi phục'
+        description='Danh mục sản phẩm sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteCategoryResult.isLoading) {
             handleDeleteCategory(selectedCategory?._id!)
@@ -228,7 +233,7 @@ export default function CategoryList() {
         open={deleteCategoriesDialogOpen}
         onOpenStateChange={setDeleteCategoriesDialogOpen}
         title='Bạn có chắc là muốn xóa những danh mục này chứ?'
-        description='Danh mục sản phẩm sau khi bị xóa không thể khôi phục'
+        description='Danh mục sản phẩm sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteManyCategoriesResult.isLoading) {
             handleDeleteManyCategories(selectedCategoriesIds)

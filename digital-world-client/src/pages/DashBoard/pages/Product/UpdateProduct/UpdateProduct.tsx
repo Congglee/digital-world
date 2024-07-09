@@ -418,7 +418,7 @@ export default function UpdateProduct() {
             </div>
           </div>
           <div className='space-x-4'>
-            <Button type='submit' disabled={uploadImagesResult.isLoading || isLoading}>
+            <Button type='submit' className='px-10' disabled={uploadImagesResult.isLoading || isLoading}>
               {uploadImagesResult.isLoading || isLoading ? <Loader className='animate-spin w-4 h-4 mr-1' /> : null}
               Lưu lại
             </Button>

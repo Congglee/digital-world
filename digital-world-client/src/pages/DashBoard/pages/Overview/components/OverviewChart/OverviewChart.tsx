@@ -51,7 +51,7 @@ const data = [
   }
 ]
 
-export default function Overview() {
+export default function OverviewChart() {
   return (
     <ResponsiveContainer width='100%' height={350}>
       <BarChart data={data}>

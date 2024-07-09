@@ -1,23 +1,19 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ArrowDownUp, CheckIcon, Loader } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import Combobox from 'src/components/AdminPanel/Combobox'
 import DatePicker from 'src/components/AdminPanel/DatePicker'
-import DistrictPicker from 'src/components/AdminPanel/DistrictPicker'
-import ProvincePicker from 'src/components/AdminPanel/ProvincePicker'
-import WardPicker from 'src/components/AdminPanel/WardPicker'
+import DistrictPicker from 'src/components/AdminPanel/DistrictPickerV2'
+import ProvincePicker from 'src/components/AdminPanel/ProvincePickerV2'
+import WardPicker from 'src/components/AdminPanel/WardPickerV2'
 import { Button } from 'src/components/ui/button'
 import { Command, CommandGroup, CommandItem } from 'src/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from 'src/components/ui/popover'
-import {
-  useGetAllVNProvincesQuery,
-  useGetDistrictWardsQuery,
-  useGetProvinceDistrictsQuery
-} from 'src/redux/apis/location.api'
+import { useHandleAddressData } from 'src/hooks/useHandleAddressData'
 import { useUpdateUserMutation } from 'src/redux/apis/user.api'
 import { rolesOptions, verifyOptions } from 'src/static/options'
 import { Role, User } from 'src/types/user.type'
@@ -63,16 +59,14 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
     resolver: yupResolver(updateUserSchema),
     defaultValues: initialFormState
   })
+  const { watch } = form
 
-  const [provinceId, setProvinceId] = useState('')
-  const [districtId, setDistrictId] = useState('')
-  const { data: provinceData } = useGetAllVNProvincesQuery()
-  const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, {
-    skip: provinceId ? false : true
-  })
-  const { data: wardsData } = useGetDistrictWardsQuery(districtId, {
-    skip: districtId ? false : true
-  })
+  const { provinceData, districtsData, wardsData, provinceId, districtId, setProvinceId, setDistrictId } =
+    useHandleAddressData({
+      watch,
+      provinceFieldName: 'province',
+      districtFieldName: 'district'
+    })
   const [updateUser, { data, isLoading, isSuccess }] = useUpdateUserMutation()
 
   useEffect(() => {
@@ -91,25 +85,6 @@ export default function UpdateUserProfile({ userProfile }: UpdateUserProfileProp
       })
     }
   }, [userProfile])
-
-  useEffect(() => {
-    if (provinceData) {
-      const selectedProvince = provinceData.data.results.find(
-        (province) => province.province_name === form.watch('province')
-      )
-      if (selectedProvince) {
-        setProvinceId(selectedProvince.province_id.toString())
-      }
-    }
-    if (districtsData) {
-      const selectedDistrict = districtsData.data.results.find(
-        (district) => district.district_name === form.watch('district')
-      )
-      if (selectedDistrict) {
-        setDistrictId(selectedDistrict.district_id.toString())
-      }
-    }
-  }, [provinceData, districtsData, form.watch('province'), form.watch('district')])
 
   const handleSelectProvince = (provinceId: string, provinceValue: string) => {
     setProvinceId(provinceId)

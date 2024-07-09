@@ -14,7 +14,7 @@ commonAuthRouter.post(
 );
 
 commonAuthRouter.put(
-  "/final-register/:token",
+  "/final-register/:register_token",
   wrapAsync(authController.finalRegisterController)
 );
 

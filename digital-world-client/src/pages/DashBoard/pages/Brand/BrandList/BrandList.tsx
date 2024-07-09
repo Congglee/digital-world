@@ -9,6 +9,7 @@ import DataTable from 'src/components/AdminPanel/DataTable'
 import DataTableColumnHeader from 'src/components/AdminPanel/DataTableColumnHeader'
 import DataTableRowActions from 'src/components/AdminPanel/DataTableRowActions'
 import PageHeading from 'src/components/AdminPanel/PageHeading'
+import { Badge } from 'src/components/ui/badge'
 import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import AddBrandDialog from 'src/pages/DashBoard/pages/Brand/components/AddBrandDialog'
@@ -113,7 +114,11 @@ export default function BrandList() {
       header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
       footer: 'Trạng thái',
       cell: ({ row }) => {
-        return <div className='font-medium'>{row.getValue('is_actived') ? 'Kích hoạt' : 'Lưu trữ'}</div>
+        return (
+          <div className='font-medium'>
+            <Badge>{row.getValue('is_actived') ? 'Kích hoạt' : 'Lưu trữ'}</Badge>
+          </div>
+        )
       }
     },
     {
@@ -182,7 +187,7 @@ export default function BrandList() {
         open={deleteBrandDialogOpen}
         onOpenStateChange={setDeleteBrandDialogOpen}
         title='Bạn có chắc là muốn xóa thương hiệu này chứ?'
-        description='Thương hiệu sản phẩm sau khi bị xóa không thể khôi phục'
+        description='Thương hiệu sản phẩm sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteBrandResult.isLoading) {
             handleDeleteBrand(selectedBrand?._id!)
@@ -194,7 +199,7 @@ export default function BrandList() {
         open={deleteBrandsDialogOpen}
         onOpenStateChange={setDeleteBrandsDialogOpen}
         title='Bạn có chắc là muốn xóa những thương hiệu này chứ?'
-        description='Thương hiệu sản phẩm sau khi bị xóa không thể khôi phục'
+        description='Thương hiệu sản phẩm sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteManyBrandsResult.isLoading) {
             handleDeleteManyBrands(selectedBrandsIds)

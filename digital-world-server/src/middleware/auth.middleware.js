@@ -76,18 +76,24 @@ const verifyAdmin = async (req, res, next) => {
 const registerRules = () => {
   return [
     body("name")
+      .trim()
       .exists({ checkFalsy: true })
       .withMessage("Họ và tên không được để trống")
-      .isLength({ max: 160 })
-      .withMessage("Họ và tên phải ít hơn 160 kí tự"),
+      .isString()
+      .withMessage("Họ và tên phải là kiểu string")
+      .isLength({ min: 1, max: 160 })
+      .withMessage("Họ và tên phải từ 1-160 kí tự"),
     body("email")
       .isEmail()
       .withMessage("Email không đúng định dạng")
       .isLength({ min: 5, max: 160 })
       .withMessage("Email phải từ 5-160 kí tự"),
     body("password")
+      .trim()
       .exists({ checkFalsy: true })
       .withMessage("Mật khẩu không được để trống")
+      .isString()
+      .withMessage("Mật khẩu phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu phải từ 6-160 kí tự"),
   ];
@@ -101,6 +107,11 @@ const loginRules = () => {
       .isLength({ min: 5, max: 160 })
       .withMessage("Email phải từ 5-160 kí tự"),
     body("password")
+      .trim()
+      .exists({ checkFalsy: true })
+      .withMessage("Mật khẩu không được để trống")
+      .isString()
+      .withMessage("Mật khẩu phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu phải từ 6-160 kí tự"),
   ];
@@ -119,9 +130,15 @@ const forgotPasswordRules = () => {
 const resetPasswordRules = () => {
   return [
     body("token")
+      .trim()
       .exists({ checkFalsy: true })
       .withMessage("Mã xác thực không được để trống"),
     body("password")
+      .trim()
+      .exists({ checkFalsy: true })
+      .withMessage("Mật khẩu không được để trống")
+      .isString()
+      .withMessage("Mật khẩu phải là kiểu string")
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu phải từ 6-160 kí tự"),
   ];

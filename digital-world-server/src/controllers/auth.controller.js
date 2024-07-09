@@ -9,11 +9,11 @@ import {
   compareValue,
   generatePasswordResetToken,
   hashValue,
-} from "../utils/crypt";
+} from "../utils/crypto";
 import { signToken } from "../utils/jwt";
 import { ErrorHandler, responseSuccess } from "../utils/response";
-import { generateOTP } from "../utils/utils.js";
-import { VERIFY_STATUS } from "../constants/verify.enum.js";
+import { generateOTP } from "../utils/utils";
+import { VERIFY_STATUS } from "../constants/verify.enum";
 
 const getExpire = (req) => {
   let expireAccessTokenConfig = Number(req.headers["expire-access-token"]);
@@ -61,9 +61,9 @@ const registerController = async (req, res) => {
 
 const finalRegisterController = async (req, res) => {
   const { expireAccessTokenConfig, expireRefreshTokenConfig } = getExpire(req);
-  const { token } = req.params;
+  const { register_token } = req.params;
   const notActiveEmail = await UserModel.findOne({
-    email: new RegExp(`${token}$`),
+    email: new RegExp(`${register_token}$`),
   }).exec();
   if (notActiveEmail) {
     notActiveEmail.email = atob(notActiveEmail.email.split("@")[0]);

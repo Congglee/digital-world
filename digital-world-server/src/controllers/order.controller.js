@@ -1,5 +1,5 @@
 import { omitBy } from "lodash";
-import { DELIVERY_STATUS } from "../constants/purchase";
+import { DELIVERY_STATUS, PAYMENT_STATUS } from "../constants/purchase";
 import { ORDER, ORDER_SORT_BY } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { OrderModel } from "../database/models/order.model";
@@ -12,64 +12,88 @@ const addOrder = async (req, res) => {
   const form = req.body;
   const user_id = req.jwtDecoded.id;
   const {
-    order_fullname,
-    order_phone,
+    user_fullname,
+    user_phone,
     order_note,
     payment_method,
-    delivery_at,
+    shipping_address,
+    shipping_province,
+    shipping_district,
+    shipping_ward,
+    billing_address,
+    billing_province,
+    billing_district,
+    billing_ward,
     products,
   } = form;
   const userInDB = await UserModel.findById(user_id).lean().exec();
 
-  if (products.length > 0) {
-    let totalAmount = 0;
-    const productsData = products.map((product) => {
-      totalAmount += product.price * product.buy_count;
-      return {
-        product_id: product._id,
-        product_name: product.name,
-        product_price: product.price,
-        product_thumb: product.thumb,
-        buy_count: product.buy_count,
-      };
-    });
-    const orderCode = generateOrderCode();
-    const order = {
-      order_code: orderCode,
-      order_by: {
-        user_avatar: userInDB.avatar,
-        user_email: userInDB.email,
-        user_id,
-      },
-      products: productsData,
-      total_amount: totalAmount,
-      date_of_order: new Date().toISOString(),
-      shipping_address: { order_fullname, order_phone, delivery_at },
-      order_note,
-      payment_method,
-    };
-    const orderAdd = await new OrderModel(order).save();
-    for (const product of products) {
-      await ProductModel.findByIdAndUpdate(product._id, {
-        $inc: { sold: product.buy_count, quantity: -product.buy_count },
-      });
+  let totalAmount = 0;
+  let productsData = [];
+  for (const product of products) {
+    const productInDB = await ProductModel.findById(product._id).lean();
+    if (!productInDB) {
+      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
     }
-    const response = {
-      message: "Tạo mới đơn hàng thành công",
-      data: orderAdd.toObject({
-        transform: (doc, ret, option) => {
-          delete ret.__v;
-          return ret;
-        },
-      }),
-    };
-    return responseSuccess(res, response);
-  } else {
-    throw new ErrorHandler(
-      STATUS.BAD_REQUEST,
-      "Giỏ hàng đang không có sản phẩm nào, không thể tạo đơn hàng"
-    );
+    if (productInDB.quantity < product.buy_count) {
+      throw new ErrorHandler(
+        STATUS.BAD_REQUEST,
+        `Số lượng sản phẩm ${productInDB.name} không đủ, vui lòng chọn sản phẩm khác`
+      );
+    }
+    totalAmount += product.price * product.buy_count;
+    productsData.push({
+      product_id: product._id,
+      product_name: product.name,
+      product_price: product.price,
+      product_thumb: product.thumb,
+      buy_count: product.buy_count,
+    });
   }
+  const orderCode = generateOrderCode();
+  const order = {
+    order_code: orderCode,
+    order_by: {
+      user_fullname: user_fullname || userInDB.name,
+      user_phone: user_phone || userInDB.phone,
+      user_email: userInDB.email,
+      user_avatar: userInDB.avatar,
+      user_id,
+    },
+    products: productsData,
+    total_amount: totalAmount,
+    date_of_order: new Date().toISOString(),
+    shipping_address: {
+      address: shipping_address || userInDB.address,
+      province: shipping_province || userInDB.province,
+      district: shipping_district || userInDB.district,
+      ward: shipping_ward || userInDB.ward,
+    },
+    billing_address: {
+      address: billing_address || shipping_address || userInDB.address,
+      province: billing_province || shipping_province || userInDB.province,
+      district: billing_district || shipping_district || userInDB.district,
+      ward: billing_ward || shipping_ward || userInDB.ward,
+    },
+    order_note,
+    payment_method,
+  };
+  const orderAdd = await new OrderModel(order).save();
+  for (const product of products) {
+    await ProductModel.findByIdAndUpdate(product._id, {
+      $inc: { sold: product.buy_count, quantity: -product.buy_count },
+    });
+  }
+  const response = {
+    message: "Tạo mới đơn hàng thành công",
+    data: orderAdd.toObject({
+      transform: (doc, ret, option) => {
+        delete ret.__v;
+        return ret;
+      },
+    }),
+  };
+  return responseSuccess(res, response);
 };
 
 const updateUserOrder = async (req, res) => {

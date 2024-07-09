@@ -30,7 +30,7 @@ export default function Combobox({
           <Button
             variant='outline'
             role='combobox'
-            className={cn('w-full justify-between overflow-hidden', value && 'text-muted-foreground')}
+            className={cn('w-full justify-between overflow-hidden', !value && 'text-muted-foreground')}
           >
             {value ? options.find((option) => option.value === value)?.label : 'Hãy chọn một danh mục sản phẩm'}
             <ArrowDownUp className='ml-2 h-4 w-4 shrink-0 opacity-50' />

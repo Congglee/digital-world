@@ -21,10 +21,10 @@ import { config } from 'src/constants/config'
 export default function UserNav() {
   const { profile } = useAppSelector((state) => state.auth)
   const dispatch = useAppDispatch()
-  const [logoutMutation, { isSuccess }] = useLogoutMutation()
+  const [logout, { isSuccess }] = useLogoutMutation()
 
   const handleLogout = async () => {
-    await logoutMutation()
+    await logout()
   }
 
   useEffect(() => {

@@ -1,30 +1,26 @@
-import { Separator } from 'src/components/ui/separator'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { ImageUp, Loader } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import DatePicker from 'src/components/AdminPanel/DatePicker'
+import DistrictPicker from 'src/components/AdminPanel/DistrictPickerV2'
+import ProvincePicker from 'src/components/AdminPanel/ProvincePickerV2'
+import WardPicker from 'src/components/AdminPanel/WardPickerV2'
+import { Button } from 'src/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'src/components/ui/form'
 import { Input } from 'src/components/ui/input'
-import { Button } from 'src/components/ui/button'
-import { UserSchema, userSchema } from 'src/utils/rules'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useGetMeQuery, useUpdateProfileMutation } from 'src/redux/apis/user.api'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import ProvincePicker from 'src/components/AdminPanel/ProvincePicker'
-import {
-  useGetAllVNProvincesQuery,
-  useGetDistrictWardsQuery,
-  useGetProvinceDistrictsQuery
-} from 'src/redux/apis/location.api'
-import DistrictPicker from 'src/components/AdminPanel/DistrictPicker'
-import WardPicker from 'src/components/AdminPanel/WardPicker'
-import DatePicker from 'src/components/AdminPanel/DatePicker'
-import { ImageUp, Loader } from 'lucide-react'
-import { getAvatarUrl, handleValidateFile } from 'src/utils/utils'
+import { Separator } from 'src/components/ui/separator'
+import { useHandleAddressData } from 'src/hooks/useHandleAddressData'
+import SettingsHeading from 'src/pages/DashBoard/pages/Settings/components/SettingsHeading'
 import { useUploadImagesMutation } from 'src/redux/apis/upload.api'
-import { toast } from 'react-toastify'
-import { isEntityError } from 'src/utils/helper'
+import { useGetMeQuery, useUpdateProfileMutation } from 'src/redux/apis/user.api'
 import { useAppDispatch } from 'src/redux/hook'
 import { setProfile } from 'src/redux/slices/auth.slice'
 import { setProfileToLS } from 'src/utils/auth'
-import SettingsHeading from 'src/pages/DashBoard/pages/Settings/components/SettingsHeading'
+import { isEntityError } from 'src/utils/helper'
+import { UserSchema, userSchema } from 'src/utils/rules'
+import { getAvatarUrl, handleValidateFile } from 'src/utils/utils'
 
 type FormData = Pick<
   UserSchema,
@@ -59,10 +55,9 @@ export default function SettingsProfile() {
     resolver: yupResolver(profileSchema),
     defaultValues: initialFormState
   })
+  const { watch } = form
   const { data: profileData, refetch } = useGetMeQuery()
   const profile = profileData?.data.data
-  const [provinceId, setProvinceId] = useState('')
-  const [districtId, setDistrictId] = useState('')
   const avatarFileInputRef = useRef<HTMLInputElement>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const previewAvatarImage = useMemo(() => {
@@ -70,13 +65,12 @@ export default function SettingsProfile() {
   }, [avatarFile])
   const dispatch = useAppDispatch()
 
-  const { data: provinceData } = useGetAllVNProvincesQuery()
-  const { data: districtsData } = useGetProvinceDistrictsQuery(provinceId, {
-    skip: provinceId ? false : true
-  })
-  const { data: wardsData } = useGetDistrictWardsQuery(districtId, {
-    skip: districtId ? false : true
-  })
+  const { provinceData, districtsData, wardsData, provinceId, districtId, setProvinceId, setDistrictId } =
+    useHandleAddressData({
+      watch,
+      provinceFieldName: 'province',
+      districtFieldName: 'district'
+    })
   const [uploadImages, uploadImagesResult] = useUploadImagesMutation()
   const [updateProfile, { data, isSuccess, isError, error, isLoading }] = useUpdateProfileMutation()
 
@@ -96,27 +90,9 @@ export default function SettingsProfile() {
     }
   }, [profile, form.setValue])
 
-  useEffect(() => {
-    if (provinceData) {
-      const selectedProvince = provinceData.data.results.find(
-        (province) => province.province_name === form.watch('province')
-      )
-      if (selectedProvince) {
-        setProvinceId(selectedProvince.province_id.toString())
-      }
-    }
-    if (districtsData) {
-      const selectedDistrict = districtsData.data.results.find(
-        (district) => district.district_name === form.watch('district')
-      )
-      if (selectedDistrict) {
-        setDistrictId(selectedDistrict.district_id.toString())
-      }
-    }
-  }, [provinceData, districtsData, form.watch('province'), form.watch('district')])
-
   const handleSelectProvince = (provinceId: string, provinceValue: string) => {
     setProvinceId(provinceId)
+    setDistrictId('')
     form.setValue('province', provinceValue)
     form.setValue('district', '')
     form.setValue('ward', '')

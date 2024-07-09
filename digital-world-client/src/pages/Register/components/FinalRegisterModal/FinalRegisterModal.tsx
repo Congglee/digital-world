@@ -16,9 +16,9 @@ interface FinalRegisterModalProps {
   closeModal: () => void
 }
 
-type FormData = Pick<Schema, 'token'>
+type FormData = Pick<Schema, 'register_token'>
 
-const finalRegisterSchema = schema.pick(['token'])
+const finalRegisterSchema = schema.pick(['register_token'])
 
 export default function FinalRegisterModal(props: FinalRegisterModalProps) {
   const { open, closeModal } = props
@@ -31,13 +31,13 @@ export default function FinalRegisterModal(props: FinalRegisterModalProps) {
     resolver: yupResolver(finalRegisterSchema)
   })
 
-  const [finalRegisterMutation, { isLoading, isSuccess, isError, data, error }] = useFinalRegisterMutation()
+  const [finalRegister, { isLoading, isSuccess, isError, data, error }] = useFinalRegisterMutation()
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const onSubmit = handleSubmit(async (data) => {
-    await finalRegisterMutation(data)
+    await finalRegister(data)
   })
 
   useEffect(() => {
@@ -103,11 +103,11 @@ export default function FinalRegisterModal(props: FinalRegisterModalProps) {
                 <div className='mt-4'>
                   <form onSubmit={onSubmit} noValidate>
                     <Input
-                      name='token'
+                      name='register_token'
                       register={register}
                       type='text'
                       placeholder='Mã OTP'
-                      errorMessage={errors.token?.message}
+                      errorMessage={errors.register_token?.message}
                     />
                     <div className='mt-1 flex gap-2'>
                       <Button

@@ -40,8 +40,8 @@ export const authApi = createApi({
       >({
         query: (payload) => ({ url: URL_REGISTER, method: 'POST', data: payload })
       }),
-      finalRegister: build.mutation<AxiosResponse<AuthResponse>, { token: string }>({
-        query: (payload) => ({ url: `${URL_FINAL_REGISTER}/${payload.token}`, method: 'PUT', data: payload })
+      finalRegister: build.mutation<AxiosResponse<AuthResponse>, { register_token: string }>({
+        query: (payload) => ({ url: `${URL_FINAL_REGISTER}/${payload.register_token}`, method: 'PUT', data: payload })
       }),
       forgotPassword: build.mutation<
         AxiosResponse<SuccessResponse<{ reset_password_token: string }>>,

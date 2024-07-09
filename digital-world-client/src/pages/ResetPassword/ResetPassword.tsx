@@ -23,12 +23,12 @@ export default function ResetPassword() {
     resolver: yupResolver(resetPasswordSchema)
   })
   const { token } = useParams() as { token: string }
-  const [resetPasswordMutation, { isLoading, isSuccess, data }] = useResetPasswordMutation()
+  const [resetPassword, { isLoading, isSuccess, data }] = useResetPasswordMutation()
   const navigate = useNavigate()
 
   const onSubmit = handleSubmit(async (data) => {
     const body = omit(data, ['confirm_password'])
-    await resetPasswordMutation({ ...body, token })
+    await resetPassword({ ...body, token })
   })
 
   useEffect(() => {

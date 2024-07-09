@@ -301,7 +301,7 @@ export default function RatingDetail() {
         open={deleteRatingDialogOpen}
         onOpenStateChange={setDeleteRatingDialogOpen}
         title='Bạn có chắc là muốn xóa đánh giá này chứ?'
-        description='Đánh giá sau khi bị xóa không thể khôi phục'
+        description='Đánh giá sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteUserRatingResult.isLoading) {
             handleDeleteRating(product._id, selectedRating as string)
@@ -313,7 +313,7 @@ export default function RatingDetail() {
         open={deleteRatingsDialogOpen}
         onOpenStateChange={setDeleteRatingsDialogOpen}
         title='Bạn có chắc là muốn xóa những đánh giá này chứ?'
-        description='Những đánh giá sau khi bị xóa không thể khôi phục'
+        description='Những đánh giá sau khi bị xóa không thể khôi phục.'
         onConfirm={() => {
           if (!deleteManyRatingsResult.isLoading) {
             handleDeleteManyRatings(product._id, selectedRatingsIds)

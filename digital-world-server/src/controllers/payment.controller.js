@@ -22,72 +22,97 @@ const getExchangeRate = async () => {
 
 const createStripeCheckoutSession = async (req, res) => {
   const form = req.body;
+  const user_id = req.jwtDecoded.id;
   const {
-    order_fullname,
-    order_phone,
+    user_fullname,
+    user_phone,
     order_note,
     payment_method,
-    delivery_at,
+    shipping_address,
+    shipping_province,
+    shipping_district,
+    shipping_ward,
+    billing_address,
+    billing_province,
+    billing_district,
+    billing_ward,
     products,
   } = form;
-  const user_id = req.jwtDecoded.id;
   const userInDB = await UserModel.findById(user_id).lean().exec();
-  if (products.length > 0) {
-    const totalAmount = products.reduce(
-      (total, product) => total + product.price * product.buy_count,
-      0
-    );
-    const orderCode = generateOrderCode();
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      client_reference_id: orderCode,
-      line_items: products.map((product) => ({
-        price_data: {
-          currency: "vnd",
-          product_data: {
-            name: product.name,
-            images: [product.thumb],
-          },
-          unit_amount: product.price,
-        },
-        quantity: product.buy_count,
-      })),
-      mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/checkout/success/${orderCode}`,
-      cancel_url: `${process.env.CLIENT_URL}/checkout/profile`,
-      customer_email: userInDB.email,
-      metadata: {
-        payment_method,
-        delivery_at,
-        order_fullname,
-        order_phone,
-        order_note,
-        user_id,
-        total_amount: totalAmount,
-      },
-    });
-    return responseSuccess(res, {
-      message: "Tạo session thanh toán stripe thành công",
-      data: session,
-    });
-  } else {
-    throw new ErrorHandler(
-      STATUS.BAD_REQUEST,
-      "Giỏ hàng đang không có sản phẩm nào, không thể tạo đơn hàng"
-    );
+
+  let totalAmount = 0;
+  for (const product of products) {
+    const productInDB = await ProductModel.findById(product._id).lean();
+    if (!productInDB) {
+      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
+    }
+    if (productInDB.quantity < product.buy_count) {
+      throw new ErrorHandler(
+        STATUS.BAD_REQUEST,
+        `Số lượng sản phẩm ${productInDB.name} không đủ, vui lòng chọn sản phẩm khác`
+      );
+    }
+    totalAmount += product.price * product.buy_count;
   }
+  const orderCode = generateOrderCode();
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    client_reference_id: orderCode,
+    line_items: products.map((product) => ({
+      price_data: {
+        currency: "vnd",
+        product_data: {
+          name: product.name,
+          images: [product.thumb],
+        },
+        unit_amount: product.price,
+      },
+      quantity: product.buy_count,
+    })),
+    mode: "payment",
+    success_url: `${process.env.CLIENT_URL}/checkout/success/${orderCode}`,
+    cancel_url: `${process.env.CLIENT_URL}/checkout/profile`,
+    customer_email: userInDB.email,
+    metadata: {
+      user_fullname,
+      user_phone,
+      payment_method,
+      shipping_address,
+      shipping_province,
+      shipping_district,
+      shipping_ward,
+      billing_address,
+      billing_province,
+      billing_district,
+      billing_ward,
+      order_note,
+      user_id,
+      total_amount: totalAmount,
+    },
+  });
+  return responseSuccess(res, {
+    message: "Tạo session thanh toán stripe thành công",
+    data: session,
+  });
 };
 
 const addOrderForStripePayment = async (session) => {
   const orderCode = session.client_reference_id;
   const {
-    delivery_at,
+    user_fullname,
+    user_phone,
     payment_method,
-    user_id,
+    shipping_address,
+    shipping_province,
+    shipping_district,
+    shipping_ward,
+    billing_address,
+    billing_province,
+    billing_district,
+    billing_ward,
     order_note,
-    order_fullname,
-    order_phone,
-    total_amount,
+    user_id,
+    total_amount: totalAmount,
   } = session.metadata;
   const userInDB = await UserModel.findById(user_id)
     .populate({
@@ -110,14 +135,27 @@ const addOrderForStripePayment = async (session) => {
   const order = {
     order_code: orderCode,
     order_by: {
-      user_avatar: userInDB.avatar,
+      user_fullname: user_fullname || userInDB.name,
+      user_phone: user_phone || userInDB.phone,
       user_email: userInDB.email,
+      user_avatar: userInDB.avatar,
       user_id,
     },
     products: productsData,
-    total_amount: Number(total_amount),
+    total_amount: totalAmount,
     date_of_order: new Date().toISOString(),
-    shipping_address: { order_fullname, order_phone, delivery_at },
+    shipping_address: {
+      address: shipping_address || userInDB.address,
+      province: shipping_province || userInDB.province,
+      district: shipping_district || userInDB.district,
+      ward: shipping_ward || userInDB.ward,
+    },
+    billing_address: {
+      address: billing_address || shipping_address || userInDB.address,
+      province: billing_province || shipping_province || userInDB.province,
+      district: billing_district || shipping_district || userInDB.district,
+      ward: billing_ward || shipping_ward || userInDB.ward,
+    },
     order_note,
     payment_method,
     payment_status: PAYMENT_STATUS.PAID,

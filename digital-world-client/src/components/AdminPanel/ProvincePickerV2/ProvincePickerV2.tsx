@@ -7,13 +7,13 @@ import { ScrollArea } from 'src/components/ui/scroll-area'
 import { VietNamProvince } from 'src/types/location.type'
 import { cn } from 'src/utils/utils'
 
-interface ProvincePickerProps {
+interface ProvincePickerV2Props {
   value?: string
   provinces: VietNamProvince[]
   onSelect?: (provinceId: string, provinceValue: string) => void
 }
 
-export default function ProvincePicker({ value, provinces, onSelect }: ProvincePickerProps) {
+export default function ProvincePickerV2({ value, provinces, onSelect }: ProvincePickerV2Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>

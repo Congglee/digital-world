@@ -11,7 +11,7 @@ import { Button } from 'src/components/ui/button'
 import { Checkbox } from 'src/components/ui/checkbox'
 import path from 'src/constants/path'
 import { useGetAllOrdersQuery } from 'src/redux/apis/order.api'
-import { Order, OrderProductItem, ShippingAddress } from 'src/types/order.type'
+import { Order, OrderProductItem, OrderBy } from 'src/types/order.type'
 import { formatCurrency } from 'src/utils/utils'
 
 const exportDataHeaders = [
@@ -25,6 +25,7 @@ const exportDataHeaders = [
   'Thành tiền',
   'Ngày đặt',
   'Địa chỉ giao hàng',
+  'Địa chỉ thanh toán',
   'Phương thức thanh toán',
   'Trạng thái đơn hàng',
   'Trạng thái vận chuyển',
@@ -41,15 +42,16 @@ export default function OrderList() {
       ? ordersData.data.orders.flatMap((order) =>
           order.products.map((product) => [
             order.order_code,
-            order.shipping_address.order_fullname,
+            order.order_by.user_fullname,
             order.order_by.user_email,
-            order.shipping_address.order_phone,
+            order.order_by.user_phone,
             product.product_name,
             product.buy_count,
             `${formatCurrency(product.product_price)}đ`,
             `${formatCurrency(product.buy_count * product.product_price)}đ`,
             format(order.date_of_order, 'dd/MM/yy'),
-            order.shipping_address.delivery_at,
+            `${order.shipping_address.address}, ${order.shipping_address.province}, ${order.shipping_address.district}, ${order.shipping_address.ward}`,
+            `${order.billing_address.address}, ${order.billing_address.province}, ${order.billing_address.district}, ${order.billing_address.ward}`,
             order.payment_method,
             order.order_status,
             order.delivery_status,
@@ -96,11 +98,11 @@ export default function OrderList() {
       )
     },
     {
-      accessorKey: 'shipping_address',
+      accessorKey: 'order_by',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Khách hàng' />,
       footer: 'Khách hàng',
       cell: ({ row }) => {
-        return <div className='font-medium'>{(row.getValue('shipping_address') as ShippingAddress).order_fullname}</div>
+        return <div className='font-medium'>{(row.getValue('order_by') as OrderBy).user_fullname}</div>
       }
     },
     {

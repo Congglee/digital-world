@@ -40,7 +40,7 @@ type BaseUserMutationFields = Pick<
 >
 
 type BodyAddUser = BaseUserMutationFields & { password: string }
-type BodyUpdateUser = BaseUserMutationFields & { password?: string }
+type BodyUpdateUser = BaseUserMutationFields | { password?: string }
 
 export const userApi = createApi({
   reducerPath,

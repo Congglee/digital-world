@@ -3,8 +3,11 @@ import { body, query } from "express-validator";
 const addCategoryRules = () => {
   return [
     body("name")
+      .trim()
       .exists({ checkFalsy: true })
       .withMessage("Tên danh mục không được để trống")
+      .isString()
+      .withMessage("Tên danh mục phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Tên danh mục phải ít hơn 160 kí tự"),
     body("brands")
@@ -18,11 +21,11 @@ const addCategoryRules = () => {
         }
         return true;
       })
-      .withMessage("Thương hiệu phải ở định dạng mảng string"),
+      .withMessage("Thương hiệu phải là kiểu string array"),
     body("is_actived")
       .if((value) => value !== undefined)
       .isBoolean()
-      .withMessage("Trạng thái kích hoạt phải ở định dạng boolean"),
+      .withMessage("Trạng thái kích hoạt phải là kiểu boolean"),
   ];
 };
 
