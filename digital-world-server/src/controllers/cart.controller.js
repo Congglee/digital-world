@@ -30,6 +30,7 @@ const addToCart = async (req, res) => {
           select: "name price price_before_discount thumb quantity",
           populate: { path: "category", select: "name" },
         })
+        .select({ cart: 1 })
         .lean();
     } else {
       data = await UserModel.findByIdAndUpdate(
@@ -51,6 +52,7 @@ const addToCart = async (req, res) => {
           select: "name price price_before_discount thumb quantity",
           populate: { path: "category", select: "name" },
         })
+        .select({ cart: 1 })
         .lean();
     }
     const response = { message: "Thêm sản phẩm vào giỏ hàng thành công", data };
@@ -80,6 +82,7 @@ const updateCart = async (req, res) => {
         select: "name price price_before_discount thumb quantity",
         populate: { path: "category", select: "name" },
       })
+      .select({ cart: 1 })
       .lean();
     const response = { message: "Cập nhập giỏ hàng thành công", data };
     return responseSuccess(res, response);

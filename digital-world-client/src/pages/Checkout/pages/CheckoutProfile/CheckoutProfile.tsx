@@ -195,7 +195,7 @@ export default function CheckoutProfile() {
         <div className='mt-[30px]'>
           <FormProvider {...form}>
             <form className='space-y-5' onSubmit={onSubmit}>
-              <h4 className='mb-[10px] capitalize text-2xl'>Thông tin cá nhân</h4>
+              <h4 className='mb-[10px] capitalize text-2xl'>Thông tin thanh toán</h4>
               <div className='grid xs:grid-cols-2 gap-[10px]'>
                 <div className='space-y-1'>
                   <label htmlFor='user_fullname' className='text-[#6d7175]'>

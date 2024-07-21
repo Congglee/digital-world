@@ -5,7 +5,7 @@ import { Product, ProductList } from 'src/types/product.type'
 import { ProductSchema, RatingSchema } from 'src/utils/rules'
 import axiosBaseQuery from 'src/redux/helper'
 
-const PRODUCT_URL = 'products'
+export const PRODUCT_URL = 'products'
 const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
 
 const URL_GET_ALL_PRODUCTS = 'get-all-products'

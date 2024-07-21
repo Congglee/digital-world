@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom'
-import { cn, formatCurrency, generateNameId } from 'src/utils/utils'
-import { AlignJustify, Eye, Heart } from 'lucide-react'
+import { cn, formatCurrency, generateNameId, scrollToTop } from 'src/utils/utils'
+import { AlignJustify, Eye, Heart, Loader2 } from 'lucide-react'
 import ProductRating from 'src/components/ProductRating'
 import { Product } from 'src/types/product.type'
 import path from 'src/constants/path'
+import QuickViewModal from 'src/components/QuickViewModal'
+import { useEffect, useState } from 'react'
+import { useAddToWishListMutation } from 'src/redux/apis/user.api'
+import { toast } from 'react-toastify'
 
 // Best - Total Ratings > 4.5
 // Featured - Is Featured === true
@@ -53,58 +57,97 @@ export default function ProductTab({ product }: { product: Product }) {
     red: 'bg-[#df0029] after:border-r-[#df0029]'
   }
   const label = getProductLabel(product)
+  const [open, setOpen] = useState(false)
+  const [addToWishList, { data, isSuccess, isLoading }] = useAddToWishListMutation()
+
+  const closeModal = () => {
+    setOpen(false)
+  }
+
+  const openModal = () => {
+    setOpen(true)
+  }
+
+  const handleAddToWishList = async () => {
+    await addToWishList(product._id)
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message, { autoClose: 1000 })
+    }
+  }, [isSuccess])
 
   return (
-    <div className='bg-white border border-[#ebebeb] p-[15px] group'>
-      <div className='w-full overflow-hidden relative'>
-        <Link to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}>
-          <img src={product.thumb} alt={`product ${product.name} thumbnail`} className='w-full h-full object-cover' />
-        </Link>
-        <div className='absolute top-0 right-0 text-left'>
-          {label && (
-            <span
-              className={cn(
-                'text-white py-[6px] text-[10px] font-semibold absolute w-[70px] h-[25px] right-0 text-center uppercase',
-                'before:content-[""] before:size-[6px] before:bg-white before:absolute before:left-0 before:top-[10px] before:rounded-full',
-                'after:content-[""] after:size-0 after:border-r-[10px] after:border-t-[13px] after:border-t-transparent after:border-b-[12px] after:border-b-transparent after:absolute after:top-0 after:right-0 after:-left-[10px] after:text-center',
-                `${labelColors[label.color as keyof typeof labelColors]}`
-              )}
+    <>
+      <div className='bg-white border border-[#ebebeb] p-[15px] group'>
+        <div className='w-full overflow-hidden relative'>
+          <Link to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}>
+            <img src={product.thumb} alt={`product ${product.name} thumbnail`} className='w-full h-full object-cover' />
+          </Link>
+          <div className='absolute top-0 right-0 text-left'>
+            {label && (
+              <span
+                className={cn(
+                  'text-white py-[6px] text-[10px] font-semibold absolute w-[70px] h-[25px] right-0 text-center uppercase',
+                  'before:content-[""] before:size-[6px] before:bg-white before:absolute before:left-0 before:top-[10px] before:rounded-full',
+                  'after:content-[""] after:size-0 after:border-r-[10px] after:border-t-[13px] after:border-t-transparent after:border-b-[12px] after:border-b-transparent after:absolute after:top-0 after:right-0 after:-left-[10px] after:text-center',
+                  `${labelColors[label.color as keyof typeof labelColors]}`
+                )}
+              >
+                {label.title}
+              </span>
+            )}
+          </div>
+          <div className='opacity-0 invisible group-hover:opacity-100 group-hover:visible w-full group-hover:bottom-5 absolute left-0 -bottom-10 px-5 flex items-center justify-center gap-[10px] transition-all duration-400'>
+            <button className='size-10 bg-white text-[#2a2a2a] border border-[#c5cfd6] rounded-full flex items-center justify-center transition-colors duration-300 hover:bg-[#2a2a2a] hover:text-white'>
+              <Link
+                to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}
+                onClick={scrollToTop}
+                className='w-full h-full flex items-center justify-center'
+              >
+                <AlignJustify className='size-4' />
+              </Link>
+            </button>
+            <button
+              className='size-10 bg-white text-[#2a2a2a] border border-[#c5cfd6] rounded-full flex items-center justify-center transition-colors duration-300 hover:bg-[#2a2a2a] hover:text-white'
+              onClick={openModal}
             >
-              {label.title}
-            </span>
-          )}
+              <Eye className='size-4' />
+            </button>
+            <button
+              className={cn(
+                'size-10 bg-white text-[#2a2a2a] border border-[#c5cfd6] rounded-full flex items-center justify-center transition-colors duration-300 hover:bg-[#2a2a2a] hover:text-white',
+                isLoading && 'animate-spin'
+              )}
+              onClick={handleAddToWishList}
+            >
+              {isLoading && <Loader2 className='size-4' />}
+              {!isLoading && <Heart className='size-4' />}
+            </button>
+          </div>
         </div>
-        <div className='opacity-0 invisible group-hover:opacity-100 group-hover:visible w-full group-hover:bottom-5 absolute left-0 -bottom-10 px-5 flex items-center justify-center gap-[10px] transition-all duration-400'>
-          <div className='size-10 bg-white text-[#2a2a2a] border border-[#c5cfd6] rounded-full flex items-center justify-center transition-colors duration-300 hover:bg-[#2a2a2a] hover:text-white'>
-            <AlignJustify className='size-4' />
-          </div>
-          <div className='size-10 bg-white text-[#2a2a2a] border border-[#c5cfd6] rounded-full flex items-center justify-center transition-colors duration-300 hover:bg-[#2a2a2a] hover:text-white'>
-            <Eye className='size-4' />
-          </div>
-          <div className='size-10 bg-white text-[#2a2a2a] border border-[#c5cfd6] rounded-full flex items-center justify-center transition-colors duration-300 hover:bg-[#2a2a2a] hover:text-white'>
-            <Heart className='size-4' />
+        <div className='flex flex-col gap-[6px]'>
+          <Link
+            to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}
+            className='line-clamp-2 text-[#2b3743]'
+          >
+            {product.name}
+          </Link>
+          <ProductRating
+            rating={product.total_ratings}
+            activeClassname='w-[14px] h-[14px] fill-[#f1b400] text-[#f1b400]'
+            nonActiveClassname='w-[14px] h-[14px] fill-current text-gray-300'
+          />
+          <div className='space-x-1'>
+            {product.price_before_discount !== 0 && (
+              <span className='text-gray-500 line-through'>{formatCurrency(product.price_before_discount)} VND</span>
+            )}
+            <span>{formatCurrency(product.price)} VND</span>
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-[6px]'>
-        <Link
-          to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}
-          className='line-clamp-2 text-[#2b3743]'
-        >
-          {product.name}
-        </Link>
-        <ProductRating
-          rating={product.total_ratings}
-          activeClassname='w-[14px] h-[14px] fill-[#f1b400] text-[#f1b400]'
-          nonActiveClassname='w-[14px] h-[14px] fill-current text-gray-300'
-        />
-        <div className='space-x-1'>
-          {product.price_before_discount !== 0 && (
-            <span className='text-gray-500 line-through'>{formatCurrency(product.price_before_discount)} VND</span>
-          )}
-          <span>{formatCurrency(product.price)} VND</span>
-        </div>
-      </div>
-    </div>
+      <QuickViewModal open={open} product={product} closeModal={closeModal} />
+    </>
   )
 }

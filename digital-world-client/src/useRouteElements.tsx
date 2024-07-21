@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { Navigate, Outlet, useLocation, useRoutes } from 'react-router-dom'
 import path from 'src/constants/path'
 import DashboardLayout from 'src/layouts/DashboardLayout'
 import MainLayout from 'src/layouts/MainLayout'
@@ -33,6 +33,10 @@ import ProductDetail from 'src/pages/ProductDetail'
 import ProductList from 'src/pages/ProductList'
 import Register from 'src/pages/Register'
 import ResetPassword from 'src/pages/ResetPassword'
+import UserLayout from 'src/pages/User/layouts'
+import HistoryOrder from 'src/pages/User/pages/HistoryOrder'
+import Profile from 'src/pages/User/pages/Profile'
+import Wishlist from 'src/pages/Wishlist'
 import { useAppSelector } from 'src/redux/hook'
 import { allowedRoles } from 'src/static/data'
 
@@ -51,6 +55,12 @@ function ProtectedDashboardRoute() {
 function RejectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
   return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
+}
+
+function DefaultUserRoute() {
+  const { pathname } = useLocation()
+  const userPathRegex = new RegExp(`^${path.user}/?$`)
+  return userPathRegex.test(pathname) ? <Navigate to={path.profile} replace /> : <Outlet />
 }
 
 export default function useRouteElements() {
@@ -192,7 +202,24 @@ export default function useRouteElements() {
         {
           path: '',
           element: <MainLayout />,
-          children: [{ path: path.cart, element: <Cart /> }]
+          children: [
+            { path: path.cart, element: <Cart /> },
+            { path: path.wishlist, element: <Wishlist /> },
+            {
+              path: '',
+              element: <DefaultUserRoute />,
+              children: [
+                {
+                  path: path.user,
+                  element: <UserLayout />,
+                  children: [
+                    { path: path.profile, element: <Profile /> },
+                    { path: path.historyOrder, element: <HistoryOrder /> }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           path: path.checkout,

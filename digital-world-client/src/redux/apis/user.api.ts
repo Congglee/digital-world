@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
+import { PRODUCT_URL } from 'src/redux/apis/product.api'
 import axiosBaseQuery from 'src/redux/helper'
 import { User, UserList } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
@@ -22,6 +23,9 @@ const URL_UPDATE_PROFILE = `${USER_URL}/update-me`
 const URL_ADD_TO_CART = `${CART_URL}/add-to-cart`
 const URL_UPDATE_USER_CART = `${CART_URL}/update-cart`
 const URL_DELETE_PRODUCTS_CART = `${CART_URL}/delete-products-cart`
+
+const URL_ADD_TO_WISHLIST = `${PRODUCT_URL}/add-to-wishlist`
+const URL_REMOVE_FROM_WISHLIST = `${PRODUCT_URL}/remove-from-wishlist`
 
 const reducerPath = 'user/api' as const
 const tagTypes = ['User'] as const
@@ -88,19 +92,34 @@ export const userApi = createApi({
           invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
         }
       ),
-      addToCart: build.mutation<SuccessResponse<User>, { product_id: string; buy_count: number }>({
-        query: (payload) => ({ url: URL_ADD_TO_CART, method: 'POST', data: payload }),
-        transformResponse: (response: AxiosResponse<SuccessResponse<User>>) => response.data,
-        invalidatesTags: (result, error, _args) => (error ? [] : [{ type: 'User', id: result?.data._id }])
-      }),
-      updateUserCart: build.mutation<SuccessResponse<User>, { product_id: string; buy_count: number }>({
+      addToCart: build.mutation<SuccessResponse<Pick<User, '_id' | 'cart'>>, { product_id: string; buy_count: number }>(
+        {
+          query: (payload) => ({ url: URL_ADD_TO_CART, method: 'POST', data: payload }),
+          transformResponse: (response: AxiosResponse<SuccessResponse<Pick<User, '_id' | 'cart'>>>) => response.data,
+          invalidatesTags: (result, error, _args) => (error ? [] : [{ type: 'User', id: result?.data._id }])
+        }
+      ),
+      updateUserCart: build.mutation<
+        SuccessResponse<Pick<User, '_id' | 'cart'>>,
+        { product_id: string; buy_count: number }
+      >({
         query: (payload) => ({ url: URL_UPDATE_USER_CART, method: 'PUT', data: payload }),
-        transformResponse: (response: AxiosResponse<SuccessResponse<User>>) => response.data,
+        transformResponse: (response: AxiosResponse<SuccessResponse<Pick<User, '_id' | 'cart'>>>) => response.data,
         invalidatesTags: (result, error, _args) => (error ? [] : [{ type: 'User', id: result?.data._id }])
       }),
       deleteProductsCart: build.mutation<AxiosResponse<SuccessResponse<{ deleted_products_cart: number }>>, string[]>({
         query: (payload) => ({ url: URL_DELETE_PRODUCTS_CART, method: 'DELETE', data: payload }),
         invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+      }),
+      addToWishList: build.mutation<SuccessResponse<Pick<User, '_id' | 'wishlist'>>, string>({
+        query: (product_id) => ({ url: `${URL_ADD_TO_WISHLIST}/${product_id}`, method: 'PUT' }),
+        transformResponse: (response: AxiosResponse<SuccessResponse<Pick<User, '_id' | 'wishlist'>>>) => response.data,
+        invalidatesTags: (result, error, _args) => (error ? [] : [{ type: 'User', id: result?.data._id }])
+      }),
+      removeFromWishList: build.mutation<SuccessResponse<Pick<User, '_id' | 'wishlist'>>, string>({
+        query: (product_id) => ({ url: `${URL_REMOVE_FROM_WISHLIST}/${product_id}`, method: 'PUT' }),
+        transformResponse: (response: AxiosResponse<SuccessResponse<Pick<User, '_id' | 'wishlist'>>>) => response.data,
+        invalidatesTags: (result, error, _args) => (error ? [] : [{ type: 'User', id: result?.data._id }])
       })
     }
   }
@@ -117,5 +136,7 @@ export const {
   useDeleteManyUsersMutation,
   useAddToCartMutation,
   useUpdateUserCartMutation,
-  useDeleteProductsCartMutation
+  useDeleteProductsCartMutation,
+  useAddToWishListMutation,
+  useRemoveFromWishListMutation
 } = userApi

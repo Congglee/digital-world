@@ -122,6 +122,11 @@ const getDetailMySelf = async (req, res) => {
       select: "name price price_before_discount thumb quantity",
       populate: { path: "category", select: "name" },
     })
+    .populate({
+      path: "wishlist",
+      select: "name price price_before_discount thumb quantity",
+      populate: { path: "category", select: "name" },
+    })
     .select({ password: 0, __v: 0 })
     .lean();
   if (userDB) {
@@ -287,6 +292,60 @@ const deleteManyUsers = async (req, res) => {
   }
 };
 
+const addToWishlist = async (req, res) => {
+  const { product_id } = req.params;
+  const user_id = req.jwtDecoded.id;
+  const userDB = await UserModel.findByIdAndUpdate(
+    user_id,
+    { $addToSet: { wishlist: product_id } },
+    { new: true }
+  )
+    .select({ wishlist: 1 })
+    .lean();
+  if (userDB) {
+    return responseSuccess(res, {
+      message: "Thêm sản phẩm vào danh sách yêu thích thành công",
+      data: userDB,
+    });
+  } else {
+    throw new ErrorHandler(
+      STATUS.UNAUTHORIZED,
+      "Thêm sản phẩm vào danh sách yêu thích thất bại"
+    );
+  }
+};
+
+const removeFromWishlist = async (req, res) => {
+  const { product_id } = req.params;
+  const user_id = req.jwtDecoded.id;
+  const userDB = await UserModel.findById(user_id).lean();
+  if (userDB) {
+    const productIndex = userDB.wishlist.findIndex(
+      (product) => product.toString() === product_id
+    );
+    if (productIndex !== -1) {
+      const updatedUserDB = await UserModel.findByIdAndUpdate(
+        user_id,
+        { $pull: { wishlist: product_id } },
+        { new: true }
+      )
+        .select({ wishlist: 1 })
+        .lean();
+      return responseSuccess(res, {
+        message: "Xóa sản phẩm khỏi danh sách yêu thích thành công",
+        data: updatedUserDB,
+      });
+    } else {
+      throw new ErrorHandler(
+        STATUS.BAD_REQUEST,
+        "Sản phẩm không tồn tại trong danh sách yêu thích"
+      );
+    }
+  } else {
+    throw new ErrorHandler(STATUS.UNAUTHORIZED, "Không tìm thấy người dùng");
+  }
+};
+
 const userController = {
   addUser,
   getUsers,
@@ -297,6 +356,8 @@ const userController = {
   updateMe,
   deleteUser,
   deleteManyUsers,
+  addToWishlist,
+  removeFromWishlist,
 };
 
 export default userController;

@@ -1,5 +1,5 @@
 {
-  "name": "techshop-backend-api-v2",
+  "name": "digital-world-server",
   "version": "1.0.0",
   "main": "./src/server.js",
   "scripts": {
@@ -30,8 +30,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.8",
     "stripe": "^14.25.0",
-    "uuid": "^9.0.1",
-    "vnpay": "^1.5.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",

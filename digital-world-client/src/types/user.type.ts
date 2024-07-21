@@ -12,6 +12,7 @@ interface CartProductItem {
   price_before_discount: number
   quantity: number
 }
+
 interface CartItem {
   _id: string
   product: CartProductItem
@@ -20,6 +21,17 @@ interface CartItem {
   price_before_discount: number
 }
 
+interface WishlistProductItem {
+  _id: string
+  name: string
+  thumb: string
+  category: {
+    _id: string
+    name: string
+  }
+  price: number
+  price_before_discount: number
+}
 export interface User {
   _id: string
   name: string
@@ -32,10 +44,7 @@ export interface User {
   district?: string
   ward?: string
   phone?: string
-  wishlist: {
-    _id: string
-    name: string
-  }[]
+  wishlist: WishlistProductItem[]
   cart: CartItem[]
   verify: number
   createdAt: string

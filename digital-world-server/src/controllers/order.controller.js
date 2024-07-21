@@ -1,5 +1,5 @@
 import { omitBy } from "lodash";
-import { DELIVERY_STATUS, PAYMENT_STATUS } from "../constants/purchase";
+import { DELIVERY_STATUS } from "../constants/purchase";
 import { ORDER, ORDER_SORT_BY } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { OrderModel } from "../database/models/order.model";

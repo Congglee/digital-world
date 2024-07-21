@@ -43,10 +43,10 @@ function DesktopTopHeader({
               <ChevronDown size={16} />
             </div>
           </div>
-          <div>
+          <div className='flex items-center'>
             {isAuthenticated && (
               <Popover
-                className='flex items-center py-1 hover:text-gray-300 cursor-pointer ml-6'
+                className='flex items-center py-1 hover:text-gray-300 cursor-pointer ml-6 px-[10px]'
                 renderPopover={
                   <div className='bg-white text-sm relative shadow-md rounded-md border border-gray-200'>
                     {isAllowedRole && (
@@ -88,17 +88,16 @@ function DesktopTopHeader({
                 <div>{profile?.email}</div>
               </Popover>
             )}
-
             {!isAuthenticated && (
               <>
                 <Link to={path.login} className='px-[10px]'>
                   Tài khoản
                 </Link>
-                <Link to={path.wishlist} className='px-[10px]'>
-                  Sản phẩm yêu thích
-                </Link>
               </>
             )}
+            <Link to={isAuthenticated ? path.wishlist : path.login} className='px-[10px]'>
+              Sản phẩm yêu thích
+            </Link>
           </div>
         </div>
       </div>
