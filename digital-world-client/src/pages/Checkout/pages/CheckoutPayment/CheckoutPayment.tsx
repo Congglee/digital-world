@@ -227,7 +227,7 @@ export default function CheckoutPayment() {
                   districts={districtsData?.data.results || []}
                   onSelectDistrict={handleSelectDistrict}
                   wards={wardsData?.data.results || []}
-                  onSelectWards={handleSelectWard}
+                  onSelectWard={handleSelectWard}
                 />
               </div>
             )}
@@ -285,7 +285,6 @@ export default function CheckoutPayment() {
               <Button
                 type='submit'
                 className='flex items-center justify-center gap-2 p-5 text-white bg-[#3a3a3a] shadow-[0_1px_0_rgba(0,_0,_0,_.05),_inset_0_-1px_0_rgba(0,_0,_0,_0.2)] hover:bg-purple transition-colors'
-                // onClick={handleBuyPurchases}
                 disabled={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
                 isLoading={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
               >

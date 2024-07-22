@@ -83,7 +83,7 @@ export default function ProductTab({ product }: { product: Product }) {
       <div className='bg-white border border-[#ebebeb] p-[15px] group'>
         <div className='w-full overflow-hidden relative'>
           <Link to={`${path.products}/${generateNameId({ name: product.name, id: product._id })}`}>
-            <img src={product.thumb} alt={`product ${product.name} thumbnail`} className='w-full h-full object-cover' />
+            <img src={product.thumb} alt={product.name} className='w-full h-full object-cover' />
           </Link>
           <div className='absolute top-0 right-0 text-left'>
             {label && (

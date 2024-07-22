@@ -1,12 +1,11 @@
 import { LogOut, UserRound } from 'lucide-react'
 import { useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Order } from 'src/components/Icons/Icons'
 import path from 'src/constants/path'
 import { cn } from 'src/utils/utils'
 
 export default function UserSideNav() {
-  const navigate = useNavigate()
   const { pathname } = useLocation()
   const userSideNavOpen = pathname === path.profile || pathname === path.changePassword
   const [open, setOpen] = useState(userSideNavOpen)
@@ -17,17 +16,14 @@ export default function UserSideNav() {
         <li>
           <button
             className={cn(
-              'py-[10px] px-[15px] hover:bg-[#ebebeb] transition-colors duration-300 ease-in-out relative cursor-pointer w-full',
+              'hover:bg-[#ebebeb] py-[10px] transition-colors duration-300 ease-in-out relative cursor-pointer w-full',
               userSideNavOpen ? 'bg-[#ebebeb]' : ''
             )}
-            onClick={() => {
-              navigate(path.profile)
-              setOpen(true)
-            }}
+            onClick={() => setOpen(true)}
           >
-            <NavLink to={path.profile} className='flex items-center gap-[5px] hover:text-purple capitalize'>
+            <NavLink to={path.profile} className='px-[15px] flex items-center gap-[5px] hover:text-purple capitalize'>
               <UserRound className='size-4' />
-              Tài khoản của tôi
+              <span className='truncate'>Tài khoản của tôi</span>
             </NavLink>
             <div
               className={cn(
@@ -35,26 +31,22 @@ export default function UserSideNav() {
                 open && 'h-auto opacity-100 mt-3'
               )}
             >
-              <div className='pl-5'>
-                <NavLink
-                  to={path.profile}
-                  className={({ isActive }) =>
-                    cn('flex items-center gap-[5px] hover:text-purple capitalize', isActive && 'text-purple')
-                  }
-                >
-                  Hồ sơ
-                </NavLink>
-              </div>
-              <div className='pl-5'>
-                <NavLink
-                  to={path.changePassword}
-                  className={({ isActive }) =>
-                    cn('flex items-center gap-[5px] hover:text-purple capitalize', isActive && 'text-purple')
-                  }
-                >
-                  Đổi mật khẩu
-                </NavLink>
-              </div>
+              <NavLink
+                to={path.profile}
+                className={({ isActive }) =>
+                  cn('pl-10 flex items-center gap-[5px] hover:text-purple capitalize', isActive && 'text-purple')
+                }
+              >
+                Hồ sơ
+              </NavLink>
+              <NavLink
+                to={path.changePassword}
+                className={({ isActive }) =>
+                  cn('pl-10 flex items-center gap-[5px] hover:text-purple capitalize', isActive && 'text-purple')
+                }
+              >
+                Đổi mật khẩu
+              </NavLink>
             </div>
           </button>
         </li>

@@ -40,7 +40,7 @@ export default function Wishlist() {
             {profile.wishlist.map((product) => (
               <div className='grid grid-cols-12 gap-5 items-center py-[15px] px-5'>
                 <div className='col-span-2'>
-                  <img src={product.thumb} alt='' className='w-full h-full object-cover' />
+                  <img src={product.thumb} alt={product.name} className='w-full h-full object-cover' />
                 </div>
                 <div className='col-span-4'>
                   <Link

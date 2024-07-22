@@ -21,7 +21,8 @@ export default function Breadcrumbs({ currentPageName }: BreadcrumbsProps) {
     { path: path.user, breadcrumb: 'Tài khoản' },
     { path: path.profile, breadcrumb: 'Hồ sơ' },
     { path: path.historyOrder, breadcrumb: 'Đơn mua' },
-    { path: path.wishlist, breadcrumb: 'Danh sách yêu thích' }
+    { path: path.wishlist, breadcrumb: 'Danh sách yêu thích' },
+    { path: path.changePassword, breadcrumb: 'Đổi mật khẩu' }
   ]
   const breadcrumbs = useBreadcrumbs(routes)
 

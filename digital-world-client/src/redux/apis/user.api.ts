@@ -30,13 +30,12 @@ const URL_REMOVE_FROM_WISHLIST = `${PRODUCT_URL}/remove-from-wishlist`
 const reducerPath = 'user/api' as const
 const tagTypes = ['User'] as const
 
-type BodyUpdateProfile = Omit<
-  User,
-  '_id' | 'wishlist' | 'cart' | 'roles' | 'email' | 'createdAt' | 'updatedAt' | 'verify'
-> & {
-  password?: string
-  newPassword?: string
-}
+type BodyUpdateProfile =
+  | Omit<User, '_id' | 'wishlist' | 'cart' | 'roles' | 'email' | 'createdAt' | 'updatedAt' | 'verify'>
+  | {
+      password?: string
+      newPassword?: string
+    }
 
 type BaseUserMutationFields = Pick<
   User,
@@ -44,7 +43,7 @@ type BaseUserMutationFields = Pick<
 >
 
 type BodyAddUser = BaseUserMutationFields & { password: string }
-type BodyUpdateUser = BaseUserMutationFields | { password?: string }
+type BodyUpdateUser = (BaseUserMutationFields & { password?: string }) | { password?: string }
 
 export const userApi = createApi({
   reducerPath,

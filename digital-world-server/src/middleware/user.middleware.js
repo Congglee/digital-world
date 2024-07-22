@@ -259,7 +259,7 @@ const updateMeRules = () => {
       .isLength({ min: 6, max: 160 })
       .withMessage("Mật khẩu phải từ 6-160 kí tự"),
     body("new_password")
-      .if((value) => value !== undefined)
+      .if((value, { req }) => value !== undefined || req.body.password)
       .trim()
       .isString()
       .withMessage("Mật khẩu mới phải là kiểu string")

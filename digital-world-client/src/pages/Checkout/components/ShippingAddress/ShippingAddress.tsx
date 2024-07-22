@@ -14,7 +14,7 @@ interface ShippingAddressProps {
   districts: VietNamDistrict[]
   onSelectDistrict: (districtId: string, districtValue: string) => void
   wards: VietNamWard[]
-  onSelectWards: (wardValue: string) => void
+  onSelectWard: (wardValue: string) => void
 }
 
 export default function ShippingAddress({
@@ -23,7 +23,7 @@ export default function ShippingAddress({
   districts,
   onSelectDistrict,
   wards,
-  onSelectWards
+  onSelectWard
 }: ShippingAddressProps) {
   const {
     register,
@@ -63,6 +63,8 @@ export default function ShippingAddress({
                   provinces={provinces}
                   onSelect={onSelectProvince}
                   onChange={field.onChange}
+                  className='py-[10px] pl-3 pr-6 border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] appearance-none focus:border-transparent'
+                  labelId='shipping_province'
                 />
               )}
             />
@@ -86,6 +88,8 @@ export default function ShippingAddress({
                   districts={districts}
                   onSelect={onSelectDistrict}
                   onChange={field.onChange}
+                  className='py-[10px] pl-3 pr-6 border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] appearance-none focus:border-transparent'
+                  labelId='shipping_district'
                 />
               )}
             />
@@ -104,7 +108,14 @@ export default function ShippingAddress({
               name='shipping_ward'
               control={control}
               render={({ field }) => (
-                <WardPicker value={field.value} wards={wards} onSelect={onSelectWards} onChange={field.onChange} />
+                <WardPicker
+                  value={field.value}
+                  wards={wards}
+                  onSelect={onSelectWard}
+                  onChange={field.onChange}
+                  className='py-[10px] pl-3 pr-6 border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] appearance-none focus:border-transparent'
+                  labelId='shipping_ward'
+                />
               )}
             />
             <div className='absolute top-0 bottom-0 right-0 -ml-5 px-3 flex items-center justify-center'>

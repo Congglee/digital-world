@@ -34,6 +34,7 @@ import ProductList from 'src/pages/ProductList'
 import Register from 'src/pages/Register'
 import ResetPassword from 'src/pages/ResetPassword'
 import UserLayout from 'src/pages/User/layouts'
+import ChangePassword from 'src/pages/User/pages/ChangePassword'
 import HistoryOrder from 'src/pages/User/pages/HistoryOrder'
 import Profile from 'src/pages/User/pages/Profile'
 import Wishlist from 'src/pages/Wishlist'
@@ -214,6 +215,7 @@ export default function useRouteElements() {
                   element: <UserLayout />,
                   children: [
                     { path: path.profile, element: <Profile /> },
+                    { path: path.changePassword, element: <ChangePassword /> },
                     { path: path.historyOrder, element: <HistoryOrder /> }
                   ]
                 }

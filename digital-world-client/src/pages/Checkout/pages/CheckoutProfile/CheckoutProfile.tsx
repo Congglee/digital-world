@@ -235,7 +235,7 @@ export default function CheckoutProfile() {
                 districts={districtsData?.data.results || []}
                 onSelectDistrict={handleSelectDistrict}
                 wards={wardsData?.data.results || []}
-                onSelectWards={handleSelectWard}
+                onSelectWard={handleSelectWard}
               />
               <div className='space-y-1'>
                 <label htmlFor='order_note' className='text-[#6d7175]'>
