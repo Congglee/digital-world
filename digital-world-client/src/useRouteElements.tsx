@@ -36,6 +36,7 @@ import ResetPassword from 'src/pages/ResetPassword'
 import UserLayout from 'src/pages/User/layouts'
 import ChangePassword from 'src/pages/User/pages/ChangePassword'
 import HistoryOrder from 'src/pages/User/pages/HistoryOrder'
+import OrderDetail from 'src/pages/User/pages/OrderDetail'
 import Profile from 'src/pages/User/pages/Profile'
 import Wishlist from 'src/pages/Wishlist'
 import { useAppSelector } from 'src/redux/hook'
@@ -216,7 +217,8 @@ export default function useRouteElements() {
                   children: [
                     { path: path.profile, element: <Profile /> },
                     { path: path.changePassword, element: <ChangePassword /> },
-                    { path: path.historyOrder, element: <HistoryOrder /> }
+                    { path: path.historyOrder, element: <HistoryOrder /> },
+                    { path: path.orderDetail, element: <OrderDetail /> }
                   ]
                 }
               ]

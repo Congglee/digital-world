@@ -11,7 +11,7 @@ interface ComboboxProps {
   options: Option[]
   onSelect?: (value: string) => void
   hasSearchCombobox?: boolean
-  searchComboPlaceholder?: string
+  searchPlaceholder?: string
   searchEmptyText?: string
 }
 
@@ -20,7 +20,7 @@ export default function Combobox({
   options,
   onSelect,
   hasSearchCombobox,
-  searchComboPlaceholder,
+  searchPlaceholder,
   searchEmptyText
 }: ComboboxProps) {
   return (
@@ -41,7 +41,7 @@ export default function Combobox({
         <Command>
           {hasSearchCombobox && (
             <>
-              <CommandInput placeholder={searchComboPlaceholder || 'Tìm kiếm...'} className='h-9' />
+              <CommandInput placeholder={searchPlaceholder || 'Tìm kiếm...'} className='h-9' />
               <CommandEmpty>{searchEmptyText || 'Không tìm thấy kết quả.'}</CommandEmpty>
             </>
           )}

@@ -15,6 +15,7 @@ export default function Cart() {
   const { extendedPurchasesCart } = useAppSelector((state) => state.cart)
   const { data: profileData } = useGetMeQuery()
   const userCart = (profileData?.data.data.cart as ExtendedPurchaseCart[]) || []
+
   const [updateCart] = useUpdateUserCartMutation()
   const [deleteProductsCart] = useDeleteProductsCartMutation()
 

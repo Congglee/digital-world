@@ -9,6 +9,8 @@ import Input from 'src/components/Input'
 import path from 'src/constants/path'
 import { useHandleAddressData } from 'src/hooks/useHandleAddressData'
 import CheckoutBreadcrumbs from 'src/pages/Checkout/components/CheckoutBreadcrumbs'
+import CheckoutSummary from 'src/pages/Checkout/components/CheckoutSummary'
+import CheckoutSummaryDisclosure from 'src/pages/Checkout/components/CheckoutSummaryDisclosure'
 import ShippingAddress from 'src/pages/Checkout/components/ShippingAddress'
 import { useUpdateProfileMutation } from 'src/redux/apis/user.api'
 import { useAppDispatch, useAppSelector } from 'src/redux/hook'
@@ -170,112 +172,120 @@ export default function CheckoutProfile() {
 
   if (!profile) return null
 
-  if (!checkoutPurchasesCart.length) {
+  if (!checkoutPurchasesCart || checkoutPurchasesCart.length === 0) {
     naivgate(path.cart)
     return null
   }
 
   return (
     <>
-      <div className='mt-1'>
-        <CheckoutBreadcrumbs active='contact-information' />
-        <div className='mt-1'>
-          <div className='px-5 rounded border border-[#e1e3e5] divide-y'>
-            <div className='grid xs:grid-cols-4 gap-1 py-[10px] border-[#e1e3e5]'>
-              <div className='xs:col-span-1'>
-                <span>Liên hệ</span>
+      <CheckoutSummaryDisclosure checkoutPurchasesCart={checkoutPurchasesCart} />
+      <div className='grid md:grid-cols-2 gap-[30px]'>
+        <div className='mb-5'>
+          <div className='mt-1'>
+            <CheckoutBreadcrumbs active='contact-information' />
+            <div className='mt-1'>
+              <div className='px-5 rounded border border-[#e1e3e5] divide-y'>
+                <div className='grid xs:grid-cols-4 gap-1 py-[10px] border-[#e1e3e5]'>
+                  <div className='xs:col-span-1'>
+                    <span>Liên hệ</span>
+                  </div>
+                  <div className='xs:col-span-2'>
+                    <span>{profile.email}</span>
+                  </div>
+                  <div className='xs:col-span-1 flex justify-end' />
+                </div>
               </div>
-              <div className='xs:col-span-2'>
-                <span>{profile.email}</span>
-              </div>
-              <div className='xs:col-span-1 flex justify-end' />
+            </div>
+            <div className='mt-[30px]'>
+              <FormProvider {...form}>
+                <form className='space-y-5' onSubmit={onSubmit}>
+                  <h4 className='mb-[10px] capitalize text-2xl'>Thông tin thanh toán</h4>
+                  <div className='grid xs:grid-cols-2 gap-[10px]'>
+                    <div className='space-y-1'>
+                      <label htmlFor='user_fullname' className='text-[#6d7175]'>
+                        Họ và tên
+                      </label>
+                      <Input
+                        id='user_fullname'
+                        name='user_fullname'
+                        register={register}
+                        type='text'
+                        placeholder='Họ và tên'
+                        classNameInput='py-[10px] px-3 border border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] bg-transparent focus:border-transparent'
+                        classNameError='min-h-0'
+                        errorMessage={errors.user_fullname?.message}
+                      />
+                    </div>
+                    <div className='space-y-1'>
+                      <label htmlFor='user_phone' className='text-[#6d7175]'>
+                        Số điện thoại
+                      </label>
+                      <Input
+                        id='user_phone'
+                        name='user_phone'
+                        register={register}
+                        type='text'
+                        placeholder='Số điện thoại'
+                        classNameInput='py-[10px] px-3 border border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] bg-transparent focus:border-transparent'
+                        classNameError='min-h-0'
+                        errorMessage={errors.user_phone?.message}
+                      />
+                    </div>
+                  </div>
+                  <h4 className='mb-[10px] capitalize text-2xl'>Địa chỉ giao hàng</h4>
+                  <ShippingAddress
+                    provinces={provinceData?.data.results || []}
+                    onSelectProvince={handleSelectProvince}
+                    districts={districtsData?.data.results || []}
+                    onSelectDistrict={handleSelectDistrict}
+                    wards={wardsData?.data.results || []}
+                    onSelectWard={handleSelectWard}
+                  />
+                  <div className='space-y-1'>
+                    <label htmlFor='order_note' className='text-[#6d7175]'>
+                      Ghi chú
+                    </label>
+                    <textarea
+                      {...register('order_note')}
+                      id='order_note'
+                      rows={5}
+                      className='min-h-20 w-full border border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] px-3 py-2 focus:border-transparent'
+                      placeholder='Ghi chú đơn hàng...'
+                    />
+                  </div>
+                  <div className='mt-[30px]'>
+                    <h4 className='mb-[10px] capitalize text-2xl'>Phương thức vận chuyển</h4>
+                    <div className='p-[10px] mb-5 rounded border border-[#e1e3e5]'>
+                      <div className='flex items-center py-1'>
+                        <input
+                          id='default-radio-1'
+                          type='radio'
+                          name='default-radio'
+                          defaultChecked
+                          className='w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500'
+                        />
+                        <label htmlFor='default-radio-1' className='ms-2.5 text-[#6d7175]'>
+                          Giao hàng tiêu chuẩn - 0.00₫
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='text-right'>
+                    <Button
+                      type='submit'
+                      className='p-5 text-white bg-[#3a3a3a] shadow-[0_1px_0_rgba(0,_0,_0,_.05),_inset_0_-1px_0_rgba(0,_0,_0,_0.2)] hover:bg-purple transition-colors'
+                    >
+                      Tiếp tục thanh toán
+                    </Button>
+                  </div>
+                </form>
+              </FormProvider>
             </div>
           </div>
         </div>
-        <div className='mt-[30px]'>
-          <FormProvider {...form}>
-            <form className='space-y-5' onSubmit={onSubmit}>
-              <h4 className='mb-[10px] capitalize text-2xl'>Thông tin thanh toán</h4>
-              <div className='grid xs:grid-cols-2 gap-[10px]'>
-                <div className='space-y-1'>
-                  <label htmlFor='user_fullname' className='text-[#6d7175]'>
-                    Họ và tên
-                  </label>
-                  <Input
-                    id='user_fullname'
-                    name='user_fullname'
-                    register={register}
-                    type='text'
-                    placeholder='Họ và tên'
-                    classNameInput='py-[10px] px-3 border border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] bg-transparent focus:border-transparent'
-                    classNameError='min-h-0'
-                    errorMessage={errors.user_fullname?.message}
-                  />
-                </div>
-                <div className='space-y-1'>
-                  <label htmlFor='user_phone' className='text-[#6d7175]'>
-                    Số điện thoại
-                  </label>
-                  <Input
-                    id='user_phone'
-                    name='user_phone'
-                    register={register}
-                    type='text'
-                    placeholder='Số điện thoại'
-                    classNameInput='py-[10px] px-3 border border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] bg-transparent focus:border-transparent'
-                    classNameError='min-h-0'
-                    errorMessage={errors.user_phone?.message}
-                  />
-                </div>
-              </div>
-              <h4 className='mb-[10px] capitalize text-2xl'>Địa chỉ giao hàng</h4>
-              <ShippingAddress
-                provinces={provinceData?.data.results || []}
-                onSelectProvince={handleSelectProvince}
-                districts={districtsData?.data.results || []}
-                onSelectDistrict={handleSelectDistrict}
-                wards={wardsData?.data.results || []}
-                onSelectWard={handleSelectWard}
-              />
-              <div className='space-y-1'>
-                <label htmlFor='order_note' className='text-[#6d7175]'>
-                  Ghi chú
-                </label>
-                <textarea
-                  {...register('order_note')}
-                  id='order_note'
-                  rows={5}
-                  className='min-h-20 w-full border border-[#c9cccf] rounded transition-shadow focus:outline-none focus:shadow-[0_0_0_1.5px_#458fff] px-3 py-2 focus:border-transparent'
-                  placeholder='Ghi chú đơn hàng...'
-                />
-              </div>
-              <div className='mt-[30px]'>
-                <h4 className='mb-[10px] capitalize text-2xl'>Phương thức vận chuyển</h4>
-                <div className='p-[10px] mb-5 rounded border border-[#e1e3e5]'>
-                  <div className='flex items-center py-1'>
-                    <input
-                      id='default-radio-1'
-                      type='radio'
-                      name='default-radio'
-                      defaultChecked
-                      className='w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500'
-                    />
-                    <label htmlFor='default-radio-1' className='ms-2.5 text-[#6d7175]'>
-                      Giao hàng tiêu chuẩn - 0.00₫
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div className='text-right'>
-                <Button
-                  type='submit'
-                  className='p-5 text-white bg-[#3a3a3a] shadow-[0_1px_0_rgba(0,_0,_0,_.05),_inset_0_-1px_0_rgba(0,_0,_0,_0.2)] hover:bg-purple transition-colors'
-                >
-                  Tiếp tục thanh toán
-                </Button>
-              </div>
-            </form>
-          </FormProvider>
+        <div className='hidden md:block pl-5 pt-[30px] pb-5 relative after:content-[""] after:absolute after:top-0 after:left-0 after:block after:w-[400%] after:bottom-0 after:bg-[#fafafa] after:-z-10 border-l border-[#e1e3e5]'>
+          <CheckoutSummary checkoutPurchasesCart={checkoutPurchasesCart} />
         </div>
       </div>
       <ConfirmModal

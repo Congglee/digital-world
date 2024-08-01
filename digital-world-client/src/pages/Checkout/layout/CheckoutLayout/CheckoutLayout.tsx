@@ -1,14 +1,10 @@
-import { Disclosure, Transition } from '@headlessui/react'
-import { ChevronUp, ShoppingCart } from 'lucide-react'
 import { useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import logo from 'src/assets/images/logo.png'
-import path from 'src/constants/path'
-import CheckoutSummary from 'src/pages/Checkout/components/CheckoutSummary'
 import { CreditCard, MasterCard, Paypal, ShoppingBag, Visa } from 'src/components/Icons/Icons'
-import { cn } from 'src/utils/utils'
+import path from 'src/constants/path'
 
 export default function CheckoutLayout() {
   const location = useLocation()
@@ -47,45 +43,7 @@ export default function CheckoutLayout() {
             </span>
             <span>Thanh toán {location.pathname === path.checkoutSuccess && 'thành công'}</span>
           </div>
-          <Disclosure>
-            {({ open }) => (
-              <>
-                <Disclosure.Button className='flex md:hidden w-full justify-between rounded-lg bg-[#ebebeb] px-4 py-2 text-left text-sm font-medium text-[#2c6ecb]/80 hover:bg-[#ebebeb]/60 focus:outline-none focus-visible:ring focus-visible:ring-[#ebebeb]/75 mb-3'>
-                  <div className='flex items-center gap-2'>
-                    <ShoppingCart className='w-4 h-4' />
-                    <span>Hiển thị tóm tắt đơn hàng</span>
-                  </div>
-                  <ChevronUp
-                    className={cn('h-5 w-5 text-[#2c6ecb]/80 transition-transform', open && 'rotate-180 transform')}
-                  />
-                </Disclosure.Button>
-                <Transition
-                  show={open}
-                  enter='ease-out duration-300'
-                  enterFrom='opacity-0 scale-95'
-                  enterTo='opacity-100 scale-100'
-                  leave='ease-in duration-200'
-                  leaveFrom='opacity-100 scale-100'
-                  leaveTo='opacity-0 scale-95'
-                >
-                  <Disclosure.Panel
-                    as='div'
-                    className='px-4 pb-2 pt-4 text-sm text-gray-500 bg-[#fafafa] overflow-auto w-full'
-                  >
-                    <CheckoutSummary />
-                  </Disclosure.Panel>
-                </Transition>
-              </>
-            )}
-          </Disclosure>
-          <div className='grid md:grid-cols-2 gap-[30px] divide-x divide-[#e1e3e5]'>
-            <div className='mb-5'>
-              <Outlet />
-            </div>
-            <div className='hidden md:block pl-5 pt-[30px] pb-5 relative after:content-[""] after:absolute after:top-0 after:left-0 after:block after:w-[400%] after:bottom-0 after:bg-[#fafafa] after:-z-10'>
-              <CheckoutSummary />
-            </div>
-          </div>
+          <Outlet />
         </main>
         <footer className='bg-[#f6f6f6] border-t border-[#dddddd] py-[10px]'>
           <div className='container flex flex-col sm:flex-row gap-2 items-center justify-between'>

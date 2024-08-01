@@ -1,3 +1,7 @@
+import { DeliveryStatus, OrderStatus } from 'src/types/order.type'
+
+export type orderStatusFilter = OrderStatus | DeliveryStatus
+
 export interface ListConfig {
   page?: number | string
   limit?: number | string
@@ -10,6 +14,7 @@ export interface ListConfig {
   name?: string
   category?: string
   brand?: string
+  status?: orderStatusFilter
 }
 
 export interface UploadResponse {

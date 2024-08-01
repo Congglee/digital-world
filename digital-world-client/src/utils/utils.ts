@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { toast } from 'react-toastify'
 import userImage from 'src/assets/images/user.svg'
 import { config } from 'src/constants/config'
-import { accountVerifyStatusLabels } from 'src/constants/verifyStatus'
+import { accountsVerifyStatusLabels } from 'src/constants/verifyStatus'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -89,4 +89,4 @@ export function scrollToTop() {
 
 export const getAvatarUrl = (avatarName?: string) => (avatarName ? avatarName : userImage)
 
-export const getVerifyStatusLabel = (status: number) => accountVerifyStatusLabels[status] || 'Unknown'
+export const getVerifyStatusLabel = (status: number) => accountsVerifyStatusLabels[status] || 'Unknown'

@@ -2,11 +2,9 @@ import { useMemo } from 'react'
 import { ExtendedPurchaseCart } from 'src/types/cart.type'
 import { formatCurrency } from 'src/utils/utils'
 
-export default function CheckoutSummary() {
-  const checkoutPurchasesCart = JSON.parse(
-    localStorage.getItem('checkout-purchases-cart') || '[]'
-  ) as ExtendedPurchaseCart[]
+export type CheckoutPurchaseCart = Pick<ExtendedPurchaseCart, '_id' | 'price' | 'buy_count' | 'product'>
 
+export default function CheckoutSummary({ checkoutPurchasesCart }: { checkoutPurchasesCart: CheckoutPurchaseCart[] }) {
   const totalPurchaseAmount = useMemo(() => {
     return checkoutPurchasesCart.reduce((result, purchase) => result + purchase.price * purchase.buy_count, 0)
   }, [checkoutPurchasesCart])

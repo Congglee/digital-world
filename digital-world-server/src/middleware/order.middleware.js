@@ -104,45 +104,45 @@ const addOrderRules = () => {
       .withMessage("Phường thanh toán phải là kiểu string")
       .isLength({ max: 160 })
       .withMessage("Phường thanh toán phải ít hơn 160 kí tự"),
-    body("products")
-      .exists({ checkFalsy: true })
-      .withMessage("Sản phẩm không được để trống")
-      .isArray()
-      .withMessage("Sản phẩm phải là kiểu array")
-      .custom((value) => {
-        if (value.length === 0) {
-          return false;
-        }
-        return true;
-      })
-      .withMessage("Sản phẩm không được để trống"),
-    body("products.*._id")
-      .exists({ checkFalsy: true })
-      .withMessage("Id sản phẩm không được để trống")
-      .isMongoId()
-      .withMessage("Id sản phẩm phải là kiểu id"),
-    body("products.*.name")
-      .trim()
-      .exists({ checkFalsy: true })
-      .withMessage("Tên sản phẩm không được để trống")
-      .isString()
-      .withMessage("Tên sản phẩm phải là kiểu string"),
-    body("products.*.price")
-      .exists({ checkFalsy: true })
-      .withMessage("Giá sản phẩm không được để trống")
-      .isNumeric()
-      .withMessage("Giá sản phẩm phải là kiểu số"),
-    body("products.*.thumb")
-      .trim()
-      .exists({ checkFalsy: true })
-      .withMessage("Ảnh sản phẩm không được để trống")
-      .isString()
-      .withMessage("Ảnh sản phẩm phải là kiểu string"),
-    body("products.*.buy_count")
-      .exists({ checkFalsy: true })
-      .withMessage("Số lượng mua không được để trống")
-      .isInt({ min: 0 })
-      .withMessage("Số lượng mua phải là kiểu number số nguyên và lớn hơn 0"),
+    // body("products")
+    //   .exists({ checkFalsy: true })
+    //   .withMessage("Sản phẩm không được để trống")
+    //   .isArray()
+    //   .withMessage("Sản phẩm phải là kiểu array")
+    //   .custom((value) => {
+    //     if (value.length === 0) {
+    //       return false;
+    //     }
+    //     return true;
+    //   })
+    //   .withMessage("Sản phẩm không được để trống"),
+    // body("products.*._id")
+    //   .exists({ checkFalsy: true })
+    //   .withMessage("Id sản phẩm không được để trống")
+    //   .isMongoId()
+    //   .withMessage("Id sản phẩm phải là kiểu id"),
+    // body("products.*.name")
+    //   .trim()
+    //   .exists({ checkFalsy: true })
+    //   .withMessage("Tên sản phẩm không được để trống")
+    //   .isString()
+    //   .withMessage("Tên sản phẩm phải là kiểu string"),
+    // body("products.*.price")
+    //   .exists({ checkFalsy: true })
+    //   .withMessage("Giá sản phẩm không được để trống")
+    //   .isNumeric()
+    //   .withMessage("Giá sản phẩm phải là kiểu số"),
+    // body("products.*.thumb")
+    //   .trim()
+    //   .exists({ checkFalsy: true })
+    //   .withMessage("Ảnh sản phẩm không được để trống")
+    //   .isString()
+    //   .withMessage("Ảnh sản phẩm phải là kiểu string"),
+    // body("products.*.buy_count")
+    //   .exists({ checkFalsy: true })
+    //   .withMessage("Số lượng mua không được để trống")
+    //   .isInt({ min: 0 })
+    //   .withMessage("Số lượng mua phải là kiểu number số nguyên và lớn hơn 0"),
   ];
 };
 

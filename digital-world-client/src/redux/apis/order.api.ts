@@ -1,9 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { AxiosResponse } from 'axios'
-import { SuccessResponse } from 'src/types/utils.type'
+import { ListConfig, SuccessResponse } from 'src/types/utils.type'
 import { Order, OrderList } from 'src/types/order.type'
 import { OrderSchema } from 'src/utils/rules'
 import axiosBaseQuery from 'src/redux/helper'
+import { userApi } from 'src/redux/apis/user.api'
 
 const ORDER_URL = 'orders'
 const ADMIN_ORDER_URL = `admin/${ORDER_URL}`
@@ -22,7 +23,6 @@ const tagTypes = ['Order'] as const
 
 export type BodyAddOrder = Omit<OrderSchema, 'order_status' | 'delivery_status' | 'payment_status'> & {
   payment_method: string
-  products: { _id: string; name: string; price: number; thumb: string; buy_count: number }[]
 }
 
 export const orderApi = createApi({
@@ -40,14 +40,22 @@ export const orderApi = createApi({
       transformResponse: (response: AxiosResponse<SuccessResponse<OrderList>>) => response.data,
       providesTags: [{ type: 'Order' as const, id: 'USER_ORDERS_LIST' }]
     }),
-    getMyOrders: build.query<SuccessResponse<OrderList>, void>({
-      query: () => ({ url: URL_GET_MY_ORDERS, method: 'GET' }),
+    getMyOrders: build.query<SuccessResponse<OrderList>, ListConfig>({
+      query: (params) => ({ url: URL_GET_MY_ORDERS, method: 'GET', params }),
       transformResponse: (response: AxiosResponse<SuccessResponse<OrderList>>) => response.data,
       providesTags: [{ type: 'Order' as const, id: 'MY_ORDERS_LIST' }]
     }),
     addOrder: build.mutation<AxiosResponse<SuccessResponse<Order>>, BodyAddOrder>({
       query: (payload) => ({ url: URL_ADD_ORDER, method: 'POST', data: payload }),
-      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes),
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled
+          dispatch(userApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }),
     getOrder: build.query<AxiosResponse<SuccessResponse<Order>>, string>({
       query: (id) => ({ url: `${URL_GET_ORDER}/${id}`, method: 'GET' }),

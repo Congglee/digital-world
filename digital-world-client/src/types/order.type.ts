@@ -1,3 +1,5 @@
+import { Product } from 'src/types/product.type'
+
 export type OrderStatus = 'Đang xử lý' | 'Đã xử lý' | 'Thành công' | 'Đã hủy'
 export type DeliveryStatus = 'Đợi xác nhận' | 'Đang giao' | 'Đã giao thành công'
 export type PaymentStatus = 'Chưa thanh toán' | 'Đã thanh toán'
@@ -17,7 +19,7 @@ export interface OrderBy {
 
 export interface OrderProductItem {
   _id: string
-  product_id: string
+  product_id: Product
   product_name: string
   product_price: number
   product_thumb: string

@@ -12,6 +12,8 @@ import { paymentMethodOptions } from 'src/constants/payment'
 import { useHandleAddressData } from 'src/hooks/useHandleAddressData'
 import BillingAddress from 'src/pages/Checkout/components/BillingAddress'
 import CheckoutBreadcrumbs from 'src/pages/Checkout/components/CheckoutBreadcrumbs'
+import CheckoutSummary from 'src/pages/Checkout/components/CheckoutSummary'
+import CheckoutSummaryDisclosure from 'src/pages/Checkout/components/CheckoutSummaryDisclosure'
 import { type FormData as CheckoutProfileType } from 'src/pages/Checkout/pages/CheckoutProfile/CheckoutProfile'
 import { useAddOrderMutation } from 'src/redux/apis/order.api'
 import {
@@ -110,14 +112,7 @@ export default function CheckoutPayment() {
       const payloadData = {
         ...checkoutProfile,
         ...data,
-        payment_method: paymentMethod,
-        products: checkoutPurchasesCart.map((purchase) => ({
-          _id: purchase.product._id,
-          name: purchase.product.name,
-          price: purchase.product.price,
-          thumb: purchase.product.thumb,
-          buy_count: purchase.buy_count
-        }))
+        payment_method: paymentMethod
       }
       if (paymentMethod === paymentMethodOptions.stripeGateWay) {
         await createStripePayment(payloadData)
@@ -145,6 +140,7 @@ export default function CheckoutPayment() {
         toast.success(data?.data.message)
         navigate(path.checkoutSuccess.replace(':order_code', data?.data.data.order_code as string))
         localStorage.removeItem('checkout-profile')
+        localStorage.removeItem('checkout-purchases-cart')
       }
     }
   }, [isSuccess])
@@ -154,6 +150,7 @@ export default function CheckoutPayment() {
       const { data: createStripePaymentData } = createStripePaymentResult
       window.location.href = createStripePaymentData?.data.data.url
       localStorage.removeItem('checkout-profile')
+      localStorage.removeItem('checkout-purchases-cart')
     }
   }, [createStripePaymentResult.isSuccess])
 
@@ -164,6 +161,7 @@ export default function CheckoutPayment() {
       const payerActionUrl = links.find((link) => link.rel === 'payer-action')!
       window.location.href = payerActionUrl.href
       localStorage.removeItem('checkout-profile')
+      localStorage.removeItem('checkout-purchases-cart')
     }
   }, [createPayPalPaymentResult.isSuccess])
 
@@ -175,125 +173,133 @@ export default function CheckoutPayment() {
   }
 
   return (
-    <div className='mt-1'>
-      <CheckoutBreadcrumbs active='payment' />
-      <FormProvider {...form}>
-        <form onSubmit={onSubmit}>
-          <div className='mt-1'>
-            <div className='px-5 border border-[#e1e3e5] rounded-sm divide-y'>
-              <div className='grid gap-1 xs:grid-cols-4 py-[10px]'>
-                <div className='col-span-1'>
-                  <span>Liên hệ</span>
+    <>
+      <CheckoutSummaryDisclosure checkoutPurchasesCart={checkoutPurchasesCart} />
+      <div className='grid md:grid-cols-2 gap-[30px]'>
+        <div className='mt-1 mb-5'>
+          <CheckoutBreadcrumbs active='payment' />
+          <FormProvider {...form}>
+            <form onSubmit={onSubmit}>
+              <div className='mt-1'>
+                <div className='px-5 border border-[#e1e3e5] rounded-sm divide-y'>
+                  <div className='grid gap-1 xs:grid-cols-4 py-[10px]'>
+                    <div className='col-span-1'>
+                      <span>Liên hệ</span>
+                    </div>
+                    <div className='col-span-2'>
+                      <span>{profile.email}</span>
+                    </div>
+                    <div className='col-span-1 flex justify-end'></div>
+                  </div>
+                  <div className='grid gap-1 xs:grid-cols-4 py-[10px]'>
+                    <div className='col-span-1'>
+                      <span>Giao tới</span>
+                    </div>
+                    <div className='col-span-2'>{orderDeliveryAt}</div>
+                    <div className='col-span-1 xs:flex xs:justify-end'>
+                      <Link to={path.checkoutProfile} className='text-[#2c6ecb] hover:underline'>
+                        Sửa
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-                <div className='col-span-2'>
-                  <span>{profile.email}</span>
-                </div>
-                <div className='col-span-1 flex justify-end'></div>
               </div>
-              <div className='grid gap-1 xs:grid-cols-4 py-[10px]'>
-                <div className='col-span-1'>
-                  <span>Giao tới</span>
+              <div className='mt-[30px]'>
+                <h4 className='mb-[10px] capitalize text-2xl'>Địa chỉ thanh toán</h4>
+                <div className='flex items-center space-x-2'>
+                  <Checkbox
+                    id='address'
+                    className='w-4 h-4 data-[state=checked]:border-[#2c6ecb] data-[state=checked]:bg-[#2c6ecb]'
+                    onCheckedChange={(checked) => {
+                      reset()
+                      setOpen(checked as boolean)
+                    }}
+                    checked={open}
+                  />
+                  <label htmlFor='address' className='text-[#6d7175] cursor-pointer'>
+                    Địa chỉ thanh toán giống với địa chỉ giao hàng
+                  </label>
                 </div>
-                <div className='col-span-2'>{orderDeliveryAt}</div>
-                <div className='col-span-1 xs:flex xs:justify-end'>
-                  <Link to={path.checkoutProfile} className='text-[#2c6ecb] hover:underline'>
-                    Sửa
-                  </Link>
-                </div>
+                {!open && (
+                  <div className='space-y-3 mt-2'>
+                    <BillingAddress
+                      provinces={provinceData?.data.results || []}
+                      onSelectProvince={handleSelectProvince}
+                      districts={districtsData?.data.results || []}
+                      onSelectDistrict={handleSelectDistrict}
+                      wards={wardsData?.data.results || []}
+                      onSelectWard={handleSelectWard}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-          <div className='mt-[30px]'>
-            <h4 className='mb-[10px] capitalize text-2xl'>Địa chỉ thanh toán</h4>
-            <div className='flex items-center space-x-2'>
-              <Checkbox
-                id='address'
-                className='w-4 h-4 data-[state=checked]:border-[#2c6ecb] data-[state=checked]:bg-[#2c6ecb]'
-                onCheckedChange={(checked) => {
-                  reset()
-                  setOpen(checked as boolean)
-                }}
-                checked={open}
-              />
-              <label htmlFor='address' className='text-[#6d7175] cursor-pointer'>
-                Địa chỉ thanh toán giống với địa chỉ giao hàng
-              </label>
-            </div>
-            {!open && (
-              <div className='space-y-3 mt-2'>
-                <BillingAddress
-                  provinces={provinceData?.data.results || []}
-                  onSelectProvince={handleSelectProvince}
-                  districts={districtsData?.data.results || []}
-                  onSelectDistrict={handleSelectDistrict}
-                  wards={wardsData?.data.results || []}
-                  onSelectWard={handleSelectWard}
-                />
-              </div>
-            )}
-          </div>
-          <div className='mt-[30px]'>
-            <h4 className='mb-[10px] capitalize text-2xl'>Phương thức thanh toán</h4>
-            <div className='w-full border border-[#e1e3e5] divide-y'>
-              {paymentMethodData &&
-                paymentMethodData.data.payment_methods
-                  .filter((paymentMethod) => paymentMethod.is_actived)
-                  .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-                  .map((item) => {
-                    const isOpen = paymentMethod === item.name
-                    return (
-                      <div className='border-[#e1e3e5]' key={item._id}>
-                        <button
-                          type='button'
-                          className={cn(
-                            'flex items-center justify-between w-full px-5 py-4 focus:outline-none focus-visible:ring focus-visible:ring-[#2c6ecb]/75',
-                            isOpen && 'bg-[#2c6ecb]/20'
-                          )}
-                          onClick={() => {
-                            setPaymentMethod(item.name)
-                          }}
-                        >
-                          <div className='flex items-center gap-4'>
-                            {isOpen ? (
-                              <CircleCheckBig className='w-5 h-5 text-[#2c6ecb]' />
-                            ) : (
-                              <Circle className='w-5 h-5 text-gray-500' />
+              <div className='mt-[30px]'>
+                <h4 className='mb-[10px] capitalize text-2xl'>Phương thức thanh toán</h4>
+                <div className='w-full border border-[#e1e3e5] divide-y'>
+                  {paymentMethodData &&
+                    paymentMethodData.data.payment_methods
+                      .filter((paymentMethod) => paymentMethod.is_actived)
+                      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                      .map((item) => {
+                        const isOpen = paymentMethod === item.name
+                        return (
+                          <div className='border-[#e1e3e5]' key={item._id}>
+                            <button
+                              type='button'
+                              className={cn(
+                                'flex items-center justify-between w-full px-5 py-4 focus:outline-none focus-visible:ring focus-visible:ring-[#2c6ecb]/75',
+                                isOpen && 'bg-[#2c6ecb]/20'
+                              )}
+                              onClick={() => {
+                                setPaymentMethod(item.name)
+                              }}
+                            >
+                              <div className='flex items-center gap-4'>
+                                {isOpen ? (
+                                  <CircleCheckBig className='w-5 h-5 text-[#2c6ecb]' />
+                                ) : (
+                                  <Circle className='w-5 h-5 text-gray-500' />
+                                )}
+                                {item.image && (
+                                  <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    className='w-28 h-12 hidden xs:block object-contain'
+                                  />
+                                )}
+                                <span className='text-sm font-medium text-[#3a3a3a]'>{item.name}</span>
+                              </div>
+                              {item.description && (
+                                <ChevronUpIcon className={cn('h-5 w-5', isOpen && 'rotate-180 transform')} />
+                              )}
+                            </button>
+                            {isOpen && item.description && (
+                              <div className='p-5 pt-0 text-sm text-gray-500 bg-[#2c6ecb]/20'>
+                                <div className='border border-gray-400 rounded p-3'>{item.description}</div>
+                              </div>
                             )}
-                            {item.image && (
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                                className='w-28 h-12 hidden xs:block object-contain'
-                              />
-                            )}
-                            <span className='text-sm font-medium text-[#3a3a3a]'>{item.name}</span>
                           </div>
-                          {item.description && (
-                            <ChevronUpIcon className={cn('h-5 w-5', isOpen && 'rotate-180 transform')} />
-                          )}
-                        </button>
-                        {isOpen && item.description && (
-                          <div className='p-5 pt-0 text-sm text-gray-500 bg-[#2c6ecb]/20'>
-                            <div className='border border-gray-400 rounded p-3'>{item.description}</div>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-            </div>
-            <div className='flex justify-end mt-5'>
-              <Button
-                type='submit'
-                className='flex items-center justify-center gap-2 p-5 text-white bg-[#3a3a3a] shadow-[0_1px_0_rgba(0,_0,_0,_.05),_inset_0_-1px_0_rgba(0,_0,_0,_0.2)] hover:bg-purple transition-colors'
-                disabled={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
-                isLoading={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
-              >
-                Đặt Đơn
-              </Button>
-            </div>
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+                        )
+                      })}
+                </div>
+                <div className='flex justify-end mt-5'>
+                  <Button
+                    type='submit'
+                    className='flex items-center justify-center gap-2 p-5 text-white bg-[#3a3a3a] shadow-[0_1px_0_rgba(0,_0,_0,_.05),_inset_0_-1px_0_rgba(0,_0,_0,_0.2)] hover:bg-purple transition-colors'
+                    disabled={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
+                    isLoading={createStripePaymentResult.isLoading || createPayPalPaymentResult.isLoading || isLoading}
+                  >
+                    Đặt Đơn
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </FormProvider>
+        </div>
+        <div className='hidden md:block pl-5 pt-[30px] pb-5 relative after:content-[""] after:absolute after:top-0 after:left-0 after:block after:w-[400%] after:bottom-0 after:bg-[#fafafa] after:-z-10 border-l border-[#e1e3e5]'>
+          <CheckoutSummary checkoutPurchasesCart={checkoutPurchasesCart} />
+        </div>
+      </div>
+    </>
   )
 }

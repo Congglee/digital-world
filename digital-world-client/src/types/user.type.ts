@@ -1,4 +1,4 @@
-export type Role = 'User' | 'Admin' | 'Guest' | 'Writer'
+export type Role = 'User' | 'Admin'
 
 interface CartProductItem {
   _id: string

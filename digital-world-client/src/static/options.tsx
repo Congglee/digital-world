@@ -9,16 +9,12 @@ export type Option = {
 
 export const rolesOptions = [
   {
-    label: 'Guest',
-    value: 'Guest'
-  },
-  {
     label: 'User',
     value: 'User'
   },
   {
-    label: 'Writer',
-    value: 'Writer'
+    label: 'Staff',
+    value: 'Staff'
   }
 ]
 

@@ -12,6 +12,7 @@ const path = {
   user: '/user',
   profile: '/user/profile',
   historyOrder: '/user/order',
+  orderDetail: '/user/order/:order_code',
   changePassword: '/user/password',
   checkout: '/checkout',
   checkoutProfile: '/checkout/profile',

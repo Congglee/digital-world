@@ -36,38 +36,33 @@ const createStripeCheckoutSession = async (req, res) => {
     billing_province,
     billing_district,
     billing_ward,
-    products,
   } = form;
-  const userInDB = await UserModel.findById(user_id).lean().exec();
+  const userInDB = await UserModel.findById(user_id)
+    .populate({
+      path: "cart.product",
+      select: "name price price_before_discount thumb quantity",
+      populate: { path: "category", select: "name" },
+    })
+    .exec();
 
   let totalAmount = 0;
-  for (const product of products) {
-    const productInDB = await ProductModel.findById(product._id).lean();
-    if (!productInDB) {
-      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
-    }
-    if (productInDB.quantity < product.buy_count) {
-      throw new ErrorHandler(
-        STATUS.BAD_REQUEST,
-        `Số lượng sản phẩm ${productInDB.name} không đủ, vui lòng chọn sản phẩm khác`
-      );
-    }
-    totalAmount += product.price * product.buy_count;
+  for (const item of userInDB.cart) {
+    totalAmount += item.price * item.buy_count;
   }
   const orderCode = generateOrderCode();
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     client_reference_id: orderCode,
-    line_items: products.map((product) => ({
+    line_items: userInDB.cart.map((item) => ({
       price_data: {
         currency: "vnd",
         product_data: {
-          name: product.name,
-          images: [product.thumb],
+          name: item.product.name,
+          images: [item.product.thumb],
         },
-        unit_amount: product.price,
+        unit_amount: item.product.price,
       },
-      quantity: product.buy_count,
+      quantity: item.buy_count,
     })),
     mode: "payment",
     success_url: `${process.env.CLIENT_URL}/checkout/success/${orderCode}`,
@@ -120,8 +115,8 @@ const addOrderForStripePayment = async (session) => {
       select: "name price price_before_discount thumb quantity",
       populate: { path: "category", select: "name" },
     })
-    .lean()
     .exec();
+
   const productsData = userInDB.cart.map((item) => {
     const product = item.product;
     return {
@@ -166,6 +161,9 @@ const addOrderForStripePayment = async (session) => {
       $inc: { sold: product.buy_count, quantity: -product.buy_count },
     });
   }
+  userInDB.cart = [];
+  await userInDB.save();
+
   return orderAdd;
 };
 

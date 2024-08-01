@@ -322,7 +322,7 @@ export default function UpdateProduct() {
                     options={categoriesOptions}
                     onSelect={(value) => form.setValue('category', value)}
                     hasSearchCombobox={true}
-                    searchComboPlaceholder='Tìm kiếm danh mục...'
+                    searchPlaceholder='Tìm kiếm danh mục...'
                     searchEmptyText='Không tìm thấy danh mục.'
                   />
                   <FormMessage />
@@ -340,7 +340,7 @@ export default function UpdateProduct() {
                     options={brandsOptions}
                     onSelect={(value) => form.setValue('brand', value)}
                     hasSearchCombobox={true}
-                    searchComboPlaceholder='Tìm kiếm thương hiệu...'
+                    searchPlaceholder='Tìm kiếm thương hiệu...'
                     searchEmptyText='Không tìm thấy thương hiệu.'
                   />
                   <FormMessage />

@@ -24,76 +24,78 @@ const addOrder = async (req, res) => {
     billing_province,
     billing_district,
     billing_ward,
-    products,
   } = form;
-  const userInDB = await UserModel.findById(user_id).lean().exec();
+  const userInDB = await UserModel.findById(user_id)
+    .populate({
+      path: "cart.product",
+      select: "name price price_before_discount thumb quantity",
+      populate: { path: "category", select: "name" },
+    })
+    .exec();
 
-  let totalAmount = 0;
-  let productsData = [];
-  for (const product of products) {
-    const productInDB = await ProductModel.findById(product._id).lean();
-    if (!productInDB) {
-      throw new ErrorHandler(STATUS.NOT_FOUND, "Không tìm thấy sản phẩm");
+  if (userInDB.cart.length > 0) {
+    let totalAmount = 0;
+    let productsData = [];
+    for (const item of userInDB.cart) {
+      totalAmount += item.price * item.buy_count;
+      productsData.push({
+        product_id: item.product._id,
+        product_name: item.product.name,
+        product_price: item.product.price,
+        product_thumb: item.product.thumb,
+        buy_count: item.buy_count,
+      });
     }
-    if (productInDB.quantity < product.buy_count) {
-      throw new ErrorHandler(
-        STATUS.BAD_REQUEST,
-        `Số lượng sản phẩm ${productInDB.name} không đủ, vui lòng chọn sản phẩm khác`
-      );
-    }
-    totalAmount += product.price * product.buy_count;
-    productsData.push({
-      product_id: product._id,
-      product_name: product.name,
-      product_price: product.price,
-      product_thumb: product.thumb,
-      buy_count: product.buy_count,
-    });
-  }
-  const orderCode = generateOrderCode();
-  const order = {
-    order_code: orderCode,
-    order_by: {
-      user_fullname: user_fullname || userInDB.name,
-      user_phone: user_phone || userInDB.phone,
-      user_email: userInDB.email,
-      user_avatar: userInDB.avatar,
-      user_id,
-    },
-    products: productsData,
-    total_amount: totalAmount,
-    date_of_order: new Date().toISOString(),
-    shipping_address: {
-      address: shipping_address || userInDB.address,
-      province: shipping_province || userInDB.province,
-      district: shipping_district || userInDB.district,
-      ward: shipping_ward || userInDB.ward,
-    },
-    billing_address: {
-      address: billing_address || shipping_address || userInDB.address,
-      province: billing_province || shipping_province || userInDB.province,
-      district: billing_district || shipping_district || userInDB.district,
-      ward: billing_ward || shipping_ward || userInDB.ward,
-    },
-    order_note,
-    payment_method,
-  };
-  const orderAdd = await new OrderModel(order).save();
-  for (const product of products) {
-    await ProductModel.findByIdAndUpdate(product._id, {
-      $inc: { sold: product.buy_count, quantity: -product.buy_count },
-    });
-  }
-  const response = {
-    message: "Tạo mới đơn hàng thành công",
-    data: orderAdd.toObject({
-      transform: (doc, ret, option) => {
-        delete ret.__v;
-        return ret;
+    const orderCode = generateOrderCode();
+    const order = {
+      order_code: orderCode,
+      order_by: {
+        user_fullname: user_fullname || userInDB.name,
+        user_phone: user_phone || userInDB.phone,
+        user_email: userInDB.email,
+        user_avatar: userInDB.avatar,
+        user_id,
       },
-    }),
-  };
-  return responseSuccess(res, response);
+      products: productsData,
+      total_amount: totalAmount,
+      date_of_order: new Date().toISOString(),
+      shipping_address: {
+        address: shipping_address || userInDB.address,
+        province: shipping_province || userInDB.province,
+        district: shipping_district || userInDB.district,
+        ward: shipping_ward || userInDB.ward,
+      },
+      billing_address: {
+        address: billing_address || shipping_address || userInDB.address,
+        province: billing_province || shipping_province || userInDB.province,
+        district: billing_district || shipping_district || userInDB.district,
+        ward: billing_ward || shipping_ward || userInDB.ward,
+      },
+      order_note,
+      payment_method,
+    };
+    const orderAdd = await new OrderModel(order).save();
+    for (const product of productsData) {
+      await ProductModel.findByIdAndUpdate(product.product_id, {
+        $inc: { sold: product.buy_count, quantity: -product.buy_count },
+      });
+    }
+    userInDB.cart = [];
+    await userInDB.save();
+
+    const response = {
+      message: "Tạo mới đơn hàng thành công",
+      data: orderAdd.toObject({
+        transform: (doc, ret, option) => {
+          delete ret.__v;
+          return ret;
+        },
+      }),
+    };
+    return responseSuccess(res, response);
+  } else {
+    throw new ErrorHandler(STATUS.BAD_REQUEST, "Giỏ hàng trống");
+  }
 };
 
 const updateUserOrder = async (req, res) => {
@@ -280,13 +282,47 @@ const getUserOrders = async (req, res) => {
 };
 
 const getMyOrders = async (req, res) => {
-  let orders = await OrderModel.find({ "order_by.user_id": req.jwtDecoded.id })
-    .sort({ createdAt: -1 })
-    .select({ __v: 0 })
-    .lean();
+  let { page = 1, limit = 30, exclude, sort_by, order, status } = req.query;
+
+  page = Number(page);
+  limit = Number(limit);
+  let condition = {};
+  if (status) {
+    condition.$or = [{ order_status: status }, { delivery_status: status }];
+  }
+  if (exclude) {
+    condition._id = { $ne: exclude };
+  }
+  if (!ORDER.includes(order)) {
+    order = ORDER[0];
+  }
+  if (!ORDER_SORT_BY.includes(sort_by)) {
+    sort_by = ORDER_SORT_BY[0];
+  }
+
+  let [orders, totalOrders] = await Promise.all([
+    OrderModel.find({ "order_by.user_id": req.jwtDecoded.id, ...condition })
+      .sort({ [sort_by]: order === "desc" ? -1 : 1 })
+      .skip(page * limit - limit)
+      .limit(limit)
+      .select({ __v: 0 })
+      .lean(),
+    OrderModel.find({ "order_by.user_id": req.jwtDecoded.id, ...condition })
+      .countDocuments()
+      .lean(),
+  ]);
+  const page_size = Math.ceil(totalOrders / limit) || 1;
+
   const response = {
     message: "Lấy tất cả đơn hàng của tài khoản thành công",
-    data: { orders },
+    data: {
+      orders,
+      pagination: {
+        page,
+        limit,
+        page_size,
+      },
+    },
   };
   return responseSuccess(res, response);
 };
