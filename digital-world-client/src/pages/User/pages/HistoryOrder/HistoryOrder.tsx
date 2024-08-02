@@ -11,7 +11,7 @@ import { ordersStatus } from 'src/constants/purchase'
 import useQueryParams from 'src/hooks/useQueryParams'
 import { useGetMyOrdersQuery, useUpdateMyOrderMutation } from 'src/redux/apis/order.api'
 import { DeliveryStatus, OrderStatus } from 'src/types/order.type'
-import { orderStatusFilter } from 'src/types/utils.type'
+import { OrderStatusFilter } from 'src/types/utils.type'
 import { cn, formatCurrency } from 'src/utils/utils'
 
 const orderTabs = [
@@ -33,7 +33,7 @@ const allowedCancelOrderStatus: Array<OrderStatus | DeliveryStatus> = [
 export default function HistoryOrder() {
   const queryParams: { status?: string } = useQueryParams()
   const status: string = queryParams.status || ordersStatus.all
-  const { data: historyOrdersData } = useGetMyOrdersQuery(status ? { status: status as orderStatusFilter } : {})
+  const { data: historyOrdersData } = useGetMyOrdersQuery(status ? { status: status as OrderStatusFilter } : {})
   const historyOrders = historyOrdersData?.data.orders || []
   const [open, setOpen] = useState<boolean>(false)
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null)
