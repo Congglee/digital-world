@@ -1,5 +1,5 @@
 import { omitBy } from "lodash";
-import { DELIVERY_STATUS } from "../constants/purchase";
+import { DELIVERY_STATUS, ORDER_STATUS } from "../constants/purchase";
 import { ORDER, ORDER_SORT_BY } from "../constants/sort";
 import { STATUS } from "../constants/status";
 import { OrderModel } from "../database/models/order.model";
@@ -140,7 +140,9 @@ const updateMyOrder = async (req, res) => {
   if (orderDB) {
     if (
       orderDB.delivery_status === DELIVERY_STATUS.WAIT_FOR_CONFIRMATION ||
-      orderDB.delivery_status === DELIVERY_STATUS.CONFIRMED
+      orderDB.delivery_status === DELIVERY_STATUS.CONFIRMED ||
+      orderDB.order_status === ORDER_STATUS.IN_PROGRESS ||
+      orderDB.order_status === ORDER_STATUS.PROCESSED
     ) {
       const userOrderDB = await OrderModel.findByIdAndUpdate(order_id, order, {
         new: true,
@@ -155,7 +157,7 @@ const updateMyOrder = async (req, res) => {
     } else {
       throw new ErrorHandler(
         STATUS.BAD_REQUEST,
-        "Đơn hàng đã được xác nhận hoặc đang chuyển hàng, không thể hủy đơn hàng"
+        "Không thể cập nhật đơn hàng này"
       );
     }
   } else {

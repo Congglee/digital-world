@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation, useRoutes } from 'react-router-dom'
 import path from 'src/constants/path'
+import { accountRoles } from 'src/constants/role'
 import DashboardLayout from 'src/layouts/DashboardLayout'
 import MainLayout from 'src/layouts/MainLayout'
 import Cart from 'src/pages/Cart'
@@ -49,10 +50,33 @@ function ProtectedRoute() {
 
 function ProtectedDashboardRoute() {
   const { profile } = useAppSelector((state) => state.auth)
-  const isAllowedRole = profile?.roles.some((role: string) => allowedRoles.includes(role))
+  const isAllowedRole = profile?.roles.some((role) => allowedRoles.includes(role))
 
   return isAllowedRole ? <Outlet /> : <Navigate to={path.home} />
 }
+
+function ProtectedAdminRoute() {
+  const { profile } = useAppSelector((state) => state.auth)
+  const isAdmin = profile?.roles.includes(accountRoles.admin)
+
+  return isAdmin ? <Outlet /> : <Navigate to={path.orderDashBoard} />
+}
+
+// function RejectedRouteV2() {
+//   const { isAuthenticated, profile } = useAppSelector((state) => state.auth)
+
+//   if (!isAuthenticated) {
+//     ;<Navigate to='/login' />
+//   }
+
+//   if (profile?.roles.includes(accountRoles.admin) || profile?.roles.includes(accountRoles.staff)) {
+//     return <Navigate to={path.dashboard} />
+//   } else if (profile?.roles.includes(accountRoles.user)) {
+//     return <Navigate to={path.home} />
+//   }
+
+//   return <Outlet />
+// }
 
 function RejectedRoute() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -109,24 +133,30 @@ export default function useRouteElements() {
               element: <DashboardLayout />,
               children: [
                 {
-                  index: true,
-                  element: <Overview />
-                },
-                {
-                  path: path.categoryDashboard,
-                  element: <CategoryList />
-                },
-                {
-                  path: path.brandDashBoard,
-                  element: <BrandList />
-                },
-                {
-                  path: path.userDashBoard,
-                  element: <UserList />
-                },
-                {
-                  path: path.userProfileDashboard,
-                  element: <UserProfile />
+                  path: '',
+                  element: <ProtectedAdminRoute />,
+                  children: [
+                    {
+                      index: true,
+                      element: <Overview />
+                    },
+                    {
+                      path: path.categoryDashboard,
+                      element: <CategoryList />
+                    },
+                    {
+                      path: path.brandDashBoard,
+                      element: <BrandList />
+                    },
+                    {
+                      path: path.userDashBoard,
+                      element: <UserList />
+                    },
+                    {
+                      path: path.userProfileDashboard,
+                      element: <UserProfile />
+                    }
+                  ]
                 },
                 {
                   path: path.productsDashboard,
@@ -165,12 +195,26 @@ export default function useRouteElements() {
                   element: <SettingsLayout />,
                   children: [
                     {
-                      index: true,
-                      element: <SettingsStore />
-                    },
-                    {
-                      path: path.settingsStore,
-                      element: <SettingsStore />
+                      path: '',
+                      element: <ProtectedAdminRoute />,
+                      children: [
+                        {
+                          index: true,
+                          element: <SettingsStore />
+                        },
+                        {
+                          path: path.settingsStore,
+                          element: <SettingsStore />
+                        },
+                        {
+                          path: path.settingsSendMail,
+                          element: <SettingsSendMail />
+                        },
+                        {
+                          path: path.settingsAppearance,
+                          element: <SettingsAppearance />
+                        }
+                      ]
                     },
                     {
                       path: path.settingsPayment,
@@ -179,14 +223,6 @@ export default function useRouteElements() {
                     {
                       path: path.settingsProfile,
                       element: <SettingsProfile />
-                    },
-                    {
-                      path: path.settingsSendMail,
-                      element: <SettingsSendMail />
-                    },
-                    {
-                      path: path.settingsAppearance,
-                      element: <SettingsAppearance />
                     }
                   ]
                 }

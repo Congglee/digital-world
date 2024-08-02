@@ -4,6 +4,7 @@ import { ListConfig, SuccessResponse } from 'src/types/utils.type'
 import { Product, ProductList } from 'src/types/product.type'
 import { ProductSchema, RatingSchema } from 'src/utils/rules'
 import axiosBaseQuery from 'src/redux/helper'
+import { userApi } from 'src/redux/apis/user.api'
 
 export const PRODUCT_URL = 'products'
 const ADMIN_PRODUCT_URL = `admin/${PRODUCT_URL}`
@@ -56,14 +57,30 @@ export const productApi = createApi({
     }),
     deleteProduct: build.mutation<AxiosResponse<SuccessResponse<string>>, string>({
       query: (id) => ({ url: `${URL_DELETE_PRODUCT}/${id}`, method: 'DELETE' }),
-      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes),
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled
+          dispatch(userApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }),
     deleteManyProducts: build.mutation<
       AxiosResponse<SuccessResponse<{ deleted_count: number }>>,
       { list_id: string[] }
     >({
       query: (payload) => ({ url: URL_DELETE_PRODUCTS, method: 'DELETE', data: payload }),
-      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes)
+      invalidatesTags: (_result, error, _args) => (error ? [] : tagTypes),
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled
+          dispatch(userApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }),
     ratingProduct: build.mutation<
       AxiosResponse<SuccessResponse<string>>,

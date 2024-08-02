@@ -125,6 +125,11 @@ const loginController = async (req, res) => {
     throw new ErrorHandler(STATUS.UNPROCESSABLE_ENTITY, {
       password: "Email hoặc password không đúng",
     });
+  } else if (userInDB.verify === VERIFY_STATUS.BANNED) {
+    throw new ErrorHandler(
+      STATUS.NOT_ACCEPTABLE,
+      "Tài khoản của bạn đã bị khóa, vui lòng liên hệ với quản trị viên"
+    );
   } else {
     const match = compareValue(password, userInDB.password);
     if (!match) {

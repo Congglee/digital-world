@@ -5,6 +5,7 @@ import { SuccessResponse } from 'src/types/utils.type'
 import { Schema } from 'src/utils/rules'
 import { userApi } from 'src/redux/apis/user.api'
 import axiosBaseQuery from 'src/redux/helper'
+import { orderApi } from 'src/redux/apis/order.api'
 
 export const URL_LOGIN = 'login'
 export const URL_REGISTER = 'register'
@@ -29,6 +30,7 @@ export const authApi = createApi({
           try {
             await queryFulfilled
             dispatch(userApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
+            dispatch(orderApi.endpoints.getMyOrders.initiate({}, { forceRefetch: true }))
           } catch (error) {
             console.log(error)
           }
@@ -41,7 +43,16 @@ export const authApi = createApi({
         query: (payload) => ({ url: URL_REGISTER, method: 'POST', data: payload })
       }),
       finalRegister: build.mutation<AxiosResponse<AuthResponse>, { register_token: string }>({
-        query: (payload) => ({ url: `${URL_FINAL_REGISTER}/${payload.register_token}`, method: 'PUT', data: payload })
+        query: (payload) => ({ url: `${URL_FINAL_REGISTER}/${payload.register_token}`, method: 'PUT', data: payload }),
+        onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
+          try {
+            await queryFulfilled
+            dispatch(userApi.endpoints.getMe.initiate(undefined, { forceRefetch: true }))
+            dispatch(orderApi.endpoints.getMyOrders.initiate({}, { forceRefetch: true }))
+          } catch (error) {
+            console.log(error)
+          }
+        }
       }),
       forgotPassword: build.mutation<
         AxiosResponse<SuccessResponse<{ reset_password_token: string }>>,

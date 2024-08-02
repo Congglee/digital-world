@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Breadcrumbs from 'src/components/Breadcrumbs'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
@@ -27,7 +27,6 @@ export default function Login() {
 
   const [login, { isLoading, isSuccess, isError, data, error }] = useLoginMutation()
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   const onSubmit = handleSubmit(async (data) => {
     await login(data)
@@ -37,7 +36,6 @@ export default function Login() {
     if (isSuccess) {
       dispatch(setProfile(data?.data.data.user))
       dispatch(setAuthenticated(true))
-      navigate('/')
     }
   }, [isSuccess])
 

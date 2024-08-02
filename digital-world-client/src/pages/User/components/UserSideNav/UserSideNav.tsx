@@ -1,14 +1,32 @@
 import { LogOut, UserRound } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Order } from 'src/components/Icons/Icons'
 import path from 'src/constants/path'
+import { useLogoutMutation } from 'src/redux/apis/auth.api'
+import { useAppDispatch } from 'src/redux/hook'
+import { setAuthenticated, setProfile } from 'src/redux/slices/auth.slice'
 import { cn } from 'src/utils/utils'
 
 export default function UserSideNav() {
   const { pathname } = useLocation()
   const userSideNavOpen = pathname === path.profile || pathname === path.changePassword
   const [open, setOpen] = useState(userSideNavOpen)
+  const [logout, { isSuccess }] = useLogoutMutation()
+  const dispatch = useAppDispatch()
+
+  const handleLogout = async () => {
+    await logout()
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setProfile(null))
+      dispatch(setAuthenticated(false))
+      localStorage.removeItem('checkout-profile')
+      localStorage.removeItem('checkout-purchases-cart')
+    }
+  }, [isSuccess])
 
   return (
     <nav>
@@ -70,6 +88,7 @@ export default function UserSideNav() {
             className={cn(
               'w-full py-[10px] px-[15px] flex items-center hover:bg-[#ebebeb] gap-[5px] transition-colors duration-300 ease-in-out capitalize'
             )}
+            onClick={handleLogout}
           >
             <LogOut className='size-4' />
             Đăng xuất

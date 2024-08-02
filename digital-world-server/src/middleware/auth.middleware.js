@@ -69,8 +69,27 @@ const verifyAdmin = async (req, res, next) => {
   }
   return responseError(
     res,
-    new ErrorHandler(STATUS.FORBIDDEN, "Không có quyền truy cập")
+    new ErrorHandler(
+      STATUS.FORBIDDEN,
+      "Không có quyền truy cập hay chỉnh sửa tài nguyên này"
+    )
   );
+};
+
+const verifyManagementAccess = (requiredRoles) => {
+  return async (req, res, next) => {
+    const user = await UserModel.findById(req.jwtDecoded.id).lean();
+    if (requiredRoles.some((role) => user.roles.includes(role))) {
+      return next();
+    }
+    return responseError(
+      res,
+      new ErrorHandler(
+        STATUS.FORBIDDEN,
+        "Không có quyền truy cập vào tài nguyên này"
+      )
+    );
+  };
 };
 
 const registerRules = () => {
@@ -152,6 +171,7 @@ const authMiddleware = {
   verifyRefreshToken,
   forgotPasswordRules,
   resetPasswordRules,
+  verifyManagementAccess,
 };
 
 export default authMiddleware;

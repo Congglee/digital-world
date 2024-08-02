@@ -218,10 +218,16 @@ const deleteProduct = async (req, res) => {
   const product_id = req.params.product_id;
   const productDB = await ProductModel.findByIdAndDelete(product_id).lean();
   if (productDB) {
-    await UserModel.updateMany(
-      { "cart.product": product_id },
-      { $pull: { cart: { product: product_id } } }
-    );
+    await Promise.all([
+      UserModel.updateMany(
+        { "cart.product": product_id },
+        { $pull: { cart: { product: product_id } } }
+      ),
+      UserModel.updateMany(
+        { wishlist: product_id },
+        { $pull: { wishlist: product_id } }
+      ),
+    ]);
     return responseSuccess(res, { message: "Xóa sản phẩm thành công" });
   } else {
     throw new ErrorHandler(STATUS.BAD_REQUEST, "Không tìm thấy sản phẩm");
@@ -235,10 +241,16 @@ const deleteManyProducts = async (req, res) => {
     _id: { $in: list_id },
   }).lean();
   if (productDB.length > 0) {
-    await UserModel.updateMany(
-      { "cart.product": { $in: list_id } },
-      { $pull: { cart: { product: { $in: list_id } } } }
-    );
+    await Promise.all([
+      UserModel.updateMany(
+        { "cart.product": { $in: list_id } },
+        { $pull: { cart: { product: { $in: list_id } } } }
+      ),
+      UserModel.updateMany(
+        { wishlist: { $in: list_id } },
+        { $pull: { wishlist: { $in: list_id } } }
+      ),
+    ]);
     return responseSuccess(res, {
       message: `Xóa ${deletedData.deletedCount} sản phẩm thành công`,
       data: { deleted_count: deletedData.deletedCount },

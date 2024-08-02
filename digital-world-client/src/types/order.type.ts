@@ -1,7 +1,7 @@
 import { Product } from 'src/types/product.type'
 
 export type OrderStatus = 'Đang xử lý' | 'Đã xử lý' | 'Thành công' | 'Đã hủy'
-export type DeliveryStatus = 'Đợi xác nhận' | 'Đang giao' | 'Đã giao thành công'
+export type DeliveryStatus = 'Đợi xác nhận' | 'Đã xác nhận' | 'Đã chuyển hàng' | 'Đang giao' | 'Đã giao thành công'
 export type PaymentStatus = 'Chưa thanh toán' | 'Đã thanh toán'
 export type PaymentMethod =
   | 'Thanh toán trực tiếp khi nhận hàng'

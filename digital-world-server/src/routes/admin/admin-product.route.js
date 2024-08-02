@@ -5,13 +5,14 @@ import productController from "../../controllers/product.controller";
 import productMiddleware from "../../middleware/product.middleware";
 import { wrapAsync } from "../../utils/response";
 import reviewController from "../../controllers/review.controller";
+import { ROLE } from "../../constants/role.enum";
 
 const adminProductRouter = Router();
 
 adminProductRouter.post(
   "/add-product",
   authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
+  authMiddleware.verifyManagementAccess([ROLE.ADMIN, ROLE.STAFF]),
   productMiddleware.addProductRules(),
   helpersMiddleware.entityValidator,
   wrapAsync(productController.addProduct)
@@ -20,7 +21,7 @@ adminProductRouter.post(
 adminProductRouter.put(
   "/update-product/:product_id",
   authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
+  authMiddleware.verifyManagementAccess([ROLE.ADMIN, ROLE.STAFF]),
   helpersMiddleware.idRule("product_id"),
   helpersMiddleware.idValidator,
   productMiddleware.updateProductRules(),
@@ -69,7 +70,7 @@ adminProductRouter.delete(
 adminProductRouter.put(
   "/update-rating-status/:product_id/:rating_id",
   authMiddleware.verifyAccessToken,
-  authMiddleware.verifyAdmin,
+  authMiddleware.verifyManagementAccess([ROLE.ADMIN, ROLE.STAFF]),
   helpersMiddleware.idRule("product_id"),
   helpersMiddleware.idRule("rating_id"),
   helpersMiddleware.idValidator,

@@ -129,4 +129,4 @@ export const blogPosts = [
   }
 ]
 
-export const allowedRoles = ['Admin']
+export const allowedRoles = ['Admin', 'Staff']

@@ -17,6 +17,7 @@ const URL_ADD_ORDER = `${ORDER_URL}/add-order`
 const URL_GET_ORDER = `${ADMIN_ORDER_URL}/get-order`
 const URL_GET_ORDER_BY_ORDER_CODE = `${ORDER_URL}/get-order-by-order-code`
 const URL_UPDATE_USER_ORDER = `${ADMIN_ORDER_URL}/update-user-order`
+const URL_UPDATE_MY_ORDER = `${ORDER_URL}/update-my-order`
 
 const reducerPath = 'order/api' as const
 const tagTypes = ['Order'] as const
@@ -73,6 +74,13 @@ export const orderApi = createApi({
     >({
       query: ({ id, payload }) => ({ url: `${URL_UPDATE_USER_ORDER}/${id}`, method: 'PUT', data: payload }),
       invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Order', id: args.id }, ...tagTypes])
+    }),
+    updateMyOrder: build.mutation<
+      AxiosResponse<SuccessResponse<Order>>,
+      { id: string; payload: Pick<OrderSchema, 'order_status'> }
+    >({
+      query: ({ id, payload }) => ({ url: `${URL_UPDATE_MY_ORDER}/${id}`, method: 'PUT', data: payload }),
+      invalidatesTags: (_result, error, args) => (error ? [] : [{ type: 'Order', id: args.id }, ...tagTypes])
     })
   })
 })
@@ -84,5 +92,6 @@ export const {
   useGetUserOrdersQuery,
   useGetMyOrdersQuery,
   useAddOrderMutation,
-  useGetOrderByOrderCodeQuery
+  useGetOrderByOrderCodeQuery,
+  useUpdateMyOrderMutation
 } = orderApi

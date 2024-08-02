@@ -17,6 +17,7 @@ import { useGetAllCategoriesQuery } from 'src/redux/apis/category.api'
 import { Category } from 'src/types/category.type'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import MenuDrawer from 'src/components/MenuDrawer'
+import { accountRoles } from 'src/constants/role'
 
 function DesktopTopHeader({
   handleLogout,
@@ -27,7 +28,8 @@ function DesktopTopHeader({
   isAuthenticated: boolean
   profile: UserType | null
 }) {
-  const isAllowedRole = profile && profile.roles.some((role: string) => allowedRoles.includes(role))
+  const isAllowedRole = profile && profile.roles.some((role) => allowedRoles.includes(role))
+  const isAdminRole = profile && profile.roles.includes(accountRoles.admin)
 
   return (
     <div className='bg-[#f0f0f0] text-[#505050] h-9 hidden md:block'>
@@ -51,7 +53,7 @@ function DesktopTopHeader({
                   <div className='bg-white text-sm relative shadow-md rounded-md border border-gray-200'>
                     {isAllowedRole && (
                       <Link
-                        to={path.dashboard}
+                        to={isAdminRole ? path.dashboard : path.orderDashBoard}
                         className='block py-3 px-4 hover:bg-slate-100 hover:text-cyan-500 w-full text-left'
                       >
                         Quản lý website

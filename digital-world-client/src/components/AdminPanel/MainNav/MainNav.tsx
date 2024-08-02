@@ -8,74 +8,94 @@ import { cn } from 'src/utils/utils'
 import { Brand, Category, Website } from 'src/components/Icons/Icons'
 import { useHorizontalScroll } from 'src/hooks/useScroll'
 import Search from 'src/components/AdminPanel/Search'
+import { useAppSelector } from 'src/redux/hook'
+import { Role } from 'src/types/user.type'
+import { accountRoles } from 'src/constants/role'
 
 interface MenuNavProps extends React.HTMLAttributes<HTMLElement> {
   className: string
   horizontalScroll?: boolean
 }
 
-const navMenus = [
-  {
-    path: path.home,
-    label: 'Website',
-    icon: <Website className='w-5 h-5' />
-  },
-  {
-    path: path.dashboard,
-    label: 'Trang chủ',
-    icon: <Gauge className='w-5 h-5' />
-  },
-  {
-    path: path.categoryDashboard,
-    label: 'Danh mục',
-    icon: <Category className='w-5 h-5' />
-  },
-  {
-    path: path.brandDashBoard,
-    label: 'Thương hiệu',
-    icon: <Brand className='w-5 h-5' />
-  },
-  {
-    path: path.productsDashboard,
-    label: 'Sản phẩm',
-    icon: <ShoppingBag className='w-5 h-5' />,
-    children: [path.addProduct, path.updateProduct]
-  },
-  {
-    path: path.ratingDashboard,
-    label: 'Đánh giá',
-    icon: <Star className='w-5 h-5' />,
-    children: [path.detailRatingDashboard]
-  },
-  {
-    path: path.userDashBoard,
-    label: 'Tài khoản',
-    icon: <UserRound className='w-5 h-5' />,
-    children: [path.userProfileDashboard]
-  },
-  {
-    path: path.orderDashBoard,
-    label: 'Đơn hàng',
-    icon: <Receipt className='w-5 h-5' />,
-    children: [path.updateUserOrder, path.sendMailOrder]
-  },
-  {
-    path: path.settingsStore,
-    label: 'Cài đặt',
-    icon: <Settings />,
-    children: [
-      path.settingsDashboard,
-      path.settingsPayment,
-      path.settingsProfile,
-      path.settingsAppearance,
-      path.settingsSendMail
-    ]
-  }
-]
+function getNavMenus(roles: Role[]) {
+  const isAdminRole = roles.includes(accountRoles.admin)
+
+  const navMenus = [
+    {
+      path: path.home,
+      label: 'Website',
+      icon: <Website className='w-5 h-5' />,
+      roles: [accountRoles.staff, accountRoles.admin]
+    },
+    {
+      path: path.dashboard,
+      label: 'Trang chủ',
+      icon: <Gauge className='w-5 h-5' />,
+      roles: [accountRoles.admin]
+    },
+    {
+      path: path.categoryDashboard,
+      label: 'Danh mục',
+      icon: <Category className='w-5 h-5' />,
+      roles: [accountRoles.admin]
+    },
+    {
+      path: path.brandDashBoard,
+      label: 'Thương hiệu',
+      icon: <Brand className='w-5 h-5' />,
+      roles: [accountRoles.admin]
+    },
+    {
+      path: path.productsDashboard,
+      label: 'Sản phẩm',
+      icon: <ShoppingBag className='w-5 h-5' />,
+      children: [path.addProduct, path.updateProduct],
+      roles: [accountRoles.staff, accountRoles.admin]
+    },
+    {
+      path: path.ratingDashboard,
+      label: 'Đánh giá',
+      icon: <Star className='w-5 h-5' />,
+      children: [path.detailRatingDashboard],
+      roles: [accountRoles.staff, accountRoles.admin]
+    },
+    {
+      path: path.userDashBoard,
+      label: 'Tài khoản',
+      icon: <UserRound className='w-5 h-5' />,
+      children: [path.userProfileDashboard],
+      roles: [accountRoles.admin]
+    },
+    {
+      path: path.orderDashBoard,
+      label: 'Đơn hàng',
+      icon: <Receipt className='w-5 h-5' />,
+      children: [path.updateUserOrder, path.sendMailOrder],
+      roles: [accountRoles.staff, accountRoles.admin]
+    },
+    {
+      path: isAdminRole ? path.settingsStore : path.settingsPayment,
+      label: 'Cài đặt',
+      icon: <Settings />,
+      roles: [accountRoles.staff, accountRoles.admin],
+      children: [
+        path.settingsDashboard,
+        path.settingsPayment,
+        path.settingsProfile,
+        path.settingsAppearance,
+        path.settingsSendMail
+      ]
+    }
+  ]
+
+  return navMenus.filter((menu) => isAdminRole || (menu.roles as ('Admin' | 'Staff')[]).includes(accountRoles.staff))
+}
 
 function MenuNav({ className, horizontalScroll = false, ...props }: MenuNavProps) {
   const scrollRef = useHorizontalScroll()
   const { pathname } = useLocation()
+  const { profile } = useAppSelector((state) => state.auth)
+  const navMenus = getNavMenus(profile?.roles || [])
 
   return (
     <nav

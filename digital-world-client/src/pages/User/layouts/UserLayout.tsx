@@ -5,6 +5,10 @@ import UserSideNav from 'src/pages/User/components/UserSideNav'
 
 export default function UserLayout() {
   const { pathname } = useLocation()
+  const orderDetailCodeMatch = pathname.match(/\/user\/order\/(.+)/)
+  const orderCode = orderDetailCodeMatch ? orderDetailCodeMatch[1] : ''
+
+  const orderDetailPath = path.orderDetail.replace(':order_code', '[^/]+')
   const currentPageName =
     pathname === path.profile
       ? 'Hồ sơ của tôi'
@@ -12,7 +16,9 @@ export default function UserLayout() {
         ? 'Lịch sử mua hàng'
         : pathname === path.changePassword
           ? 'Đổi mật khẩu'
-          : ''
+          : pathname.match(new RegExp(orderDetailPath))
+            ? `Đơn hàng ${orderCode}`
+            : ''
 
   return (
     <>
